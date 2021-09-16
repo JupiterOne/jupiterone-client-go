@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 
-	client "github.com/jupiterone/jupiterone-client-go/jupiterone"
+	j1 "github.com/jupiterone/jupiterone-client-go/jupiterone"
 )
 
 func main() {
-	var entityProps client.EntityProperties
+	var entityProps j1.EntityProperties
 
 	// Set configuration
-	config := client.JupiterOneClientConfig{
+	config := j1.Config{
 		APIKey:    "key",
 		AccountID: "j1dev",
 		Region:    "dev",
@@ -21,7 +21,7 @@ func main() {
 	entityProps.Class = "Record"
 
 	//Initialize client
-	client, err := config.Client()
+	client, err := j1.NewClient(&config)
 
 	if err != nil {
 		fmt.Println("failed to create JupiterOne client: %s", err.Error())
