@@ -33,19 +33,19 @@ type service struct {
 	client *Client
 }
 
-func (c *Config) getEnv() string {
-	env := c.Region
+func (c *Config) getRegion() string {
+	region := c.Region
 
-	if env == "" {
-		env = DefaultRegion
+	if region == "" {
+		region = DefaultRegion
 	}
 
-	log.Printf("[info] Utilizing env: %s", env)
-	return env
+	log.Printf("[info] Utilizing region: %s", region)
+	return region
 }
 
 func (c *Config) getGraphQLEndpoint() string {
-	return "https://api." + c.getEnv() + ".jupiterone.io/graphql"
+	return "https://api." + c.getRegion() + ".jupiterone.io/graphql"
 }
 
 func NewClient(config *Config) (*Client, error) {
