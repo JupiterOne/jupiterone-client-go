@@ -1,24 +1,15 @@
-# JupiterOne Client Go
-
-## Requirements
-
-- [Go](https://golang.org/doc/install)
-
-## Usage
-
-```
 package example
 
 import (
 	"fmt"
 
-	"../jupiterone/client"
+	client "github.com/jupiterone/jupiterone-client-go/jupiterone"
 )
 
 func main() {
 
 	// Set configuration
-	config := client.JupiterOneClientConfig{
+	config := jupiterone.client.JupiterOneClientConfig{
 		APIKey:    "api_key",
 		AccountID: "accountID",
 		Region:    "dev",
@@ -34,5 +25,3 @@ func main() {
 	//Do stuffs
 	fmt.Print(client)
 }
-
-```
