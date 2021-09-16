@@ -10,14 +10,14 @@ import (
 
 const DefaultRegion string = "us"
 
-type JupiterOneClientConfig struct {
+type Config struct {
 	APIKey     string
 	AccountID  string
 	Region     string
 	HTTPClient *http.Client
 }
 
-type JupiterOneClient struct {
+type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	apiKey, accountID string
@@ -30,38 +30,38 @@ type JupiterOneClient struct {
 }
 
 type service struct {
-	client *JupiterOneClient
+	client *Client
 }
 
-func (c *JupiterOneClientConfig) getRegion() string {
-	region := c.Region
+func (c *Config) getEnv() string {
+	env := c.Region
 
-	if region == "" {
-		region = DefaultRegion
+	if env == "" {
+		env = DefaultRegion
 	}
 
-	log.Printf("[info] Utilizing region: %s", region)
-	return region
+	log.Printf("[info] Utilizing env: %s", env)
+	return env
 }
 
-func (c *JupiterOneClientConfig) getGraphQLEndpoint() string {
-	return "https://api." + c.getRegion() + ".jupiterone.io/graphql"
+func (c *Config) getGraphQLEndpoint() string {
+	return "https://api." + c.getEnv() + ".jupiterone.io/graphql"
 }
 
-func (c *JupiterOneClientConfig) Client() (*JupiterOneClient, error) {
-	endpoint := c.getGraphQLEndpoint()
+func NewClient(config *Config) (*Client, error) {
+	endpoint := config.getGraphQLEndpoint()
 
 	var client *graphql.Client
 
-	if c.HTTPClient != nil {
-		client = graphql.NewClient(endpoint, graphql.WithHTTPClient(c.HTTPClient))
+	if config.HTTPClient != nil {
+		client = graphql.NewClient(endpoint, graphql.WithHTTPClient(config.HTTPClient))
 	} else {
 		client = graphql.NewClient(endpoint)
 	}
 
-	jupiterOneClient := &JupiterOneClient{
-		apiKey:        c.APIKey,
-		accountID:     c.AccountID,
+	jupiterOneClient := &Client{
+		apiKey:        config.APIKey,
+		accountID:     config.AccountID,
 		graphqlClient: client,
 		RetryTimeout:  time.Minute,
 	}
@@ -75,7 +75,7 @@ func (c *JupiterOneClientConfig) Client() (*JupiterOneClient, error) {
 	return jupiterOneClient, nil
 }
 
-func (c *JupiterOneClient) prepareRequest(query string) *graphql.Request {
+func (c *Client) prepareRequest(query string) *graphql.Request {
 	req := graphql.NewRequest(query)
 
 	req.Header.Set("LifeOmic-Account", c.accountID)

@@ -7,13 +7,13 @@ import (
 )
 
 func TestGetGraphqlEndpointSetsDefaultValue(t *testing.T) {
-	config := JupiterOneClientConfig{}
+	config := Config{}
 	endpoint := config.getGraphQLEndpoint()
 	assert.Equal(t, endpoint, "https://api.us.jupiterone.io/graphql", "Endpoints should match")
 }
 
 func TestGetGraphqlEndpointNoOverride(t *testing.T) {
-	config := JupiterOneClientConfig{
+	config := Config{
 		Region: "dev",
 	}
 
