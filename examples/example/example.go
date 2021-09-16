@@ -1,4 +1,4 @@
-package example
+package main
 
 import (
 	"fmt"
@@ -7,13 +7,18 @@ import (
 )
 
 func main() {
+	var entityProps client.EntityProperties
 
 	// Set configuration
-	config := jupiterone.client.JupiterOneClientConfig{
-		APIKey:    "api_key",
-		AccountID: "accountID",
+	config := client.JupiterOneClientConfig{
+		APIKey:    "key",
+		AccountID: "j1dev",
 		Region:    "dev",
 	}
+
+	entityProps.Key = "go-client-key"
+	entityProps.Type = "go_client_type"
+	entityProps.Class = "Record"
 
 	//Initialize client
 	client, err := config.Client()
@@ -23,5 +28,6 @@ func main() {
 	}
 
 	//Do stuffs
-	fmt.Print(client)
+	// fmt.Print(client)
+	fmt.Print(client.CreateEntity(entityProps))
 }
