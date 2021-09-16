@@ -18,9 +18,19 @@ type JupiterOneClientConfig struct {
 }
 
 type JupiterOneClient struct {
+	common service // Reuse a single struct instead of allocating one for each service on the heap.
+
 	apiKey, accountID string
 	graphqlClient     *graphql.Client
 	RetryTimeout      time.Duration
+
+	Entity   *EntityService
+	Rule     *RuleService
+	Question *QuestionService
+}
+
+type service struct {
+	client *JupiterOneClient
 }
 
 func (c *JupiterOneClientConfig) getRegion() string {
@@ -55,6 +65,12 @@ func (c *JupiterOneClientConfig) Client() (*JupiterOneClient, error) {
 		graphqlClient: client,
 		RetryTimeout:  time.Minute,
 	}
+
+	// Pass around the single client to each service
+	jupiterOneClient.common.client = jupiterOneClient
+	jupiterOneClient.Entity = (*EntityService)(&jupiterOneClient.common)
+	jupiterOneClient.Rule = (*RuleService)(&jupiterOneClient.common)
+	jupiterOneClient.Question = (*QuestionService)(&jupiterOneClient.common)
 
 	return jupiterOneClient, nil
 }
