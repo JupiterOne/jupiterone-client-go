@@ -8,6 +8,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+type RuleService service
+
 type RuleQuestion struct {
 	Queries []QuestionQuery `json:"queries"`
 }
@@ -55,8 +57,8 @@ type UpdateQuestionRuleInstanceInput struct {
 }
 
 // GetQuestionRuleInstanceByID - Fetches the QuestionRuleInstance by unique id
-func (c *JupiterOneClient) GetQuestionRuleInstanceByID(id string) (*QuestionRuleInstance, error) {
-	req := c.prepareRequest(`
+func (s *RuleService) GetByID(id string) (*QuestionRuleInstance, error) {
+	req := s.client.prepareRequest(`
 		query GetQuestionRuleInstance($id: ID!) {
 			questionRuleInstance (id: $id) {
 				id
@@ -89,7 +91,7 @@ func (c *JupiterOneClient) GetQuestionRuleInstanceByID(id string) (*QuestionRule
 	req.Var("id", id)
 
 	var respData map[string]interface{}
-	if err := c.graphqlClient.Run(context.Background(), req, &respData); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
@@ -103,10 +105,10 @@ func (c *JupiterOneClient) GetQuestionRuleInstanceByID(id string) (*QuestionRule
 }
 
 // CreateQuestionRuleInstance - Creates a question rule instance
-func (c *JupiterOneClient) CreateQuestionRuleInstance(createQuestionRuleInstanceInput BaseQuestionRuleInstanceProperties) (*QuestionRuleInstance, error) {
+func (s *RuleService) Create(createQuestionRuleInstanceInput BaseQuestionRuleInstanceProperties) (*QuestionRuleInstance, error) {
 	log.Println("Create question rule instance: " + createQuestionRuleInstanceInput.Name)
 
-	req := c.prepareRequest(`
+	req := s.client.prepareRequest(`
 		mutation CreateQuestionRuleInstance ($instance: CreateQuestionRuleInstanceInput!) {
 			createQuestionRuleInstance (
 				instance: $instance
@@ -161,7 +163,7 @@ func (c *JupiterOneClient) CreateQuestionRuleInstance(createQuestionRuleInstance
 
 	var respData map[string]interface{}
 
-	if err := c.graphqlClient.Run(context.Background(), req, &respData); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
@@ -174,10 +176,10 @@ func (c *JupiterOneClient) CreateQuestionRuleInstance(createQuestionRuleInstance
 	return &questionRuleInstance, nil
 }
 
-func (c *JupiterOneClient) UpdateQuestionRuleInstance(properties UpdateQuestionRuleInstanceProperties) (*QuestionRuleInstance, error) {
+func (s *RuleService) Update(properties UpdateQuestionRuleInstanceProperties) (*QuestionRuleInstance, error) {
 	log.Println("Updating question rule instance: " + properties.Name)
 
-	req := c.prepareRequest(`
+	req := s.client.prepareRequest(`
 		mutation UpdateQuestionRuleInstance ($instance: UpdateQuestionRuleInstanceInput!) {
 			updateQuestionRuleInstance (
 				instance: $instance
@@ -233,7 +235,7 @@ func (c *JupiterOneClient) UpdateQuestionRuleInstance(properties UpdateQuestionR
 	req.Var("instance", input)
 	var respData map[string]interface{}
 
-	if err := c.graphqlClient.Run(context.Background(), req, &respData); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
@@ -246,8 +248,8 @@ func (c *JupiterOneClient) UpdateQuestionRuleInstance(properties UpdateQuestionR
 	return &questionRuleInstance, nil
 }
 
-func (c *JupiterOneClient) DeleteQuestionRuleInstance(id string) error {
-	req := c.prepareRequest(`
+func (s *RuleService) Delete(id string) error {
+	req := s.client.prepareRequest(`
 		mutation DeleteRuleInstance ($id: ID!) {
 			deleteRuleInstance (id: $id) {
 				id
@@ -257,7 +259,7 @@ func (c *JupiterOneClient) DeleteQuestionRuleInstance(id string) error {
 
 	req.Var("id", id)
 
-	if err := c.graphqlClient.Run(context.Background(), req, nil); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, nil); err != nil {
 		return err
 	}
 

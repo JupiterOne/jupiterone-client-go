@@ -6,6 +6,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+type QuestionService service
+
 type QuestionQuery struct {
 	Query   string `json:"query"`
 	Version string `json:"version"`
@@ -35,8 +37,8 @@ type Question struct {
 	Compliance  []QuestionComplianceMetaData `json:"compliance"`
 }
 
-func (c *JupiterOneClient) GetQuestion(id string) (*Question, error) {
-	req := c.prepareRequest(`
+func (s *QuestionService) Get(id string) (*Question, error) {
+	req := s.client.prepareRequest(`
 		query GetQuestionById ($id: ID!) {
 			question(id: $id) {
 				id
@@ -64,7 +66,7 @@ func (c *JupiterOneClient) GetQuestion(id string) (*Question, error) {
 
 	var respData map[string]interface{}
 
-	if err := c.graphqlClient.Run(context.Background(), req, &respData); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
@@ -77,8 +79,8 @@ func (c *JupiterOneClient) GetQuestion(id string) (*Question, error) {
 	return &question, nil
 }
 
-func (c *JupiterOneClient) CreateQuestion(properties QuestionProperties) (*Question, error) {
-	req := c.prepareRequest(`
+func (s *QuestionService) Create(properties QuestionProperties) (*Question, error) {
+	req := s.client.prepareRequest(`
 		mutation CreateQuestion($question: CreateQuestionInput!) {
 			createQuestion(question: $question) {
 				id
@@ -109,7 +111,7 @@ func (c *JupiterOneClient) CreateQuestion(properties QuestionProperties) (*Quest
 
 	var respData map[string]interface{}
 
-	if err := c.graphqlClient.Run(context.Background(), req, &respData); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
@@ -122,8 +124,8 @@ func (c *JupiterOneClient) CreateQuestion(properties QuestionProperties) (*Quest
 	return &question, nil
 }
 
-func (c *JupiterOneClient) UpdateQuestion(id string, properties QuestionProperties) (*Question, error) {
-	req := c.prepareRequest(`
+func (s *QuestionService) Update(id string, properties QuestionProperties) (*Question, error) {
+	req := s.client.prepareRequest(`
 		mutation UpdateQuestion ($id: ID!, $update: QuestionUpdate!) {
 			updateQuestion(id: $id, update: $update) {
 				id
@@ -155,7 +157,7 @@ func (c *JupiterOneClient) UpdateQuestion(id string, properties QuestionProperti
 
 	var respData map[string]interface{}
 
-	if err := c.graphqlClient.Run(context.Background(), req, &respData); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
@@ -168,8 +170,8 @@ func (c *JupiterOneClient) UpdateQuestion(id string, properties QuestionProperti
 	return &question, nil
 }
 
-func (c *JupiterOneClient) DeleteQuestion(id string) error {
-	req := c.prepareRequest(`
+func (s *QuestionService) Delete(id string) error {
+	req := s.client.prepareRequest(`
 		mutation DeleteQuestion($id: ID!) {
 			deleteQuestion(id: $id) {
 				id
@@ -179,7 +181,7 @@ func (c *JupiterOneClient) DeleteQuestion(id string) error {
 
 	req.Var("id", id)
 
-	if err := c.graphqlClient.Run(context.Background(), req, nil); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, nil); err != nil {
 		return err
 	}
 

@@ -29,5 +29,5 @@ func main() {
 
 	//Do stuffs
 	// fmt.Print(client)
-	fmt.Print(client.CreateEntity(entityProps))
+	fmt.Print(client.Entity.Create(entityProps))
 }

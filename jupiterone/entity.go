@@ -7,6 +7,8 @@ import (
 	// "github.com/mitchellh/mapstructure"
 )
 
+type EntityService service
+
 type EntityProperties struct {
 	Key   string `json:"key"`
 	Type  string `json:"type"`
@@ -18,8 +20,8 @@ type Entity struct {
 	Id string `json:"id"`
 }
 
-func (c *JupiterOneClient) CreateEntity(properties EntityProperties) (*string, error) {
-	req := c.prepareRequest(`
+func (s *EntityService) Create(properties EntityProperties) (*string, error) {
+	req := s.client.prepareRequest(`
 	mutation CreateEntity(
 		$entityKey: String!
 		$entityType: String!
@@ -52,7 +54,7 @@ func (c *JupiterOneClient) CreateEntity(properties EntityProperties) (*string, e
 	var respData map[string]interface{}
 	//var respData string
 
-	if err := c.graphqlClient.Run(context.Background(), req, &respData); err != nil {
+	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
