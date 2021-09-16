@@ -6,13 +6,13 @@
 
 ## Usage
 
-```
+```go
 package example
 
 import (
 	"fmt"
 
-	"../jupiterone/client"
+	client "github.com/jupiterone/jupiterone-client-go/jupiterone/client"
 )
 
 func main() {
