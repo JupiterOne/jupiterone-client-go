@@ -7,32 +7,39 @@
 ## Usage
 
 ```go
-package example
+package main
 
 import (
 	"fmt"
 
-	client "github.com/jupiterone/jupiterone-client-go/jupiterone/client"
+	j1 "github.com/jupiterone/jupiterone-client-go/jupiterone"
 )
 
 func main() {
+	var entityProps j1.EntityProperties
 
 	// Set configuration
-	config := client.JupiterOneClientConfig{
+	config := j1.Config{
 		APIKey:    "api_key",
-		AccountID: "accountID",
+		AccountID: "accountid",
 		Region:    "dev",
 	}
 
+	entityProps.Key = "go-client-key"
+	entityProps.Type = "go_client_type"
+	entityProps.Class = "Record"
+
 	//Initialize client
-	client, err := config.Client()
+	client, err := j1.NewClient(&config)
 
 	if err != nil {
 		fmt.Println("failed to create JupiterOne client: %s", err.Error())
 	}
 
 	//Do stuffs
-	fmt.Print(client)
+	// fmt.Print(client)
+	fmt.Print(client.Entity.Create(entityProps))
 }
+
 
 ```

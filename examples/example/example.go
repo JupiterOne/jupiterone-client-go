@@ -11,8 +11,8 @@ func main() {
 
 	// Set configuration
 	config := j1.Config{
-		APIKey:    "key",
-		AccountID: "j1dev",
+		APIKey:    "api_key",
+		AccountID: "accountId",
 		Region:    "dev",
 	}
 
