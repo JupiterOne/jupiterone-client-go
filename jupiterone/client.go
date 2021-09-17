@@ -5,7 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/machinebox/graphql"
+	//"github.com/ardanlabs/graphql"
+	graphql "github.com/hasura/go-graphql-client"
+	// "github.com/machinebox/graphql"
 )
 
 const DefaultRegion string = "us"
@@ -54,10 +56,12 @@ func NewClient(config *Config) (*Client, error) {
 	var client *graphql.Client
 
 	if config.HTTPClient != nil {
-		client = graphql.NewClient(endpoint, graphql.WithHTTPClient(config.HTTPClient))
+		client = graphql.NewClient(endpoint, config.HTTPClient)
 	} else {
-		client = graphql.NewClient(endpoint)
+		client = graphql.NewClient(endpoint, nil)
 	}
+
+	// client = graphql.NewClient(endpoint, graphql.)
 
 	jupiterOneClient := &Client{
 		apiKey:        config.APIKey,

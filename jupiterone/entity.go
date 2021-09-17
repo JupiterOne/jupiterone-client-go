@@ -2,8 +2,9 @@ package jupiterone
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+
+	graphql "github.com/hasura/go-graphql-client"
 	// "github.com/mitchellh/mapstructure"
 )
 
@@ -20,53 +21,74 @@ type Entity struct {
 	Id string `json:"id"`
 }
 
-func (s *EntityService) Create(properties EntityProperties) (*string, error) {
-	req := s.client.prepareRequest(`
-	mutation CreateEntity(
-		$entityKey: String!
-		$entityType: String!
-		$entityClass: [String!]!
-		$properties: JSON
-	  ) {
-		createEntity(
-		  entityKey: $entityKey
-		  entityType: $entityType
-		  entityClass: $entityClass
-		  properties: $properties
-		) {
-		  entity {
-			_id
-		  }
-		  vertex {
-			id
-			entity {
-			  _id
-			}
-		  }
-		}
-	  }
-	`)
+func (s *EntityService) Create(properties EntityProperties) (*Entity, error) {
+	// req := s.client.prepareRequest(`
+	// mutation CreateEntity(
+	// 	$entityKey: String!
+	// 	$entityType: String!
+	// 	$entityClass: [String!]!
+	// 	$properties: JSON
+	//   ) {
+	// 	createEntity(
+	// 	  entityKey: $entityKey
+	// 	  entityType: $entityType
+	// 	  entityClass: $entityClass
+	// 	  properties: $properties
+	// 	) {
+	// 	  entity {
+	// 		_id
+	// 	  }
+	// 	  vertex {
+	// 		id
+	// 		entity {
+	// 		  _id
+	// 		}
+	// 	  }
+	// 	}
+	//   }
+	// `)
+
+	var m struct {
+		CreateEntity struct {
+			Id graphql.String
+		} `graphql:"createEntity(entityKey: $entityKey
+			entityType: $entityType
+			entityClass: $entityClass
+			properties: $properties)"`
+	}
+	variables := map[string]interface{}{
+		"entityKey":   properties.Key,
+		"entityType":  properties.Type,
+		"entityClass": properties.Class,
+	}
 
 	req.Var("entityKey", properties.Key)
 	req.Var("entityType", properties.Type)
 	req.Var("entityClass", properties.Class)
 
-	var respData map[string]interface{}
-	//var respData string
-
-	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
-		return nil, err
+	err := s.client.graphqlClient.Mutate(context.Background(), &m, variables)
+	if err != nil {
+		// Handle error.
 	}
+	fmt.Printf("Created entity: %v", m.CreateEntity.Id)
 
-	// var entity Entity
+	// var respData map[string]interface{}
+	// //var respData string
 
-	// if err := mapstructure.Decode(respData["createEntity"], &question); err != nil {
+	// if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 	// 	return nil, err
 	// }
 
-	resp, nil := json.Marshal(respData)
-	fmt.Println("Entity: " + fmt.Sprint(respData))
-	respString := string(resp)
-	return &respString, nil
-	//return &respData, nil
+	// var entity Entity
+
+	// if err := mapstructure.Decode(respData["createEntity"], &entity); err != nil {
+	// 	return nil, err
+	// }
+	// fmt.Println(respData["id"])
+
+	// resp, nil := json.Marshal(respData)
+	// fmt.Println("Entity: " + fmt.Sprint(respData))
+	// respString := string(resp)
+	// return &respString, nil
+	return &entity, nil
 }
