@@ -18,16 +18,15 @@ func main() {
 
 	entityProps.Key = "go-client-key"
 	entityProps.Type = "go_client_type"
-	entityProps.Class = "Record"
+	entityProps.Class = append(entityProps.Class, "Record")
 
 	//Initialize client
 	client, err := j1.NewClient(&config)
 
 	if err != nil {
-		fmt.Println("failed to create JupiterOne client: %s", err.Error())
+		fmt.Printf("failed to create JupiterOne client: %s", err.Error())
 	}
 
 	//Do stuffs
-	// fmt.Print(client)
 	fmt.Print(client.Entity.Create(entityProps))
 }

@@ -26,9 +26,9 @@ type Client struct {
 	graphqlClient     *graphql.Client
 	RetryTimeout      time.Duration
 
-	Entity   *EntityService
-	Rule     *RuleService
-	Question *QuestionService
+	Entity *EntityService
+	//Rule     *RuleService
+	//Question *QuestionService
 }
 
 type service struct {
@@ -50,6 +50,19 @@ func (c *Config) getGraphQLEndpoint() string {
 	return "https://api." + c.getRegion() + ".jupiterone.io/graphql"
 }
 
+type authTransport struct {
+	http.RoundTripper
+	accountId string
+	apiToken  string
+}
+
+func (ct *authTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Set("LifeOmic-Account", ct.accountId)
+	req.Header.Set("Cache-Control", "no-cache")
+	req.Header.Set("Authorization", "Bearer "+ct.apiToken)
+	return ct.RoundTripper.RoundTrip(req)
+}
+
 func NewClient(config *Config) (*Client, error) {
 	endpoint := config.getGraphQLEndpoint()
 
@@ -58,7 +71,14 @@ func NewClient(config *Config) (*Client, error) {
 	if config.HTTPClient != nil {
 		client = graphql.NewClient(endpoint, config.HTTPClient)
 	} else {
-		client = graphql.NewClient(endpoint, nil)
+		httpClient := &http.Client{
+			Transport: &authTransport{
+				http.DefaultTransport,
+				config.AccountID,
+				config.APIKey,
+			},
+		}
+		client = graphql.NewClient(endpoint, httpClient)
 	}
 
 	// client = graphql.NewClient(endpoint, graphql.)
@@ -73,18 +93,18 @@ func NewClient(config *Config) (*Client, error) {
 	// Pass around the single client to each service
 	jupiterOneClient.common.client = jupiterOneClient
 	jupiterOneClient.Entity = (*EntityService)(&jupiterOneClient.common)
-	jupiterOneClient.Rule = (*RuleService)(&jupiterOneClient.common)
-	jupiterOneClient.Question = (*QuestionService)(&jupiterOneClient.common)
+	//jupiterOneClient.Rule = (*RuleService)(&jupiterOneClient.common)
+	//jupiterOneClient.Question = (*QuestionService)(&jupiterOneClient.common)
 
 	return jupiterOneClient, nil
 }
 
-func (c *Client) prepareRequest(query string) *graphql.Request {
-	req := graphql.NewRequest(query)
+// func (c *Client) prepareRequest(query string) *graphql.Request {
+// 	req := graphql.NewRequest(query)
 
-	req.Header.Set("LifeOmic-Account", c.accountID)
-	req.Header.Set("Cache-Control", "no-cache")
-	req.Header.Set("Authorization", "Bearer "+c.apiKey)
+// 	req.Header.Set("LifeOmic-Account", c.accountID)
+// 	req.Header.Set("Cache-Control", "no-cache")
+// 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 
-	return req
-}
+// 	return req
+// }

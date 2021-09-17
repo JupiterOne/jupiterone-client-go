@@ -11,17 +11,17 @@ import (
 type EntityService service
 
 type EntityProperties struct {
-	Key   string `json:"key"`
-	Type  string `json:"type"`
-	Class string `json:"class"`
-	// Properties []QuestionQuery              `json:"queries"`
+	Key        graphql.String   `json:"key"`
+	Type       graphql.String   `json:"type"`
+	Class      []graphql.String `json:"class"`
+	Properties graphql.String   `json:"properties"`
 }
 
 type Entity struct {
 	Id string `json:"id"`
 }
 
-func (s *EntityService) Create(properties EntityProperties) (*Entity, error) {
+func (s *EntityService) Create(properties EntityProperties) (*string, error) {
 	// req := s.client.prepareRequest(`
 	// mutation CreateEntity(
 	// 	$entityKey: String!
@@ -51,44 +51,21 @@ func (s *EntityService) Create(properties EntityProperties) (*Entity, error) {
 	var m struct {
 		CreateEntity struct {
 			Id graphql.String
-		} `graphql:"createEntity(entityKey: $entityKey
-			entityType: $entityType
-			entityClass: $entityClass
-			properties: $properties)"`
+		} `graphql:"createEntity(entityKey: $entityKey, entityType: $entityType, entityClass: $entityClass, properties: $properties)"`
 	}
 	variables := map[string]interface{}{
 		"entityKey":   properties.Key,
 		"entityType":  properties.Type,
 		"entityClass": properties.Class,
+		"properties":  properties.Properties,
 	}
-
-	req.Var("entityKey", properties.Key)
-	req.Var("entityType", properties.Type)
-	req.Var("entityClass", properties.Class)
 
 	err := s.client.graphqlClient.Mutate(context.Background(), &m, variables)
 	if err != nil {
-		// Handle error.
+		return nil, err
 	}
 	fmt.Printf("Created entity: %v", m.CreateEntity.Id)
+	entityId := string(m.CreateEntity.Id)
 
-	// var respData map[string]interface{}
-	// //var respData string
-
-	// if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
-	// 	return nil, err
-	// }
-
-	// var entity Entity
-
-	// if err := mapstructure.Decode(respData["createEntity"], &entity); err != nil {
-	// 	return nil, err
-	// }
-	// fmt.Println(respData["id"])
-
-	// resp, nil := json.Marshal(respData)
-	// fmt.Println("Entity: " + fmt.Sprint(respData))
-	// respString := string(resp)
-	// return &respString, nil
-	return &entity, nil
+	return &entityId, nil
 }
