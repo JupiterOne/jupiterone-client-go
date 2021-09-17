@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	var entityProps j1.EntityProperties
+	// var entityProps j1.EntityProperties
 
 	// Set configuration
 	config := j1.Config{
@@ -16,18 +16,26 @@ func main() {
 		Region:    "dev",
 	}
 
-	entityProps.Key = "go-client-key"
-	entityProps.Type = "go_client_type"
-	entityProps.Class = "Record"
+	// entityProps.Key = "go-client-key"
+	// entityProps.Type = "go_client_type"
+	// entityProps.Class = "Record"
+
+	var entityProps = j1.EntityProperties{
+		Key:   "go-client-key",
+		Type:  "go_client_type",
+		Class: "Record",
+	}
 
 	//Initialize client
 	client, err := j1.NewClient(&config)
 
 	if err != nil {
-		fmt.Println("failed to create JupiterOne client: %s", err.Error())
+		fmt.Printf("failed to create JupiterOne client: %s", err.Error())
 	}
 
 	//Do stuffs
 	// fmt.Print(client)
-	fmt.Print(client.Entity.Create(entityProps))
+	entity, err := client.Entity.Create(entityProps)
+
+	fmt.Print(entity)
 }
