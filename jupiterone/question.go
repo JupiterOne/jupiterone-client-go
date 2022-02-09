@@ -29,7 +29,7 @@ type QuestionProperties struct {
 }
 
 type Question struct {
-	Id          string                       `json:"id"`
+	ID          string                       `json:"id"`
 	Title       string                       `json:"title"`
 	Description string                       `json:"description"`
 	Tags        []string                     `json:"tags"`

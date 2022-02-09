@@ -1,0 +1,29 @@
+name: ci
+on:
+  push:
+    tags:
+      - v*
+    branches:
+      - master
+      - main
+    paths:
+      - "**.go"
+      - ".golangci.yml"
+      - "Makefile"
+      - "go.*"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "**.go"
+      - ".golangci.yml"
+      - "Makefile"
+      - "go.*"
+      - ".github/workflows/ci.yml"
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
