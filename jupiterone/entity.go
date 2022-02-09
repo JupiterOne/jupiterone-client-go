@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	// "github.com/mitchellh/mapstructure"
 )
 
 type EntityService service
@@ -13,11 +12,10 @@ type EntityProperties struct {
 	Key   string `json:"key"`
 	Type  string `json:"type"`
 	Class string `json:"class"`
-	// Properties []QuestionQuery              `json:"queries"`
 }
 
 type Entity struct {
-	Id string `json:"id"`
+	ID string `json:"id"`
 }
 
 func (s *EntityService) Create(properties EntityProperties) (*string, error) {
@@ -52,21 +50,14 @@ func (s *EntityService) Create(properties EntityProperties) (*string, error) {
 	req.Var("entityClass", properties.Class)
 
 	var respData map[string]interface{}
-	//var respData string
+	// var respData string
 
 	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
-	// var entity Entity
-
-	// if err := mapstructure.Decode(respData["createEntity"], &question); err != nil {
-	// 	return nil, err
-	// }
-
 	resp, nil := json.Marshal(respData)
 	fmt.Println("Entity: " + fmt.Sprint(respData))
 	respString := string(resp)
 	return &respString, nil
-	//return &respData, nil
 }

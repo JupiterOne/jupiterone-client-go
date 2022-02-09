@@ -21,8 +21,8 @@ type RuleOperation struct {
 
 type QuestionRuleInstance struct {
 	BaseQuestionRuleInstanceProperties
-	Id        string `json:"id"`
-	AccountId string `json:"accountId"`
+	ID        string `json:"id"`
+	AccountID string `json:"accountId"`
 	Version   int    `json:"version"`
 	Latest    bool   `json:"latest"`
 	Deleted   bool   `json:"deleted"`
@@ -31,7 +31,7 @@ type QuestionRuleInstance struct {
 
 type UpdateQuestionRuleInstanceProperties struct {
 	BaseQuestionRuleInstanceProperties
-	Id      string `json:"id"`
+	ID      string `json:"id"`
 	Version int    `json:"version"`
 }
 
@@ -56,7 +56,7 @@ type UpdateQuestionRuleInstanceInput struct {
 	Operations []map[string]interface{} `json:"operations"`
 }
 
-// GetQuestionRuleInstanceByID - Fetches the QuestionRuleInstance by unique id
+// GetQuestionRuleInstanceByID - Fetches the QuestionRuleInstance by unique id.
 func (s *RuleService) GetByID(id string) (*QuestionRuleInstance, error) {
 	req := s.client.prepareRequest(`
 		query GetQuestionRuleInstance($id: ID!) {
@@ -104,7 +104,7 @@ func (s *RuleService) GetByID(id string) (*QuestionRuleInstance, error) {
 	return &decodedQuestionRuleInstance, nil
 }
 
-// CreateQuestionRuleInstance - Creates a question rule instance
+// CreateQuestionRuleInstance - Creates a question rule instance.
 func (s *RuleService) Create(createQuestionRuleInstanceInput BaseQuestionRuleInstanceProperties) (*QuestionRuleInstance, error) {
 	log.Println("Create question rule instance: " + createQuestionRuleInstanceInput.Name)
 
@@ -152,7 +152,6 @@ func (s *RuleService) Create(createQuestionRuleInstanceInput BaseQuestionRuleIns
 	var deserializedOperationsMap []map[string]interface{}
 
 	err := json.Unmarshal([]byte(createQuestionRuleInstanceInput.Operations), &deserializedOperationsMap)
-
 	if err != nil {
 		return nil, err
 	}
@@ -212,7 +211,7 @@ func (s *RuleService) Update(properties UpdateQuestionRuleInstanceProperties) (*
 	`)
 
 	var input UpdateQuestionRuleInstanceInput
-	input.Id = properties.Id
+	input.ID = properties.ID
 	input.Version = properties.Version
 	input.Name = properties.Name
 	input.Description = properties.Description
@@ -225,7 +224,6 @@ func (s *RuleService) Update(properties UpdateQuestionRuleInstanceProperties) (*
 	var deserializedOperationsMap []map[string]interface{}
 
 	err := json.Unmarshal([]byte(properties.Operations), &deserializedOperationsMap)
-
 	if err != nil {
 		return nil, err
 	}
