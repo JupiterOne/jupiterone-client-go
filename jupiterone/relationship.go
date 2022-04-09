@@ -12,14 +12,14 @@ type RelationshipProperties struct {
 	RelationshipKey   string            `json:"key"`
 	RelationshipType  string            `json:"type"`
 	RelationshipClass string            `json:"class"`
-	FromEntityId      string            `json:"fromEntityId"`
-	ToEntityId        string            `json:"toEntityId"`
+	FromEntityID      string            `json:"fromEntityId"`
+	ToEntityID        string            `json:"toEntityId"`
 	Properties        map[string]string `json:"properties" bson:"properties,omitempty"`
 }
 type EdgeProperties struct {
-	Id           string            `json:"id"`
-	ToVertexId   string            `json:"toVertexId"`
-	FromVertexId string            `json:"fromVertexId"`
+	ID           string            `json:"id"`
+	ToVertexID   string            `json:"toVertexId"`
+	FromVertexID string            `json:"fromVertexId"`
 	Relationship map[string]string `json:"relationship"`
 	Properties   map[string]string `json:"properties" bson:"properties,omitempty"`
 }
