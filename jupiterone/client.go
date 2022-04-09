@@ -24,9 +24,9 @@ type Client struct {
 	graphqlClient     *graphql.Client
 	RetryTimeout      time.Duration
 
-	Entity   *EntityService
-	Rule     *RuleService
-	Question *QuestionService
+	Entity       *EntityService
+	Rule         *RuleService
+	Question     *QuestionService
 	Relationship *RelationshipService
 }
 

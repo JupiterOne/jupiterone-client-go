@@ -8,31 +8,26 @@ import (
 
 type RelationshipService service
 
-
-
 type RelationshipProperties struct {
-	RelationshipKey       	string                       `json:"key"`
-	RelationshipType 		string                       `json:"type"`
-	RelationshipClass 		string                       `json:"class"`
-	FromEntityId string 					 `json:"fromEntityId"`
-	ToEntityId string 					 `json:"toEntityId"`
-	Properties  map[string]string  `json:"properties" bson:"properties,omitempty"`
-
+	RelationshipKey   string            `json:"key"`
+	RelationshipType  string            `json:"type"`
+	RelationshipClass string            `json:"class"`
+	FromEntityId      string            `json:"fromEntityId"`
+	ToEntityId        string            `json:"toEntityId"`
+	Properties        map[string]string `json:"properties" bson:"properties,omitempty"`
 }
 type EdgeProperties struct {
-	Id          string                       `json:"id"`
-	ToVertexId          string                       `json:"toVertexId"`
-	FromVertexId          string                       `json:"fromVertexId"`
-	Relationship          map[string]string                       `json:"relationship"`
-	Properties  map[string]string  `json:"properties" bson:"properties,omitempty"`
+	Id           string            `json:"id"`
+	ToVertexId   string            `json:"toVertexId"`
+	FromVertexId string            `json:"fromVertexId"`
+	Relationship map[string]string `json:"relationship"`
+	Properties   map[string]string `json:"properties" bson:"properties,omitempty"`
 }
 
 type Relationship struct {
-	Relationship          map[string]string                       `json:"relationship"`
-	Edge       EdgeProperties                       `json:"_fromVertexId"`
+	Relationship map[string]string `json:"relationship"`
+	Edge         EdgeProperties    `json:"_fromVertexId"`
 }
-
-
 
 func (s *RelationshipService) Create(properties RelationshipProperties) (*Relationship, error) {
 	req := s.client.prepareRequest(`
@@ -85,9 +80,7 @@ func (s *RelationshipService) Create(properties RelationshipProperties) (*Relati
 	return &relationship, nil
 }
 
-
-
-func (s *RelationshipService) Delete(id string ) error {
+func (s *RelationshipService) Delete(id string) error {
 	req := s.client.prepareRequest(`
 	mutation DeleteRelationship($relationshipId: String! $timestamp: Long) {
 		deleteRelationship (relationshipId: $relationshipId, timestamp: $timestamp) {
