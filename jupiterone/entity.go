@@ -9,16 +9,17 @@ import (
 type EntityService service
 
 type EntityProperties struct {
-	Key   string `json:"key"`
-	Type  string `json:"type"`
-	Class string `json:"class"`
+	Key        string `json:"key"`
+	Type       string `json:"type"`
+	Class      string `json:"class"`
+	Properties map[string]interface{}
 }
 
 type Entity struct {
 	ID string `json:"id"`
 }
 
-func (s *EntityService) Create(properties EntityProperties) (*string, error) {
+func (s *EntityService) Create(entity EntityProperties) (*string, error) {
 	req := s.client.prepareRequest(`
 	mutation CreateEntity(
 		$entityKey: String!
@@ -45,9 +46,10 @@ func (s *EntityService) Create(properties EntityProperties) (*string, error) {
 	  }
 	`)
 
-	req.Var("entityKey", properties.Key)
-	req.Var("entityType", properties.Type)
-	req.Var("entityClass", properties.Class)
+	req.Var("entityKey", entity.Key)
+	req.Var("entityType", entity.Type)
+	req.Var("entityClass", entity.Class)
+	req.Var("properties", entity.Properties)
 
 	var respData map[string]interface{}
 	// var respData string

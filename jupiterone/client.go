@@ -78,7 +78,7 @@ func NewClient(config *Config) (*Client, error) {
 func (c *Client) prepareRequest(query string) *graphql.Request {
 	req := graphql.NewRequest(query)
 
-	req.Header.Set("LifeOmic-Account", c.accountID)
+	req.Header.Set("JupiterOne-Account", c.accountID)
 	req.Header.Set("Cache-Control", "no-cache")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 
