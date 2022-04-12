@@ -2,18 +2,27 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	j1 "github.com/jupiterone/jupiterone-client-go/jupiterone"
 )
+
+func getEnvWithDefault(key string, defaultVal string) string {
+    value, exists := os.LookupEnv(key)
+    if !exists {
+        value = defaultVal
+    }
+    return value
+}
 
 func main() {
 	// var entityProps j1.EntityProperties
 
 	// Set configuration
 	config := j1.Config{
-		APIKey:    "api_key"
-		AccountID: "accountId",
-		Region:    "us",
+		APIKey:    getEnvWithDefault("J1_API_TOKEN", ""),
+		AccountID: getEnvWithDefault("J1_ACCOUNT", ""),
+		Region:    getEnvWithDefault("J1_REGION", "us"),
 	}
 
 	entityProps := j1.EntityProperties{
