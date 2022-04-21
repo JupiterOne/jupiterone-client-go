@@ -1,1 +1,3 @@
 * @jupiterone/sre @jupiterone/integrations @jupiterone/security
+
+CODEOWNERS @jupiterone/security
