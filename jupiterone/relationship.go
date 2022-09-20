@@ -7,7 +7,7 @@ import (
 )
 
 // RelationshipService is the service for creating, reading, updating,
-// and deleting Relationships in the JupiterOne graph
+// and deleting Relationships in the JupiterOne graph.
 type RelationshipService service
 
 type RelationshipProperties struct {
@@ -32,7 +32,7 @@ type Relationship struct {
 }
 
 // Create creates a new Relationship in the JupiterOne graph with
-// the _key, _type, _class, and properties in properties arguement
+// the _key, _type, _class, and properties in properties argument.
 func (s *RelationshipService) Create(properties RelationshipProperties) (*Relationship, error) {
 	req := s.client.prepareRequest(`
 	mutation CreateRelationship(
@@ -84,7 +84,7 @@ func (s *RelationshipService) Create(properties RelationshipProperties) (*Relati
 	return &relationship, nil
 }
 
-// Delete deletes a relationship with the given id from the JupiterOne graph
+// Delete deletes a relationship with the given id from the JupiterOne graph.
 func (s *RelationshipService) Delete(id string) error {
 	req := s.client.prepareRequest(`
 	mutation DeleteRelationship($relationshipId: String! $timestamp: Long) {

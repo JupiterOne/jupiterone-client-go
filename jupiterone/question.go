@@ -7,7 +7,7 @@ import (
 )
 
 // QuestionService is the service for creating, reading, updating
-// and deleting Jupiterone Questions
+// and deleting Jupiterone Questions.
 type QuestionService service
 
 type QuestionQuery struct {
@@ -39,7 +39,7 @@ type Question struct {
 	Compliance  []QuestionComplianceMetaData `json:"compliance"`
 }
 
-// Get retrievies a question with the given id
+// Get retrieves a question with the given id.
 func (s *QuestionService) Get(id string) (*Question, error) {
 	req := s.client.prepareRequest(`
 		query GetQuestionById ($id: ID!) {
@@ -82,7 +82,7 @@ func (s *QuestionService) Get(id string) (*Question, error) {
 	return &question, nil
 }
 
-// Create creates a new question with the the given properties
+// Create creates a new question with the the given properties.
 func (s *QuestionService) Create(properties QuestionProperties) (*Question, error) {
 	req := s.client.prepareRequest(`
 		mutation CreateQuestion($question: CreateQuestionInput!) {
@@ -128,6 +128,7 @@ func (s *QuestionService) Create(properties QuestionProperties) (*Question, erro
 	return &question, nil
 }
 
+// Update updates a question's properties given its id and new properties.
 func (s *QuestionService) Update(id string, properties QuestionProperties) (*Question, error) {
 	req := s.client.prepareRequest(`
 		mutation UpdateQuestion ($id: ID!, $update: QuestionUpdate!) {
@@ -174,6 +175,7 @@ func (s *QuestionService) Update(id string, properties QuestionProperties) (*Que
 	return &question, nil
 }
 
+// Delete deletes a question by id.
 func (s *QuestionService) Delete(id string) error {
 	req := s.client.prepareRequest(`
 		mutation DeleteQuestion($id: ID!) {

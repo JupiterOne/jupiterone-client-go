@@ -7,19 +7,19 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-// IntegrationService handles the integration-related API requests
+// IntegrationService handles the integration-related API requests.
 type IntegrationService service
 
 // IntegrationInstance represents an instance of an integration.
-// Example: The account has an instance of the AWS integration
+// Example: The account has an instance of the AWS integration.
 type IntegrationInstance struct {
-	Id                      string `json:"id"`
+	ID                      string `json:"id"`
 	Name                    string `json:"name"`
-	IntegrationDefinitionId string `json:"integrationInstanceId"`
+	IntegrationDefinitionID string `json:"integrationDefinitionId"`
 }
 
 // IntegrationInstanceResponse is a slice of integration instances and
-// pagination information
+// pagination information.
 type IntegrationInstanceResponse struct {
 	Instances []*IntegrationInstance `json:"instances"`
 	PageInfo  PageInfo               `json:"pageInfo"`
@@ -33,7 +33,7 @@ type IntegrationInstanceResponse struct {
 // configuration needed to run that integration. It is different for
 // each integration, so it uses the json.RawMessage type.
 type IntegrationDefinition struct {
-	Id               string            `json:"id"`
+	ID               string            `json:"id"`
 	IntegrationType  string            `json:"integrationType"`
 	IntegrationClass []string          `json:"integrationClass"`
 	Name             string            `json:"name"`
@@ -43,13 +43,13 @@ type IntegrationDefinition struct {
 }
 
 // IntegrationDefinitionsResponse is a slice of integration definitions
-// and pagination information
+// and pagination information.
 type IntegrationDefinitionsResponse struct {
 	Definitions []*IntegrationDefinition `json:"definitions"`
 	PageInfo    PageInfo                 `json:"pageInfo"`
 }
 
-// PageInfo is the pagination information for ListInstances and ListDefinitions
+// PageInfo is the pagination information for ListInstances and ListDefinitions.
 type PageInfo struct {
 	HasNextPage bool   `json:"hasNextPage"`
 	EndCursor   string `json:"endCursor"`
@@ -58,7 +58,7 @@ type PageInfo struct {
 // ListDefinitions lists all the IntegrationDefinitions in the current account.
 func (s *IntegrationService) ListDefinitions() ([]*IntegrationDefinition, error) {
 	hasNextPage := true
-	var cursor *string = nil
+	var cursor *string
 	definitions := make([]*IntegrationDefinition, 0)
 
 	for hasNextPage {
@@ -105,7 +105,7 @@ func (s *IntegrationService) ListDefinitions() ([]*IntegrationDefinition, error)
 // ListInstances lists all the integration instances in the current account.
 func (s *IntegrationService) ListInstances() ([]*IntegrationInstance, error) {
 	hasNextPage := true
-	var cursor *string = nil
+	var cursor *string
 	instances := make([]*IntegrationInstance, 0)
 
 	for hasNextPage {

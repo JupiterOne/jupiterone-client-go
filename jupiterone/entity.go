@@ -6,7 +6,7 @@ import (
 )
 
 // EntityService is the service for creating, reading, updating,
-// and deleting Entities in the JupiterOne graph
+// and deleting Entities in the JupiterOne graph.
 type EntityService service
 
 type EntityProperties struct {
@@ -17,7 +17,7 @@ type EntityProperties struct {
 }
 
 // Create creates a new entity in the JupiterOne graph with
-// the _key, _type, _class, and properties in the entity arguement
+// the _key, _type, _class, and properties in the entity argument.
 func (s *EntityService) Create(entity EntityProperties) (*string, error) {
 	req := s.client.prepareRequest(`
 	mutation CreateEntity(
