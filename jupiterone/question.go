@@ -6,6 +6,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+// QuestionService is the service for creating, reading, updating
+// and deleting Jupiterone Questions
 type QuestionService service
 
 type QuestionQuery struct {
@@ -37,6 +39,7 @@ type Question struct {
 	Compliance  []QuestionComplianceMetaData `json:"compliance"`
 }
 
+// Get retrievies a question with the given id
 func (s *QuestionService) Get(id string) (*Question, error) {
 	req := s.client.prepareRequest(`
 		query GetQuestionById ($id: ID!) {
@@ -79,6 +82,7 @@ func (s *QuestionService) Get(id string) (*Question, error) {
 	return &question, nil
 }
 
+// Create creates a new question with the the given properties
 func (s *QuestionService) Create(properties QuestionProperties) (*Question, error) {
 	req := s.client.prepareRequest(`
 		mutation CreateQuestion($question: CreateQuestionInput!) {
