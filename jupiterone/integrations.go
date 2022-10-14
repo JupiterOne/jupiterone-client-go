@@ -56,13 +56,15 @@ type PageInfo struct {
 }
 
 // ListDefinitions lists all the IntegrationDefinitions in the current account.
-func (s *IntegrationService) ListDefinitions() ([]*IntegrationDefinition, error) {
-	hasNextPage := true
-	var cursor *string
-	definitions := make([]*IntegrationDefinition, 0)
-
-	for hasNextPage {
-		req := s.client.prepareRequest(`
+// ListDefinitions returns a reference to an IntegrationDefinitionResponse object
+// which contains the Definitions and PageInfo used to request additional
+// definitions (if they exist).
+//
+// The first call to ListDefinitions should pass nil as the cursor. The caller
+// should check PageInfo.HasNextPage to see if there is additional data available.
+// If there is, the caller should pass PageInfo.Cursor on subsequent calls.
+func (s *IntegrationService) ListDefinitions(cursor *string) (*IntegrationDefinitionsResponse, error) {
+	req := s.client.prepareRequest(`
 		query IntegrationDefinitions($cursor: String) {
 			integrationDefinitions(cursor: $cursor) {
 				definitions {
@@ -80,36 +82,32 @@ func (s *IntegrationService) ListDefinitions() ([]*IntegrationDefinition, error)
 			}
 		}`)
 
-		if cursor != nil {
-			req.Var("cursor", cursor)
-		}
-
-		buf := map[string]interface{}{}
-		err := s.client.graphqlClient.Run(context.Background(), req, &buf)
-		if err != nil {
-			return nil, err
-		}
-		resp := IntegrationDefinitionsResponse{}
-		err = mapstructure.Decode(buf["integrationDefinitions"], &resp)
-		if err != nil {
-			return nil, err
-		}
-
-		hasNextPage = resp.PageInfo.HasNextPage
-		cursor = &resp.PageInfo.EndCursor
-		definitions = append(definitions, resp.Definitions...)
+	if cursor != nil {
+		req.Var("cursor", cursor)
 	}
-	return definitions, nil
+
+	buf := map[string]interface{}{}
+	err := s.client.graphqlClient.Run(context.Background(), req, &buf)
+	if err != nil {
+		return nil, err
+	}
+	resp := IntegrationDefinitionsResponse{}
+	err = mapstructure.Decode(buf["integrationDefinitions"], &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
 }
 
-// ListInstances lists all the integration instances in the current account.
-func (s *IntegrationService) ListInstances() ([]*IntegrationInstance, error) {
-	hasNextPage := true
-	var cursor *string
-	instances := make([]*IntegrationInstance, 0)
-
-	for hasNextPage {
-		req := s.client.prepareRequest(`
+// ListInstances list the integration instances for the JupiterOne account.
+// ListInstances returns a reference to an IntegrationInstanceResponse which
+// contains the Instances and the PageInfo used to request additional instances.
+// The first call to ListInstances should pass nil for the cursor. To paginate
+// through all instances, the caller should check if PageInfo.HasNextPage
+// is true and pass the PageInfo.Cursor from the response in subsequent calls.
+func (s *IntegrationService) ListInstances(cursor *string) (*IntegrationInstanceResponse, error) {
+	req := s.client.prepareRequest(`
 			query IntegrationInstances($cursor: String) {
 				integrationInstances(cursor: $cursor) {
 					instances {
@@ -124,23 +122,19 @@ func (s *IntegrationService) ListInstances() ([]*IntegrationInstance, error) {
 				}
 			}`)
 
-		if cursor != nil {
-			req.Var("cursor", *cursor)
-		}
-
-		buf := map[string]interface{}{}
-		err := s.client.graphqlClient.Run(context.Background(), req, &buf)
-		if err != nil {
-			return nil, err
-		}
-		resp := IntegrationInstanceResponse{}
-		err = mapstructure.Decode(buf["integrationInstances"], &resp)
-		if err != nil {
-			return nil, err
-		}
-		hasNextPage = resp.PageInfo.HasNextPage
-		cursor = &resp.PageInfo.EndCursor
-		instances = append(instances, resp.Instances...)
+	if cursor != nil {
+		req.Var("cursor", *cursor)
 	}
-	return instances, nil
+
+	buf := map[string]interface{}{}
+	err := s.client.graphqlClient.Run(context.Background(), req, &buf)
+	if err != nil {
+		return nil, err
+	}
+	resp := IntegrationInstanceResponse{}
+	err = mapstructure.Decode(buf["integrationInstances"], &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, err
 }
