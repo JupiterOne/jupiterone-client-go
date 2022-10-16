@@ -100,32 +100,34 @@ func (s *IntegrationService) ListDefinitions(cursor *string) (*IntegrationDefini
 	return &resp, nil
 }
 
-
-// GetDefinition gets a single Integraiton Definition by its id
-func (s * IntegrationService) GetDefinition(id string) (*IntegrationDefinition, error) {
-  req := s.client.prepareRequest(`
+// GetDefinition gets a single Integration Definition by its id
+func (s *IntegrationService) GetDefinition(id string) (*IntegrationDefinition, error) {
+	req := s.client.prepareRequest(`
     query getIntegrationDefinition($id: String) {
       integrationDefinition(id: $id) {
         id
         integrationType
         integrationClass
         name
-        type
         title
         repoWebLink
       }
   }`)
 
-  resp := &IntegrationDefinition{}
+	req.Var("id", id)
+	resp := struct {
+		IntegrationDefinition *IntegrationDefinition `json:"integrationDefinition"`
+	}{
+		IntegrationDefinition: &IntegrationDefinition{},
+	}
 
-  err := s.client.graphqlClient.Run(context.Background(), req, resp)
-  if err != nil {
-    return nil, err
-  }
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
+	if err != nil {
+		return nil, err
+	}
 
-  return resp, nil
+	return resp.IntegrationDefinition, nil
 }
-
 
 // ListInstances list the integration instances for the JupiterOne account.
 // ListInstances returns a reference to an IntegrationInstanceResponse which
