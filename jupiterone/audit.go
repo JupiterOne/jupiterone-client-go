@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 )
 
-// AuditService provides the Audit API functions
+// AuditService provides the Audit API functions.
 type AuditService service
 
 // ListAuditEventsResponse represents the response from
@@ -19,8 +19,7 @@ type ListAuditEventsResponse struct {
 	}
 }
 
-// Audit Event represents a single Audit event
-// in a JupiterOne account
+// Audit Event represents a single Audit event in a JupiterOne account.
 type AuditEvent struct {
 	ID                string
 	ResourceType      string
@@ -38,7 +37,7 @@ type AuditEvent struct {
 //
 // The first call should use an empty string for cursor.
 // To paginate through all items, first check if PageInfo.HasNextPage
-// is true. If it is, call ListAuditEvents again and pass the 
+// is true. If it is, call ListAuditEvents again and pass the
 // PageInfo.Cursor as the cursor parameter.
 func (as *AuditService) ListAuditEvents(limit int, cursor string) (*ListAuditEventsResponse, error) {
 	req := as.client.prepareRequest(`
