@@ -2,7 +2,7 @@ package jupiterone
 
 import (
 	"context"
-  "encoding/json"
+	"encoding/json"
 )
 
 type AuditService service
@@ -16,12 +16,12 @@ type ListAuditEventsResponse struct {
 }
 
 type AuditEvent struct {
-	Id                string
+	ID                string
 	ResourceType      string
-	ResourceId        string
+	ResourceID        string
 	Category          string
 	Timestamp         uint
-	PerformedByUserId string
+	PerformedByUserID string
 	Data              json.RawMessage
 }
 
@@ -65,5 +65,4 @@ func (as *AuditService) ListAuditEvents(limit int, cursor string) (*ListAuditEve
 	}
 
 	return resp.GetAuditEventsForAccount, nil
-
 }
