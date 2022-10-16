@@ -60,10 +60,10 @@ type PageInfo struct {
 // which contains the Definitions and PageInfo used to request additional
 // definitions (if they exist).
 //
-// The first call to ListDefinitions should pass nil as the cursor. The caller
+// The first call to ListDefinitions should pass an empty string as the cursor. The caller
 // should check PageInfo.HasNextPage to see if there is additional data available.
 // If there is, the caller should pass PageInfo.Cursor on subsequent calls.
-func (s *IntegrationService) ListDefinitions(cursor *string) (*IntegrationDefinitionsResponse, error) {
+func (s *IntegrationService) ListDefinitions(cursor string) (*IntegrationDefinitionsResponse, error) {
 	req := s.client.prepareRequest(`
 		query IntegrationDefinitions($cursor: String) {
 			integrationDefinitions(cursor: $cursor) {
@@ -82,7 +82,7 @@ func (s *IntegrationService) ListDefinitions(cursor *string) (*IntegrationDefini
 			}
 		}`)
 
-	if cursor != nil {
+	if cursor != "" {
 		req.Var("cursor", cursor)
 	}
 
@@ -100,7 +100,7 @@ func (s *IntegrationService) ListDefinitions(cursor *string) (*IntegrationDefini
 	return &resp, nil
 }
 
-// GetDefinition gets a single Integration Definition by its id
+// GetDefinition gets a single Integration Definition by its id.
 func (s *IntegrationService) GetDefinition(id string) (*IntegrationDefinition, error) {
 	req := s.client.prepareRequest(`
     query getIntegrationDefinition($id: String) {
@@ -135,7 +135,7 @@ func (s *IntegrationService) GetDefinition(id string) (*IntegrationDefinition, e
 // The first call to ListInstances should pass nil for the cursor. To paginate
 // through all instances, the caller should check if PageInfo.HasNextPage
 // is true and pass the PageInfo.Cursor from the response in subsequent calls.
-func (s *IntegrationService) ListInstances(cursor *string) (*IntegrationInstanceResponse, error) {
+func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstanceResponse, error) {
 	req := s.client.prepareRequest(`
 			query IntegrationInstances($cursor: String) {
 				integrationInstances(cursor: $cursor) {
@@ -151,8 +151,8 @@ func (s *IntegrationService) ListInstances(cursor *string) (*IntegrationInstance
 				}
 			}`)
 
-	if cursor != nil {
-		req.Var("cursor", *cursor)
+	if cursor != "" {
+		req.Var("cursor", cursor)
 	}
 
 	buf := map[string]interface{}{}
