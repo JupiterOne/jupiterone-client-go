@@ -2,9 +2,6 @@ package jupiterone
 
 import (
 	"context"
-	"encoding/json"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 // IntegrationService handles the integration-related API requests.
@@ -18,9 +15,9 @@ type IntegrationInstance struct {
 	IntegrationDefinitionID string `json:"integrationDefinitionId"`
 }
 
-// IntegrationInstanceResponse is a slice of integration instances and
+// IntegrationInstancesResponse is a slice of integration instances and
 // pagination information.
-type IntegrationInstanceResponse struct {
+type IntegrationInstancesResponse struct {
 	Instances []*IntegrationInstance `json:"instances"`
 	PageInfo  PageInfo               `json:"pageInfo"`
 }
@@ -33,13 +30,12 @@ type IntegrationInstanceResponse struct {
 // configuration needed to run that integration. It is different for
 // each integration, so it uses the json.RawMessage type.
 type IntegrationDefinition struct {
-	ID               string            `json:"id"`
-	IntegrationType  string            `json:"integrationType"`
-	IntegrationClass []string          `json:"integrationClass"`
-	Name             string            `json:"name"`
-	Title            string            `json:"title"`
-	RepoWebLink      string            `json:"repoWebLink"`
-	ConfigFields     []json.RawMessage `json:"configFields"`
+	ID               string   `json:"id"`
+	IntegrationType  string   `json:"integrationType"`
+	IntegrationClass []string `json:"integrationClass"`
+	Name             string   `json:"name"`
+	Title            string   `json:"title"`
+	RepoWebLink      string   `json:"repoWebLink"`
 }
 
 // IntegrationDefinitionsResponse is a slice of integration definitions
@@ -86,18 +82,18 @@ func (s *IntegrationService) ListDefinitions(cursor string) (*IntegrationDefinit
 		req.Var("cursor", cursor)
 	}
 
-	buf := map[string]interface{}{}
-	err := s.client.graphqlClient.Run(context.Background(), req, &buf)
-	if err != nil {
-		return nil, err
+	resp := struct {
+		IntegrationDefinitionsResponse *IntegrationDefinitionsResponse `json:"integrationDefinitions"`
+	}{
+		IntegrationDefinitionsResponse: &IntegrationDefinitionsResponse{},
 	}
-	resp := IntegrationDefinitionsResponse{}
-	err = mapstructure.Decode(buf["integrationDefinitions"], &resp)
+
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &resp, nil
+	return resp.IntegrationDefinitionsResponse, nil
 }
 
 // GetDefinition gets a single Integration Definition by its id.
@@ -135,7 +131,7 @@ func (s *IntegrationService) GetDefinition(id string) (*IntegrationDefinition, e
 // The first call to ListInstances should pass nil for the cursor. To paginate
 // through all instances, the caller should check if PageInfo.HasNextPage
 // is true and pass the PageInfo.Cursor from the response in subsequent calls.
-func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstanceResponse, error) {
+func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstancesResponse, error) {
 	req := s.client.prepareRequest(`
 			query IntegrationInstances($cursor: String) {
 				integrationInstances(cursor: $cursor) {
@@ -155,15 +151,15 @@ func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstanceR
 		req.Var("cursor", cursor)
 	}
 
-	buf := map[string]interface{}{}
-	err := s.client.graphqlClient.Run(context.Background(), req, &buf)
+	resp := struct {
+		IntegrationInstancesResponse *IntegrationInstancesResponse `json:"integrationInstances"`
+	}{
+		IntegrationInstancesResponse: &IntegrationInstancesResponse{},
+	}
+
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
 	if err != nil {
 		return nil, err
 	}
-	resp := IntegrationInstanceResponse{}
-	err = mapstructure.Decode(buf["integrationInstances"], &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, err
+	return resp.IntegrationInstancesResponse, err
 }
