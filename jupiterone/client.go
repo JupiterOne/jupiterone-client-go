@@ -28,6 +28,7 @@ type Client struct {
 	Rule         *RuleService
 	Question     *QuestionService
 	Relationship *RelationshipService
+	Audit        *AuditService
 }
 
 type service struct {
@@ -73,6 +74,7 @@ func NewClient(config *Config) (*Client, error) {
 	jupiterOneClient.Rule = (*RuleService)(&jupiterOneClient.common)
 	jupiterOneClient.Question = (*QuestionService)(&jupiterOneClient.common)
 	jupiterOneClient.Relationship = (*RelationshipService)(&jupiterOneClient.common)
+	jupiterOneClient.Audit = (*AuditService)(&jupiterOneClient.common)
 
 	return jupiterOneClient, nil
 }
