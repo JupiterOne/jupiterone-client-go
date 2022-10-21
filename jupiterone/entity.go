@@ -3,9 +3,10 @@ package jupiterone
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 )
 
+// EntityService is the service for creating, reading, updating,
+// and deleting Entities in the JupiterOne graph.
 type EntityService service
 
 type EntityProperties struct {
@@ -15,10 +16,8 @@ type EntityProperties struct {
 	Properties map[string]interface{}
 }
 
-type Entity struct {
-	ID string `json:"id"`
-}
-
+// Create creates a new entity in the JupiterOne graph with
+// the _key, _type, _class, and properties in the entity argument.
 func (s *EntityService) Create(entity EntityProperties) (*string, error) {
 	req := s.client.prepareRequest(`
 	mutation CreateEntity(
@@ -52,14 +51,12 @@ func (s *EntityService) Create(entity EntityProperties) (*string, error) {
 	req.Var("properties", entity.Properties)
 
 	var respData map[string]interface{}
-	// var respData string
 
 	if err := s.client.graphqlClient.Run(context.Background(), req, &respData); err != nil {
 		return nil, err
 	}
 
 	resp, nil := json.Marshal(respData)
-	fmt.Println("Entity: " + fmt.Sprint(respData))
 	respString := string(resp)
 	return &respString, nil
 }
