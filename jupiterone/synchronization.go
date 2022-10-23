@@ -89,6 +89,11 @@ func (s *SynchronizationService) Start(params StartParams) (*SynchronizationJobS
 	return s.syncHelper(url, http.MethodPost, bodyReader)
 }
 
+func (s *SynchronizationService) Status(id string) (*SynchronizationJobStatus, error) {
+	url := s.client.httpBaseUrl + "/persister/synchronization/jobs/" + id
+	return s.syncHelper(url, http.MethodGet, nil)
+}
+
 func (s *SynchronizationService) Finalize(id string) (*SynchronizationJobStatus, error) {
 	url := s.client.httpBaseUrl + "/persister/synchronization/jobs/" + id + "/finalize"
 	return s.syncHelper(url, http.MethodPost, nil)
