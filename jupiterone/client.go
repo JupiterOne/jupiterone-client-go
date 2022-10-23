@@ -26,12 +26,13 @@ type Client struct {
 	httpBaseUrl       string
 	RetryTimeout      time.Duration
 
-	Entity       *EntityService
-	Rule         *RuleService
-	Question     *QuestionService
-	Relationship *RelationshipService
-	Integration  *IntegrationService
-	Audit        *AuditService
+	Entity          *EntityService
+	Rule            *RuleService
+	Question        *QuestionService
+	Relationship    *RelationshipService
+	Integration     *IntegrationService
+	Audit           *AuditService
+	Synchronization *SynchronizationService
 }
 
 type service struct {
@@ -54,7 +55,7 @@ func (c *Config) getGraphQLEndpoint() string {
 }
 
 func (c *Config) getHttpEndpoint() string {
-	return "https://api." + c.getRegion() + "jupiterone.io"
+	return "https://api." + c.getRegion() + ".jupiterone.io"
 }
 
 func NewClient(config *Config) (*Client, error) {
@@ -88,8 +89,16 @@ func NewClient(config *Config) (*Client, error) {
 	jupiterOneClient.Relationship = (*RelationshipService)(&jupiterOneClient.common)
 	jupiterOneClient.Integration = (*IntegrationService)(&jupiterOneClient.common)
 	jupiterOneClient.Audit = (*AuditService)(&jupiterOneClient.common)
+	jupiterOneClient.Synchronization = (*SynchronizationService)(&jupiterOneClient.common)
 
 	return jupiterOneClient, nil
+}
+
+func (c *Client) addAuthHeaders(req *http.Request) *http.Request {
+	req.Header.Set("JupiterOne-Account", c.accountID)
+	req.Header.Set("Authorization", "Bearer "+c.apiKey)
+
+	return req
 }
 
 func (c *Client) prepareRequest(query string) *graphql.Request {
