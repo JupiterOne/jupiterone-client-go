@@ -22,6 +22,8 @@ type Client struct {
 
 	apiKey, accountID string
 	graphqlClient     *graphql.Client
+	httpClient        *http.Client
+	httpBaseUrl       string
 	RetryTimeout      time.Duration
 
 	Entity       *EntityService
@@ -51,21 +53,30 @@ func (c *Config) getGraphQLEndpoint() string {
 	return "https://api." + c.getRegion() + ".jupiterone.io/graphql"
 }
 
+func (c *Config) getHttpEndpoint() string {
+	return "https://api." + c.getRegion() + "jupiterone.io"
+}
+
 func NewClient(config *Config) (*Client, error) {
 	endpoint := config.getGraphQLEndpoint()
 
 	var client *graphql.Client
+	var httpClient *http.Client
 
 	if config.HTTPClient != nil {
 		client = graphql.NewClient(endpoint, graphql.WithHTTPClient(config.HTTPClient))
+		httpClient = config.HTTPClient
 	} else {
 		client = graphql.NewClient(endpoint)
+		httpClient = &http.Client{}
 	}
 
 	jupiterOneClient := &Client{
 		apiKey:        config.APIKey,
 		accountID:     config.AccountID,
 		graphqlClient: client,
+		httpClient:    httpClient,
+		httpBaseUrl:   config.getHttpEndpoint(),
 		RetryTimeout:  time.Minute,
 	}
 
