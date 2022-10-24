@@ -87,6 +87,7 @@ func (c *Client) prepareRequest(query string) *graphql.Request {
 	req.Header.Set("JupiterOne-Account", c.accountID)
 	req.Header.Set("Cache-Control", "no-cache")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
+	req.Header.Set("User-Agent", "JupiterOne-Client-Go")
 
 	return req
 }
