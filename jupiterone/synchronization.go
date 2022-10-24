@@ -13,7 +13,7 @@ type StartParams struct {
 	Source           string `json:"source,omitempty"`
 	Scope            string `json:"scope,omitempty"`
 	SyncMode         string `json:"syncMode,omitempty"`
-	InstanceId       string `json:"integrationInstanceId,omitempty"`
+	InstanceID       string `json:"integrationInstanceId,omitempty"`
 	IgnoreDuplicates bool   `json:"-"`
 }
 
@@ -85,17 +85,17 @@ func (s *SynchronizationService) Start(params StartParams) (*SynchronizationJobS
 
 	bodyReader := bytes.NewBuffer(body)
 
-	url := s.client.httpBaseUrl + "/persister/synchronization/jobs"
+	url := s.client.httpBaseURL + "/persister/synchronization/jobs"
 	return s.syncHelper(url, http.MethodPost, bodyReader)
 }
 
 func (s *SynchronizationService) Status(id string) (*SynchronizationJobStatus, error) {
-	url := s.client.httpBaseUrl + "/persister/synchronization/jobs/" + id
+	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id
 	return s.syncHelper(url, http.MethodGet, nil)
 }
 
 func (s *SynchronizationService) Finalize(id string) (*SynchronizationJobStatus, error) {
-	url := s.client.httpBaseUrl + "/persister/synchronization/jobs/" + id + "/finalize"
+	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/finalize"
 	return s.syncHelper(url, http.MethodPost, nil)
 }
 
