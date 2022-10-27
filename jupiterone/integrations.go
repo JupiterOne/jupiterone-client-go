@@ -34,12 +34,13 @@ type IntegrationInstancesResponse struct {
 // configuration needed to run that integration. It is different for
 // each integration, so it uses the json.RawMessage type.
 type IntegrationDefinition struct {
-	ID               string   `json:"id"`
-	IntegrationType  string   `json:"integrationType"`
-	IntegrationClass []string `json:"integrationClass"`
-	Name             string   `json:"name"`
-	Title            string   `json:"title"`
-	RepoWebLink      string   `json:"repoWebLink"`
+	ID               string          `json:"id"`
+	IntegrationType  string          `json:"integrationType"`
+	IntegrationClass []string        `json:"integrationClass"`
+	Name             string          `json:"name"`
+	Title            string          `json:"title"`
+	RepoWebLink      string          `json:"repoWebLink"`
+	ConfigFields     json.RawMessage `json:"configFields"`
 }
 
 // IntegrationDefinitionsResponse is a slice of integration definitions
@@ -77,6 +78,28 @@ type IntegrationJob struct {
 	IntegrationInstanceID string `json:"integrationInstanceId"`
 }
 
+// IntegrationEventsResponse is the response from listing integration job events.
+// It contains a slice of IntegrationJobEvents and PageInfo.
+type IntegrationJobEventsResponse struct {
+	Events   []*IntegrationJobEvent `json:"events"`
+	PageInfo PageInfo               `json:"pageInfo"`
+}
+
+// IntegrationJobEvent represents a single event in an integration job's
+// execution.
+type IntegrationJobEvent struct {
+	ID          string `json:"id"`
+	JobID       string `json:"jobId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	CreateDate  int    `json:"createDate"`
+}
+
+// DeleteInstanceResult is the result of a DeleteInstance mutation.
+type DeleteInstanceResult struct {
+	Success bool `json:"success"`
+}
+
 // ListDefinitions lists all the IntegrationDefinitions in the current account.
 // ListDefinitions returns a reference to an IntegrationDefinitionResponse object
 // which contains the Definitions and PageInfo used to request additional
@@ -96,6 +119,9 @@ func (s *IntegrationService) ListDefinitions(cursor string) (*IntegrationDefinit
 					name
 					repoWebLink
 					title
+					configFields {
+						key
+					}
 				}
 				pageInfo {
 					hasNextPage
@@ -250,7 +276,7 @@ func (s *IntegrationService) InvokeInstance(id string) (*InvokeInstanceResult, e
 // of the results.
 //
 // To paginate, the caller should first check PageInfo.HasNextPage. If true, then the caller should pass
-// PageInfo.HasNextPage as the cursor parameter.
+// PageInfo.EndCursor as the cursor parameter.
 //
 // For default API response size behavior, pass 0 as the size.
 func (s *IntegrationService) ListInstanceJobs(id string, cursor string, size int) (*IntegrationJobsResponse, error) {
@@ -296,4 +322,89 @@ func (s *IntegrationService) ListInstanceJobs(id string, cursor string, size int
 		return nil, err
 	}
 	return resp.IntegrationJobsResponse, nil
+}
+
+// ListJobEvents lists the events for a single integration job. On the first call
+// the caller should pass the instance id of the integration, the integration job id,
+// an empty cursor (""), and the size to limit the number of events returned (0 is default api behavior).
+//
+// To paginate, the caller should first check PageInfo.HasNextPage. If true, then the caller should pass
+// PageInfo.EndCursor as the cursor parameter.
+func (s *IntegrationService) ListJobEvents(instanceId string, jobId string, cursor string, size int) (*IntegrationJobEventsResponse, error) {
+	req := s.client.prepareRequest(`
+		query ListEvents (
+			$jobId: String!,
+			$integrationInstanceId: String!,
+			$cursor: String,
+			$size: Int,
+		) {
+			integrationEvents (
+				size: $size,
+				cursor: $cursor,
+				jobId: $jobId,
+				integrationInstanceId: $integrationInstanceId,
+			) {
+				events {
+					id
+					jobId
+					name
+					description
+					createDate
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+				}
+			}
+		}
+	`)
+
+	resp := struct {
+		IntegrationJobEventResponse *IntegrationJobEventsResponse `json:"integrationEvents"`
+	}{
+		IntegrationJobEventResponse: &IntegrationJobEventsResponse{},
+	}
+
+	req.Var("integrationInstanceId", instanceId)
+	req.Var("jobId", jobId)
+	if cursor != "" {
+		req.Var("cursor", cursor)
+	}
+
+	if size != 0 {
+		req.Var("size", size)
+	}
+
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.IntegrationJobEventResponse, nil
+
+}
+
+// DeleteInstance deletes an integration instance by its id.
+func (s *IntegrationService) DeleteInstance(id string) (*DeleteInstanceResult, error) {
+	req := s.client.prepareRequest(`
+		mutation DeleteIntegrationInstance($id: String!) {
+			deleteIntegrationInstance(id: $id) {
+				success
+			}
+		}`)
+
+	req.Var("id", id)
+
+	resp := struct {
+		DeleteInstanceResult *DeleteInstanceResult `json:"deleteIntegrationInstance"`
+	}{
+		DeleteInstanceResult: &DeleteInstanceResult{},
+	}
+
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.DeleteInstanceResult, nil
 }
