@@ -69,12 +69,12 @@ type IntegrationJobsResponse struct {
 
 // IntegrationJob represent a single integration job.
 type IntegrationJob struct {
-  ID                    string `json:"id"`
-  CreateDate            int `json:"createDate"`
-  EndDate               int `json:"endDate"`
-  ErrorsOccurred        bool `json:"errorsOccurred"`
-  Status                string `json:"status"`
-  IntegrationInstanceID string `json:"integrationInstanceId"`
+	ID                    string `json:"id"`
+	CreateDate            int    `json:"createDate"`
+	EndDate               int    `json:"endDate"`
+	ErrorsOccurred        bool   `json:"errorsOccurred"`
+	Status                string `json:"status"`
+	IntegrationInstanceID string `json:"integrationInstanceId"`
 }
 
 // ListDefinitions lists all the IntegrationDefinitions in the current account.
