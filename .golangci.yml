@@ -16,6 +16,9 @@ linters-settings:
     min-occurrences: 4
   misspell:
     locale: US
+  revive:
+    - name: var-naming
+      disabled: true
 
 linters:
   disable-all: true
