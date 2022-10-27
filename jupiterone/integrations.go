@@ -381,7 +381,6 @@ func (s *IntegrationService) ListJobEvents(instanceId string, jobId string, curs
 	}
 
 	return resp.IntegrationJobEventResponse, nil
-
 }
 
 // DeleteInstance deletes an integration instance by its id.
