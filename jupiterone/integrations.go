@@ -2,6 +2,7 @@ package jupiterone
 
 import (
 	"context"
+	"encoding/json"
 )
 
 // IntegrationService handles the integration-related API requests.
@@ -10,9 +11,12 @@ type IntegrationService service
 // IntegrationInstance represents an instance of an integration.
 // Example: The account has an instance of the AWS integration.
 type IntegrationInstance struct {
-	ID                      string `json:"id"`
-	Name                    string `json:"name"`
-	IntegrationDefinitionID string `json:"integrationDefinitionId"`
+	ID                      string          `json:"id,omitempty"`
+	Name                    string          `json:"name"`
+	Description             string          `json:"description"`
+	IntegrationDefinitionID string          `json:"integrationDefinitionId"`
+	PollingInterval         string          `json:"pollingInterval,omitempty"`
+	Config                  json.RawMessage `json:"config,omitempty"`
 }
 
 // IntegrationInstancesResponse is a slice of integration instances and
@@ -49,6 +53,28 @@ type IntegrationDefinitionsResponse struct {
 type PageInfo struct {
 	HasNextPage bool   `json:"hasNextPage"`
 	EndCursor   string `json:"endCursor"`
+}
+
+// InvokeInstanceResult is the result of an InvokeInstance mutation.
+type InvokeInstanceResult struct {
+	Success bool `json:"success"`
+}
+
+// IntegrationJobsResponse represents the response from listing integration jobs.
+// It contains a slice of IntegrationJobs and PageInfo
+type IntegrationJobsResponse struct {
+	Jobs     []*IntegrationJob `json:"jobs"`
+	PageInfo PageInfo          `json:"PageInfo"`
+}
+
+// IntegrationJob represent a single integration job.
+type IntegrationJob struct {
+	ID                    string
+	CreateDate            int
+	EndDate               int
+	ErrorsOccurred        bool
+	Status                string
+	IntegrationInstanceId string
 }
 
 // ListDefinitions lists all the IntegrationDefinitions in the current account.
@@ -138,6 +164,7 @@ func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstances
 					instances {
 						id
 						name
+            			description
 						integrationDefinitionId
 					}
 					pageInfo {
@@ -162,4 +189,111 @@ func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstances
 		return nil, err
 	}
 	return resp.IntegrationInstancesResponse, err
+}
+
+// CreateIntegrationInstance creates a new integration instance
+func (s *IntegrationService) CreateInstance(instance IntegrationInstance) (*IntegrationInstance, error) {
+	req := s.client.prepareRequest(`
+		mutation CreateInstance($instance: CreateIntegrationInstanceInput!) {
+			createIntegrationInstance(instance: $instance)  {
+				id
+				name
+				description
+				pollingInterval
+				integrationDefinitionId
+				description
+				config
+			}
+		}`)
+
+	req.Var("instance", instance)
+
+	resp := struct {
+		CreateIntegrationInstance *IntegrationInstance `json:"createIntegrationInstance"`
+	}{
+		CreateIntegrationInstance: &IntegrationInstance{},
+	}
+
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.CreateIntegrationInstance, err
+}
+
+// InvokeInstance invokes an IntegrationInstance by id
+func (s *IntegrationService) InvokeInstance(id string) (*InvokeInstanceResult, error) {
+	req := s.client.prepareRequest(`
+		mutation InvokeInstance($id: String!) {
+			invokeIntegrationInstance(id: $id) {
+				success
+			}
+		}`)
+
+	req.Var("id", id)
+
+	resp := struct {
+		InvokeIntegrationInstance *InvokeInstanceResult `json:"invokeIntegrationInstance"`
+	}{
+		InvokeIntegrationInstance: &InvokeInstanceResult{},
+	}
+
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.InvokeIntegrationInstance, nil
+}
+
+// ListInstanceJobs lists the jobs for a specific integration with InstanceId, id.
+// On the first call, a caller should pass the id of the integration, an empty cursor (""), and the size
+// of the results.
+//
+// To paginate, the caller should first check PageInfo.HasNextPage. If true, then the caller should pass
+// PageInfo.HasNextPage as the cursor parameter.
+//
+// For default API response size behavior, pass 0 as the size.
+func (s *IntegrationService) ListInstanceJobs(id string, cursor string, size int) (*IntegrationJobsResponse, error) {
+	req := s.client.prepareRequest(`
+		query ListJobs($integrationInstanceId: String!, $cursor: String, $size: Int) {
+			integrationJobs(
+				integrationInstanceId: $integrationInstanceId
+				cursor: $cursor
+				size: $size
+			) {
+				jobs {
+					id
+					createDate
+					endDate
+					errorsOccurred
+					status
+					integrationInstanceId
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+				}
+			}
+		}`)
+
+	req.Var("integrationInstanceId", id)
+	if cursor != "" {
+		req.Var("cursor", cursor)
+	}
+
+	if size != 0 {
+		req.Var("size", size)
+	}
+
+	resp := struct {
+		IntegrationJobsResponse *IntegrationJobsResponse `json:"integrationJobs"`
+	}{
+		IntegrationJobsResponse: &IntegrationJobsResponse{},
+	}
+
+	err := s.client.graphqlClient.Run(context.Background(), req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.IntegrationJobsResponse, nil
 }
