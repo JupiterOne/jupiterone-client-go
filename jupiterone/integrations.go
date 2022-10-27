@@ -61,7 +61,7 @@ type InvokeInstanceResult struct {
 }
 
 // IntegrationJobsResponse represents the response from listing integration jobs.
-// It contains a slice of IntegrationJobs and PageInfo
+// It contains a slice of IntegrationJobs and PageInfo.
 type IntegrationJobsResponse struct {
 	Jobs     []*IntegrationJob `json:"jobs"`
 	PageInfo PageInfo          `json:"pageInfo"`
@@ -69,12 +69,12 @@ type IntegrationJobsResponse struct {
 
 // IntegrationJob represent a single integration job.
 type IntegrationJob struct {
-	ID                    string
-	CreateDate            int
-	EndDate               int
-	ErrorsOccurred        bool
-	Status                string
-	IntegrationInstanceId string
+  ID                    string `json:"id"`
+  CreateDate            int `json:"createDate"`
+  EndDate               int `json:"endDate"`
+  ErrorsOccurred        bool `json:"errorsOccurred"`
+  Status                string `json:"status"`
+  IntegrationInstanceID string `json:"integrationInstanceId"`
 }
 
 // ListDefinitions lists all the IntegrationDefinitions in the current account.
@@ -191,7 +191,7 @@ func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstances
 	return resp.IntegrationInstancesResponse, err
 }
 
-// CreateIntegrationInstance creates a new integration instance
+// CreateIntegrationInstance creates a new integration instance.
 func (s *IntegrationService) CreateInstance(instance IntegrationInstance) (*IntegrationInstance, error) {
 	req := s.client.prepareRequest(`
 		mutation CreateInstance($instance: CreateIntegrationInstanceInput!) {
@@ -221,7 +221,7 @@ func (s *IntegrationService) CreateInstance(instance IntegrationInstance) (*Inte
 	return resp.CreateIntegrationInstance, err
 }
 
-// InvokeInstance invokes an IntegrationInstance by id
+// InvokeInstance invokes an IntegrationInstance by its id.
 func (s *IntegrationService) InvokeInstance(id string) (*InvokeInstanceResult, error) {
 	req := s.client.prepareRequest(`
 		mutation InvokeInstance($id: String!) {
