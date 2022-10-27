@@ -64,7 +64,7 @@ type InvokeInstanceResult struct {
 // It contains a slice of IntegrationJobs and PageInfo
 type IntegrationJobsResponse struct {
 	Jobs     []*IntegrationJob `json:"jobs"`
-	PageInfo PageInfo          `json:"PageInfo"`
+	PageInfo PageInfo          `json:"pageInfo"`
 }
 
 // IntegrationJob represent a single integration job.
@@ -164,7 +164,7 @@ func (s *IntegrationService) ListInstances(cursor string) (*IntegrationInstances
 					instances {
 						id
 						name
-            			description
+						description
 						integrationDefinitionId
 					}
 					pageInfo {
