@@ -16,8 +16,6 @@ func getEnvWithDefault(key string, defaultVal string) string {
 }
 
 func main() {
-	// var entityProps j1.EntityProperties
-
 	// Set configuration
 	config := j1.Config{
 		APIKey:    getEnvWithDefault("J1_API_TOKEN", ""),
