@@ -77,7 +77,7 @@ func NewClient(config *Config) (*Client, error) {
 		accountID:     config.AccountID,
 		graphqlClient: client,
 		httpClient:    httpClient,
-		httpBaseUrl:   config.getHTTPEndpoint(),
+		httpBaseURL:   config.getHTTPEndpoint(),
 		RetryTimeout:  time.Minute,
 	}
 
