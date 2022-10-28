@@ -1,6 +1,5 @@
 TEST?=$$(go list ./...)
 PKG_NAME=jupiterone
-DIR=~/.terraform.d/plugins
 
 default: build
 
@@ -9,12 +8,6 @@ build: fmtcheck
 
 test: fmtcheck
 	JUPITERONE_API_KEY=fake JUPITERONE_ACCOUNT_ID=fake RECORD=false TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout=5m -parallel=4
-
-testacc: fmtcheck
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
-
-cassettes: fmtcheck
-	RECORD=true TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
 fmt:
 	@echo "==> Fixing source code with gofmt..."
@@ -39,8 +32,5 @@ test-compile:
 		exit 1; \
 	fi
 	go test -c $(TEST) $(TESTARGS)
-
-docs:
-	go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 
 .PHONY: build test testacc cassettes fmtcheck lint tools test-compile docs
