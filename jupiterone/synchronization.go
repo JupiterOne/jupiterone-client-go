@@ -100,26 +100,25 @@ func (s *SynchronizationService) Finalize(id string) (*SynchronizationJobStatus,
 }
 
 func (s *SynchronizationService) Upload(id string, data []byte) (*SynchronizationJobStatus, error) {
-  url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/upload"
-  body := bytes.NewBuffer(data)
+	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/upload"
+	body := bytes.NewBuffer(data)
 
-  return s.syncHelper(url, http.MethodPost, body)
+	return s.syncHelper(url, http.MethodPost, body)
 }
 
 func (s *SynchronizationService) UploadEntities(id string, data []byte) (*SynchronizationJobStatus, error) {
-  url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/entities"
-  body := bytes.NewBuffer(data)
+	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/entities"
+	body := bytes.NewBuffer(data)
 
-  return s.syncHelper(url,http.MethodPost, body)
+	return s.syncHelper(url, http.MethodPost, body)
 }
 
 func (s *SynchronizationService) UploadRelationships(id string, data []byte) (*SynchronizationJobStatus, error) {
-  url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/relationships"
-  body := bytes.NewBuffer(data)
+	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/relationships"
+	body := bytes.NewBuffer(data)
 
-  return s.syncHelper(url, http.MethodPost, body)
+	return s.syncHelper(url, http.MethodPost, body)
 }
-
 
 func (s *SynchronizationService) syncHelper(url string, method string, body io.Reader) (*SynchronizationJobStatus, error) {
 	req, err := http.NewRequest(method, url, body)
