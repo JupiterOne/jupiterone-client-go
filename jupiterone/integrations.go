@@ -330,7 +330,7 @@ func (s *IntegrationService) ListInstanceJobs(id string, cursor string, size int
 //
 // To paginate, the caller should first check PageInfo.HasNextPage. If true, then the caller should pass
 // PageInfo.EndCursor as the cursor parameter.
-func (s *IntegrationService) ListJobEvents(instanceID string, jobId string, cursor string, size int) (*IntegrationJobEventsResponse, error) {
+func (s *IntegrationService) ListJobEvents(instanceID string, jobID string, cursor string, size int) (*IntegrationJobEventsResponse, error) {
 	req := s.client.prepareRequest(`
 		query ListEvents (
 			$jobId: String!,
@@ -366,7 +366,7 @@ func (s *IntegrationService) ListJobEvents(instanceID string, jobId string, curs
 	}
 
 	req.Var("integrationInstanceId", instanceID)
-	req.Var("jobId", jobId)
+	req.Var("jobId", jobID)
 	if cursor != "" {
 		req.Var("cursor", cursor)
 	}
