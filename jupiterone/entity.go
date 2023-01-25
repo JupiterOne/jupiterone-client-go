@@ -17,7 +17,7 @@ type EntityProperties struct {
 }
 
 type EntityRawDataResponse struct {
-	EntityId string          `json:"entityId"`
+	EntityID string          `json:"entityId"`
 	Payload  []EntityRawData `json:"payload"`
 }
 
@@ -29,7 +29,7 @@ type EntityRawData struct {
 }
 
 // GetRawData gets the default raw data an entity was created from. EntityId is the _id property of an entity.
-func (s *EntityService) GetDefaultRawData(entityId string) (*EntityRawDataResponse, error) {
+func (s *EntityService) GetDefaultRawData(entityID string) (*EntityRawDataResponse, error) {
 	req := s.client.prepareRequest(`
 		query GetEntityRawData($entityId: String!, $source: String!, $name: String, $versionId: String)	 {
 			entityRawDataLegacy(entityId: $entityId, source: $source, name: $name, versionId: $versionId) {
@@ -50,7 +50,7 @@ func (s *EntityService) GetDefaultRawData(entityId string) (*EntityRawDataRespon
 		}
 	`)
 
-	req.Var("entityId", entityId)
+	req.Var("entityId", entityID)
 	// Source is required, but has no effect for default raw data.
 	req.Var("source", "")
 
@@ -65,12 +65,11 @@ func (s *EntityService) GetDefaultRawData(entityId string) (*EntityRawDataRespon
 		return nil, err
 	}
 	return resp.EntityRawDataLegacy, nil
-
 }
 
 // GetRawData gets the default raw data an entity was created from. EntityId is the _id property of an entity.
 // Passing 0 as the version will get the latest raw data.
-func (s *EntityService) GetRawData(entityId string, name string, version int) (*EntityRawDataResponse, error) {
+func (s *EntityService) GetRawData(entityID string, name string, version int) (*EntityRawDataResponse, error) {
 	req := s.client.prepareRequest(`
 		query GetEntityRawData($entityId: String!, $source: String!, $name: String, $versionId: String)	 {
 			entityRawDataLegacy(entityId: $entityId, source: $source, name: $name, versionId: $versionId) {
@@ -91,7 +90,7 @@ func (s *EntityService) GetRawData(entityId string, name string, version int) (*
 		}
 	`)
 
-	req.Var("entityId", entityId)
+	req.Var("entityId", entityID)
 	// Source is required, but has no effect for default raw data.
 	req.Var("source", "")
 	req.Var("name", name)
@@ -110,7 +109,6 @@ func (s *EntityService) GetRawData(entityId string, name string, version int) (*
 		return nil, err
 	}
 	return resp.EntityRawDataLegacy, nil
-
 }
 
 // Create creates a new entity in the JupiterOne graph with
