@@ -9,6 +9,8 @@ build: fmtcheck
 test: fmtcheck
 	JUPITERONE_API_KEY=fake JUPITERONE_ACCOUNT_ID=fake RECORD=false TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout=5m -parallel=4
 
+fmpt: gofumpt -l -w .
+
 fmt:
 	@echo "==> Fixing source code with gofmt..."
 	gofmt -w -s ./$(PKG_NAME)
@@ -19,6 +21,14 @@ fmtcheck:
 lint:
 	@echo "==> Checking source code against linters..."
 	@golangci-lint run ./$(PKG_NAME)/...
+
+ok:
+	@echo OK
+
+precommit: tidy fmt lint test sec ok
+
+tidy: 
+	go mod tidy
 
 tools:
 	@echo "==> installing required tooling..."

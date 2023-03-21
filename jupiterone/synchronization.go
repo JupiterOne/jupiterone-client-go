@@ -3,81 +3,25 @@ package jupiterone
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/jupiterone/jupiterone-client-go/jupiterone/domain"
 )
 
 type SynchronizationService service
 
-type StartParams struct {
-	Source           string `json:"source,omitempty"`
-	Scope            string `json:"scope,omitempty"`
-	SyncMode         string `json:"syncMode,omitempty"`
-	InstanceID       string `json:"integrationInstanceId,omitempty"`
-	IgnoreDuplicates bool   `json:"-"`
-}
+const (
+	syncAPIStartPath         = "%s/persister/synchronization/jobs"
+	syncAPIUploadPath        = "%s/persister/synchronization/jobs/%s/upload"
+	syncAPIFinalizePath      = "%s/persister/synchronization/jobs/%s/finalize"
+	syncAPIStatusPath        = "%s/persister/synchronization/jobs/%s"
+	syncAPIEntitiesPath      = "%s/persister/synchronization/jobs/%s/entities"
+	syncAPIRelationshipsPath = "%s/persister/synchronization/jobs/%s/relationships"
+)
 
-type SynchronizationJobStatus struct {
-	Source         string
-	Scope          string
-	AccountID      string
-	ID             string `json:"id"`
-	Status         string
-	StartTimestamp int
-	DurationMs     int
-	DeletionMode   string
-	Done           bool
-	TTL            int
-
-	NumEntitiesUploaded         int
-	NumStreamedEntitiesUploaded int
-	NumEntitiesToDelete         int
-	NumEntitiesCreated          int
-	NumEntitiesUpdated          int
-	NumEntitiesDeleted          int
-
-	NumEntityCreateErrors int
-	NumEntityUpdateErrors int
-	NumEntityDeleteErrors int
-
-	NumEntityRawDataEntriesUploaded int
-	NumEntityRawDataEntriesCreated  int
-	NumEntityRawDataEntriesUpdated  int
-	NumEntityRawDataEntriesDeleted  int
-
-	NumRelationshipsUploaded         int
-	NumStreamedRelationshipsUploaded int
-	NumRelationshipsToDelete         int
-	NumRelationshipsCreated          int
-	NumRelationshipsUpdated          int
-	NumRelationshipsDeleted          int
-
-	NumRelationshipCreateErrors int
-	NumRelationshipUpdateErrors int
-	NumRelationshipDeleteErrors int
-
-	NumRelationshipRawDataEntriesUploaded int
-	NumRelationshipRawDataEntriesCreated  int
-	NumRelationshipRawDataEntriesUpdated  int
-	NumRelationshipRawDataEntriesDeleted  int
-
-	NumRelationshipRawDataEntryCreateErrors int
-	NumRelationshipRawDataEntryUpdateErrors int
-	NumRelationshipRawDataEntryDeleteErrors int
-
-	NumMappedRelationshipsCreated int
-	NumMappedRelationshipsUpdated int
-	NumMappedRelationshipsDeleted int
-
-	NumMappedRelationshipCreateErrors int
-	NumMappedRelationshipUpdateErrors int
-	NumMappedRelationshipDeleteErrors int
-
-	NumMutationsSubmitted int
-	NumMutationsCompleted int
-}
-
-func (s *SynchronizationService) Start(params StartParams) (*SynchronizationJobStatus, error) {
+func (s *SynchronizationService) Start(params domain.StartParams) (*domain.SynchronizationJobOutput, error) {
 	body, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
@@ -85,42 +29,120 @@ func (s *SynchronizationService) Start(params StartParams) (*SynchronizationJobS
 
 	bodyReader := bytes.NewBuffer(body)
 
-	url := s.client.httpBaseURL + "/persister/synchronization/jobs"
+	url := fmt.Sprintf(syncAPIStartPath, s.client.httpBaseURL)
 	return s.syncHelper(url, http.MethodPost, bodyReader)
 }
 
-func (s *SynchronizationService) Status(id string) (*SynchronizationJobStatus, error) {
-	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id
+func (s *SynchronizationService) Status(id string) (*domain.SynchronizationJobOutput, error) {
+	url := fmt.Sprintf(syncAPIStatusPath, s.client.httpBaseURL, id)
 	return s.syncHelper(url, http.MethodGet, nil)
 }
 
-func (s *SynchronizationService) Finalize(id string) (*SynchronizationJobStatus, error) {
-	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/finalize"
+func (s *SynchronizationService) Finalize(id string) (*domain.SynchronizationJobOutput, error) {
+	url := fmt.Sprintf(syncAPIFinalizePath, s.client.httpBaseURL, id)
 	return s.syncHelper(url, http.MethodPost, nil)
 }
 
-func (s *SynchronizationService) Upload(id string, data []byte) (*SynchronizationJobStatus, error) {
-	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/upload"
+func (s *SynchronizationService) Upload(id string, data domain.SyncPayload) (*domain.SynchronizationJobOutput, error) {
+	url := fmt.Sprintf(syncAPIUploadPath, s.client.httpBaseURL, id)
+	dataAsBytes, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+	body := bytes.NewBuffer(dataAsBytes)
+
+	return s.syncHelper(url, http.MethodPost, body)
+}
+
+func (s *SynchronizationService) UploadEntities(id string, data []byte) (*domain.SynchronizationJobOutput, error) {
+	url := fmt.Sprintf(syncAPIEntitiesPath, s.client.httpBaseURL, id)
 	body := bytes.NewBuffer(data)
 
 	return s.syncHelper(url, http.MethodPost, body)
 }
 
-func (s *SynchronizationService) UploadEntities(id string, data []byte) (*SynchronizationJobStatus, error) {
-	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/entities"
+func (s *SynchronizationService) UploadRelationships(id string, data []byte) (*domain.SynchronizationJobOutput, error) {
+	url := fmt.Sprintf(syncAPIRelationshipsPath, s.client.httpBaseURL, id)
 	body := bytes.NewBuffer(data)
 
 	return s.syncHelper(url, http.MethodPost, body)
 }
 
-func (s *SynchronizationService) UploadRelationships(id string, data []byte) (*SynchronizationJobStatus, error) {
-	url := s.client.httpBaseURL + "/persister/synchronization/jobs/" + id + "/relationships"
-	body := bytes.NewBuffer(data)
-
-	return s.syncHelper(url, http.MethodPost, body)
+func (s *SynchronizationService) marshalEntities(entities []interface{}) domain.SyncPayload {
+	return domain.SyncPayload{
+		Entities: entities,
+	}
 }
 
-func (s *SynchronizationService) syncHelper(url string, method string, body io.Reader) (*SynchronizationJobStatus, error) {
+func (s *SynchronizationService) marshalRelationships(relationships []interface{}) domain.SyncPayload {
+	return domain.SyncPayload{
+		Relationships: relationships,
+	}
+}
+
+type chunkUploadFunctions struct {
+	marshalPayload func([]interface{}) domain.SyncPayload
+	upload         func(string, domain.SyncPayload) (*domain.SynchronizationJobOutput, error)
+}
+
+// chunkUpload breaks apart the payload into chunks and uploads them so that the user
+// is protected from uploading data that is too large at one time.
+func (s *SynchronizationService) chunkUpload(jobID string, payloadItems []interface{}, fns chunkUploadFunctions) error {
+	interval := 150
+
+	for len(payloadItems) != 0 {
+		if interval > len(payloadItems) {
+			interval = len(payloadItems)
+		}
+
+		chunk := payloadItems[:interval]
+		syncPayload := fns.marshalPayload(chunk)
+		_, err := fns.upload(jobID, syncPayload)
+		if err != nil {
+			return err
+		}
+
+		payloadItems = payloadItems[interval:]
+	}
+
+	return nil
+}
+
+// ProcessSyncJob is a helper function that will start, upload, and finalize a sync job.
+func (s *SynchronizationService) ProcessSyncJob(sp domain.StartParams, data domain.SyncPayload) (*domain.SynchronizationJobOutput, error) {
+	syncJob, err := s.Start(sp)
+	if err != nil {
+		return nil, err
+	}
+
+	entityChunkUploadFunctions := chunkUploadFunctions{
+		marshalPayload: s.marshalEntities,
+		upload:         s.Upload,
+	}
+
+	err = s.chunkUpload(syncJob.ID, data.Entities, entityChunkUploadFunctions)
+	if err != nil {
+		return nil, err
+	}
+
+	relationshipChunkUploadFunctions := chunkUploadFunctions{
+		marshalPayload: s.marshalRelationships,
+		upload:         s.Upload,
+	}
+	err = s.chunkUpload(syncJob.ID, data.Relationships, relationshipChunkUploadFunctions)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.Finalize(syncJob.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.Status(syncJob.ID)
+}
+
+func (s *SynchronizationService) syncHelper(url string, method string, body io.Reader) (*domain.SynchronizationJobOutput, error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
@@ -135,17 +157,17 @@ func (s *SynchronizationService) syncHelper(url string, method string, body io.R
 	}
 	defer resp.Body.Close()
 
-	syncJobStatus := struct {
-		SyncJobStatus *SynchronizationJobStatus `json:"job"`
+	syncJobOutput := struct {
+		SyncJobOutput *domain.SynchronizationJobOutput `json:"job"`
 	}{
-		SyncJobStatus: &SynchronizationJobStatus{},
+		SyncJobOutput: &domain.SynchronizationJobOutput{},
 	}
 
 	decoder := json.NewDecoder(resp.Body)
-	err = decoder.Decode(&syncJobStatus)
+	err = decoder.Decode(&syncJobOutput)
 	if err != nil {
 		return nil, err
 	}
 
-	return syncJobStatus.SyncJobStatus, nil
+	return syncJobOutput.SyncJobOutput, nil
 }
