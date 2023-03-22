@@ -8,11 +8,11 @@ import (
 )
 
 func getEnvWithDefault(key string, defaultVal string) string {
-    value, exists := os.LookupEnv(key)
-    if !exists {
-        value = defaultVal
-    }
-    return value
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		value = defaultVal
+	}
+	return value
 }
 
 func main() {
@@ -29,10 +29,10 @@ func main() {
 		Class: "Record",
 		Properties: map[string]interface{}{
 			"displayName": "exampleRecord",
-			"stringVal": "Mississippi",
-			"client": "jupiterone-client-go",
-			"isBool": true,
-	    },
+			"stringVal":   "Mississippi",
+			"client":      "jupiterone-client-go",
+			"isBool":      true,
+		},
 	}
 
 	// Initialize client
