@@ -11,12 +11,12 @@ type entity struct {
 	IntegrationClass        interface{} `json:"_integrationClass"`
 	Source                  string      `json:"_source"`
 	Scope                   string      `json:"_scope"`
-	AccountId               string      `json:"_accountId"`
+	AccountID               string      `json:"_accountId"`
 	Key                     string      `json:"_key"`
 	Class                   []string    `json:"_class"`
 	BeginOn                 string      `json:"_beginOn"`
-	IntegrationInstanceId   interface{} `json:"_integrationInstanceId"`
-	IntegrationDefinitionId string      `json:"_integrationDefinitionId"`
+	IntegrationInstanceID   interface{} `json:"_integrationInstanceId"`
+	IntegrationDefinitionID string      `json:"_integrationDefinitionId"`
 	ID                      string      `json:"_id"`
 }
 
@@ -24,19 +24,19 @@ type relationship struct {
 	ToEntityKey   string `json:"_toEntityKey"`
 	Version       int    `json:"_version"`
 	Key           string `json:"_key"`
-	FromEntityId  string `json:"_fromEntityId"`
+	FromEntityID  string `json:"_fromEntityId"`
 	ID            string `json:"_id"`
 	FromEntityKey string `json:"_fromEntityKey"`
 	CreatedOn     string `json:"_createdOn"`
 	Deleted       bool   `json:"_deleted"`
 	BeginOn       string `json:"_beginOn"`
 	Source        string `json:"_source"`
-	ToEntityId    string `json:"_toEntityId"`
+	ToEntityID    string `json:"_toEntityId"`
 	Class         string `json:"_class"`
 	Scope         string `json:"_scope"`
 	DisplayName   string `json:"displayName"`
 	Type          string `json:"_type"`
-	AccountId     string `json:"_accountId"`
+	AccountID     string `json:"_accountId"`
 }
 
 type QueryDataVertex struct {
@@ -47,8 +47,8 @@ type QueryDataVertex struct {
 
 type QueryDataEdge struct {
 	ID           string       `json:"id"`
-	ToVertexId   string       `json:"toVertexId"`
-	FromVertexId string       `json:"fromVertexId"`
+	ToVertexID   string       `json:"toVertexId"`
+	FromVertexID string       `json:"fromVertexId"`
 	Relationship relationship `json:"relationship"`
 	Properties   interface{}  `json:"properties"`
 }

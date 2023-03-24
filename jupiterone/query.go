@@ -3,6 +3,7 @@ package jupiterone
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -12,13 +13,22 @@ import (
 
 type QueryService service
 
+var ErrNetworkMessage = errors.New("error at network level")
+
+func NetworkError(errm string) error {
+	return fmt.Errorf("NetworkError %w : %s", ErrNetworkMessage, errm)
+}
+
 // Finished is the status of a query when it has completed
 // this is helpful for the consumer to know if their job is
-// actually complete or if it just failed
-const Finished = "FINISHED"
-const inProgress = "IN_PROGRESS"
+// actually complete or if it just failed.
+const (
+	Finished   = "FINISHED"
+	inProgress = "IN_PROGRESS"
+	sleepTime  = 5
+)
 
-// Cannot move this to domain until we fix the import cycle issue
+// Cannot move this to domain until we fix the import cycle issue.
 type QueryInput struct {
 	Query            string                 `json:"query"`
 	Cursor           string                 `json:"cursor"`
@@ -64,14 +74,12 @@ func (q *QueryService) Query(qi QueryInput) (interface{}, error) {
 		qi.Remember,
 		qi.Variables,
 	)
-
 	if err != nil {
 		fmt.Println("in query: graphql failure: ", err)
 		return queryResults, err
 	}
 
 	deferredResponse, err := q.pollDeferredURL(graphQLResponse.QueryV1.Url)
-
 	if err != nil {
 		fmt.Println("deferred request failed", err)
 		return queryResults, err
@@ -120,7 +128,7 @@ func (q *QueryService) AsTree(queryResults interface{}) (domain.QueryResult[doma
 func (q *QueryService) getQueryResults(d domain.DeferredQueryURLResponse) (interface{}, error) {
 	var queryResults interface{}
 
-	req, err := http.NewRequest(http.MethodGet, d.URL, nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, d.URL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -129,9 +137,10 @@ func (q *QueryService) getQueryResults(d domain.DeferredQueryURLResponse) (inter
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to retrieve query results: %s", resp.Status)
+		return nil, NetworkError(resp.Status)
 	}
 
 	decoder := json.NewDecoder(resp.Body)
@@ -146,7 +155,7 @@ func (q *QueryService) getQueryResults(d domain.DeferredQueryURLResponse) (inter
 func (q *QueryService) pollDeferredURL(url string) (domain.DeferredQueryURLResponse, error) {
 	var deferredResults domain.DeferredQueryURLResponse
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
 	if err != nil {
 		return deferredResults, err
 	}
@@ -154,6 +163,11 @@ func (q *QueryService) pollDeferredURL(url string) (domain.DeferredQueryURLRespo
 	resp, err := q.client.httpClient.Do(req)
 	if err != nil {
 		return deferredResults, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return deferredResults, NetworkError(resp.Status)
 	}
 
 	decoder := json.NewDecoder(resp.Body)
@@ -164,7 +178,7 @@ func (q *QueryService) pollDeferredURL(url string) (domain.DeferredQueryURLRespo
 
 	if deferredResults.Status == inProgress {
 		fmt.Println("deferred results are in progress. sleeping...")
-		time.Sleep(5 * time.Second)
+		time.Sleep(sleepTime * time.Second)
 		return q.pollDeferredURL(url)
 	}
 

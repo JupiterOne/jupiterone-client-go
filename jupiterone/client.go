@@ -62,24 +62,24 @@ func (c *Config) getHTTPEndpoint() string {
 }
 
 type authedTransport struct {
-	accountId string
+	accountID string
 	key       string
 	wrapped   http.RoundTripper
 }
 
 func (t *authedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	req.Header.Set("Authorization", "Bearer "+t.key)
-	req.Header.Set("Jupiterone-Account", t.accountId)
+	req.Header.Set("Jupiterone-Account", t.accountID)
 	req.Header.Set("Content-Type", "application/json")
 	return t.wrapped.RoundTrip(req)
 }
 
-func getGraphQLClient(transport *authedTransport, apiUrl string) gql.Client {
-	var httpClient = http.Client{
+func getGraphQLClient(transport *authedTransport, apiURL string) gql.Client {
+	httpClient := http.Client{
 		Transport: transport,
 	}
 
-	client := gql.NewClient(apiUrl, &httpClient)
+	client := gql.NewClient(apiURL, &httpClient)
 
 	return client
 }
@@ -88,7 +88,7 @@ func NewClient(config *Config) (*Client, error) {
 	endpoint := config.getGraphQLEndpoint()
 
 	transport := &authedTransport{
-		accountId: config.AccountID,
+		accountID: config.AccountID,
 		key:       config.APIKey,
 		wrapped:   http.DefaultTransport,
 	}
