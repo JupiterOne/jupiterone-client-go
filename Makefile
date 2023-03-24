@@ -9,7 +9,8 @@ build: fmtcheck
 test: fmtcheck
 	JUPITERONE_API_KEY=fake JUPITERONE_ACCOUNT_ID=fake RECORD=false TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout=5m -parallel=4
 
-fmpt: gofumpt -l -w .
+fmpt: 
+	gofumpt -l -w .
 
 fmt:
 	@echo "==> Fixing source code with gofmt..."
