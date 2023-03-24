@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	gql "github.com/Khan/genqlient/graphql"
 	"github.com/machinebox/graphql"
 )
 
@@ -21,6 +22,7 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	apiKey, accountID string
+	gqlClient         gql.Client
 	graphqlClient     *graphql.Client
 	httpClient        *http.Client
 	httpBaseURL       string
@@ -33,6 +35,7 @@ type Client struct {
 	Integration     *IntegrationService
 	Audit           *AuditService
 	Synchronization *SynchronizationService
+	Query           *QueryService
 }
 
 type service struct {
@@ -58,8 +61,37 @@ func (c *Config) getHTTPEndpoint() string {
 	return "https://api." + c.getRegion() + ".jupiterone.io"
 }
 
+type authedTransport struct {
+	accountId string
+	key       string
+	wrapped   http.RoundTripper
+}
+
+func (t *authedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Set("Authorization", "Bearer "+t.key)
+	req.Header.Set("Jupiterone-Account", t.accountId)
+	req.Header.Set("Content-Type", "application/json")
+	return t.wrapped.RoundTrip(req)
+}
+
+func getGraphQLClient(transport *authedTransport, apiUrl string) gql.Client {
+	var httpClient = http.Client{
+		Transport: transport,
+	}
+
+	client := gql.NewClient(apiUrl, &httpClient)
+
+	return client
+}
+
 func NewClient(config *Config) (*Client, error) {
 	endpoint := config.getGraphQLEndpoint()
+
+	transport := &authedTransport{
+		accountId: config.AccountID,
+		key:       config.APIKey,
+		wrapped:   http.DefaultTransport,
+	}
 
 	var client *graphql.Client
 	var httpClient *http.Client
@@ -72,10 +104,13 @@ func NewClient(config *Config) (*Client, error) {
 		httpClient = &http.Client{}
 	}
 
+	gqlClient := getGraphQLClient(transport, endpoint)
+
 	jupiterOneClient := &Client{
 		apiKey:        config.APIKey,
 		accountID:     config.AccountID,
 		graphqlClient: client,
+		gqlClient:     gqlClient,
 		httpClient:    httpClient,
 		httpBaseURL:   config.getHTTPEndpoint(),
 		RetryTimeout:  time.Minute,
@@ -90,6 +125,7 @@ func NewClient(config *Config) (*Client, error) {
 	jupiterOneClient.Integration = (*IntegrationService)(&jupiterOneClient.common)
 	jupiterOneClient.Audit = (*AuditService)(&jupiterOneClient.common)
 	jupiterOneClient.Synchronization = (*SynchronizationService)(&jupiterOneClient.common)
+	jupiterOneClient.Query = (*QueryService)(&jupiterOneClient.common)
 
 	return jupiterOneClient, nil
 }
