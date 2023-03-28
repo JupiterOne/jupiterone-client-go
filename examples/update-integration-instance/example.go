@@ -41,7 +41,7 @@ func main() {
 		integrationInstanceId := result["x.id"].(string)
 		integrationInstance, err := client.Integration.GetIntegrationInstance(integrationInstanceId)
 		if err != nil {
-			log.Fatalf("failed query output: %v", err)
+			log.Printf("failed query output: %v", err)
 			continue
 		}
 
@@ -64,7 +64,7 @@ func main() {
 
 		resp, err := client.Integration.UpdateIntegrationInstance(integrationInstanceId, input)
 		if err != nil {
-			log.Fatalf("failed to update integration instance: %v", err)
+			log.Printf("failed to update integration instance: %v", err)
 			continue
 		}
 
