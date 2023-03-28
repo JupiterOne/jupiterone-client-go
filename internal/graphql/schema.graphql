@@ -1,0 +1,5044 @@
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+type AcceptSecurityPolicyOutput {
+  securityPolicyAcceptedOn: Long!
+}
+
+type AccountRateLimitsQuery {
+  apiInvocationRateLimit: RateLimitPolicyQuery!
+  tokenRateLimits(tokenId: ID!): TokenRateLimitsQuery!
+}
+
+type AccountServiceUserSettings {
+  ACCOUNT_SERVICE_DELETION_REMINDER: ChannelConfiguration!
+  ACCOUNT_SERVICE_DELETION_EMAIL: ChannelConfiguration!
+  ACCOUNT_SERVICE_DELETION_NOTICE: ChannelConfiguration!
+}
+
+enum AccountStatus {
+  ENABLED
+  DISABLED
+}
+
+enum AccountType {
+  FREE
+  PAID
+  TEST
+  ENTERPRISE
+}
+
+enum ActionScope {
+  USER
+  ACCOUNT
+}
+
+enum ActionStatus {
+  UNCOMPLETED
+  COMPLETED
+}
+
+input AddAccountUserGroupsInput {
+  user: ID!
+  groups: [String!]!
+}
+
+input AddGroupUsersInput {
+  group: ID!
+  users: [String!]!
+}
+
+input AddQuestionsToAssessmentInput {
+  id: ID!
+  questionIds: [ID!]!
+}
+
+type AddQuestionsToAssessmentOutput {
+  assessment: Assessment!
+}
+
+enum AlertEndReason {
+  AUTO_CLEARED
+  RESOLVED
+}
+
+type AlertInstance {
+  id: String!
+  accountId: String!
+  ruleId: String!
+  ruleVersion: Int
+  lastUpdatedOn: Long!
+  createdOn: Long!
+  endReason: AlertEndReason
+  lastEvaluationBeginOn: Long
+  lastEvaluationEndOn: Long
+  lastEvaluationResult: RuleEvaluationResult @deprecated
+  dismissedOn: Long
+  questionRuleInstance: QuestionRuleInstance
+  reportRuleInstance: ReportRuleInstance
+  level: AlertLevel!
+  status: AlertStatus!
+}
+
+enum AlertInterval {
+  DAILY
+  WEEKLY
+}
+
+enum AlertLevel {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+  INFO
+}
+
+type AlertRule {
+  name: String!
+  description: String!
+  queries: [AlertRuleQuery!]!
+  alertLevel: AlertLevel
+  templates: JSON
+}
+
+type AlertRulePack {
+  name: String!
+  type: AlertRulePackType!
+  rules: [AlertRule!]!
+}
+
+enum AlertRulePackType {
+  AwsConfig
+  AwsThreat
+  AzureConfig
+  Azure
+  GCP
+  CommonAlerts
+  Compliance
+  DevOps
+  CriticalAssets
+}
+
+type AlertRuleQuery {
+  name: String!
+  query: String!
+  version: String!
+  includeDeleted: Boolean
+}
+
+input AlertRuleQueryInput {
+  name: String!
+  query: String!
+  version: String!
+  includeDeleted: Boolean
+}
+
+enum AlertStatus {
+  ACTIVE
+  INACTIVE
+  DISMISSED
+}
+
+enum Answer {
+  YES
+  NO
+}
+
+type Assessment {
+  id: ID!
+  name: String!
+  description: String
+  questions: [AssessmentQuestion!]
+  evaluationProgress: AssessmentEvaluationProgress!
+  evaluationSummary: AssessmentSummary @deprecated(reason: "please use assessmentSummary field")
+  assessmentSummary: AssessmentSummary
+  createdTimestamp: Long!
+  lastScheduledEvaluationTimestamp: Long
+  lastEvaluatedTimestamp: Long
+}
+
+enum AssessmentEvaluationProgress {
+  FAILED
+  FINISHED
+  IN_PROGRESS
+  NOT_STARTED
+  SKIPPED
+  SCHEDULED
+}
+
+enum AssessmentEvaluationResult {
+  PASSED
+  FAILED
+  PARTIAL
+  UNKNOWN
+}
+
+input AssessmentInput {
+  id: ID!
+}
+
+type AssessmentOutput {
+  assessment: Assessment!
+}
+
+type AssessmentQuestion {
+  question: Question!
+  evaluationProgress: AssessmentEvaluationProgress!
+  evaluationResult: AssessmentEvaluationResult!
+  lastEvaluatedTimestamp: Long
+}
+
+type AssessmentsOutput {
+  assessments: [Assessment!]!
+  assessmentsSummary: AssessmentsSummary
+}
+
+type AssessmentsSummary {
+  id: ID!
+  numberOfAssessments: Int!
+  numberOfPassed: Int!
+  numberOfFailed: Int!
+  numberOfPartial: Int!
+  numberOfUnknown: Int!
+}
+
+type AssessmentSummary {
+  id: ID!
+  numberOfPassed: Int!
+  numberOfFailed: Int!
+  numberOfPartial: Int!
+  numberOfUnknown: Int!
+}
+
+type AssetCategory {
+  color: String
+  iconPath: String
+  children: [AssetClass]
+  name: String
+  id: String!
+  description: String
+}
+
+type AssetClass {
+  color: String
+  iconPath: String
+  children: [AssetType]
+  name: String
+  id: String!
+  description: String
+  parentCategory: String!
+}
+
+type AssetType {
+  parentClass: String!
+  parentCategory: String!
+  name: String
+  id: String!
+  description: String
+}
+
+input AttachComplianceLibraryItemToComplianceFrameworkItemInput {
+  """
+  The UUID identifier of the compliance framework item that is the target of this relationship
+  """
+  frameworkItemId: ID!
+
+  """
+  The UUID identifier of the compliance library item that is the source of this relationship
+  """
+  libraryItemId: ID!
+
+  """The type of relationship between the source and target"""
+  relationshipType: LibraryItemToFrameworkItemRelationshipType!
+}
+
+interface BaseChannelConfiguration {
+  enabled: Boolean!
+}
+
+input BaseChannelConfigurationInput {
+  enabled: Boolean!
+}
+
+input BatchMapQuestionToFrameworksInput {
+  operations: [MapQuestionToFramework!]!
+}
+
+type BatchMapQuestionToFrameworksOutput {
+  """The UUID identifiers of the affected frameworkItems"""
+  affectedFrameworkItemIds: [String!]!
+
+  """The UUID identifiers of the affected libraryItems"""
+  affectedLibraryItemIds: [String!]!
+}
+
+input BatchUnmapQuestionFromFrameworksInput {
+  operations: [UnmapQuestionFromFramework!]!
+}
+
+type BatchUnmapQuestionFromFrameworksOutput {
+  """The UUID identifiers of the affected frameworkItems"""
+  affectedFrameworkItemIds: [String!]!
+
+  """The UUID identifiers of the affected libraryItems"""
+  affectedLibraryItemIds: [String!]!
+}
+
+input Board {
+  id: String!
+  name: String!
+}
+
+type BuildCsvResponse {
+  stateFileUrl: String!
+}
+
+type BuildJsonResponse {
+  stateFileUrl: String!
+}
+
+type BulkUpdateIntegrationInstancesOutput {
+  success: Int!
+  failed: Int!
+  failedIds: [String!]!
+}
+
+enum Category {
+  ACCOUNT_SERVICE
+  ALERTS
+  COMPLIANCE
+  ENDPOINT_COMPLIANCE_SERVICE
+  FILE
+  INSIGHTS
+  INTEGRATIONS
+  INVITATION_SERVICE
+  J1_RAPID_RESPONSE
+  JANITOR
+  LOGIN_SERVICE
+  POLICIES
+  TASK_SERVICE
+  USER_SERVICE
+}
+
+enum Channel {
+  IN_APP
+  EMAIL
+  SLACK
+}
+
+type ChannelConfiguration {
+  EMAIL: EmailConfiguration!
+  IN_APP: InAppConfiguration!
+  SLACK: SlackConfiguration!
+}
+
+input ChannelConfigurationUpdate {
+  EMAIL: EmailConfigurationInput
+  IN_APP: InAppConfigurationInput
+  SLACK: SlackChannelConfigurationInput
+}
+
+enum CollectionType {
+  QUESTION
+  RULE_EVALUATION
+  COMPLIANCE_REQUIREMENT_EVALUATION
+}
+
+input CompleteUserActionInput {
+  """Identifier of the action to prevent duplicate completions"""
+  id: String!
+
+  """The type of the user-action that has been completed"""
+  userActionType: UserActionType!
+}
+
+enum ComplianceEvaluationProgress {
+  FAILED
+  FINISHED
+  IN_PROGRESS
+  NOT_STARTED
+  SKIPPED
+}
+
+enum ComplianceEvaluationResult {
+  FULFILLED
+  GAP_DETECTED
+  NOT_APPLICABLE
+  UNKNOWN
+  WARNING
+}
+
+enum ComplianceEvaluationTrigger {
+  MANUAL_BY_USER
+  MANUAL_BY_SYSTEM
+  SCHEDULED
+}
+
+interface ComplianceEvidence {
+  """The UUID identifier for the evidence"""
+  id: ID!
+
+  """The type of evidence"""
+  evidenceType: ComplianceEvidenceType!
+
+  """The date of last update"""
+  lastUpdatedTimestamp: Long
+}
+
+enum ComplianceEvidenceType {
+  NOTE
+  QUESTIONNAIRE_ANSWER
+  LINK
+  EXTERNAL_UPLOAD
+  QUESTION_EVALUATION
+}
+
+type ComplianceFramework {
+  """The UUID identifier for this compliance framework"""
+  id: ID!
+
+  """The ID of the account that owns this compliance framework"""
+  accountId: ID!
+
+  """
+  The timestamp for when this compliance framework was created in the J1 system
+  """
+  createTimestamp: Long!
+
+  """The timestamp for the last updated time of this compliance framework"""
+  lastUpdatedTimestamp: Long!
+
+  """The human readable name of this compliance framework - Example: HIPPA"""
+  name: String!
+
+  """The version of this compliance framework - Example: 2013 or v.1.2"""
+  version: String!
+
+  """The type of this compliance framework"""
+  frameworkType: ComplianceFrameworkType!
+
+  """The standard that this framework was originally imported from"""
+  importedFrom: String!
+
+  """An external web link to the framework's definition"""
+  webLink: String
+
+  """The ComplianceGroups owned by this ComplianceFramework"""
+  groups: [ComplianceGroup!]
+
+  """Summary data for this compliance framework"""
+  summary: ComplianceFrameworkSummary
+
+  """Filters question evaluation results for this framework"""
+  scopeFilters: [JSON!]
+
+  """
+  A rollup of the progress of evaluating the ComplianceFrameworkItems in this ComplianceFramework
+  """
+  evaluationProgress: ComplianceEvaluationProgress
+
+  """
+  The timestamp of the last evaluation for this compliance framework item
+  """
+  lastEvaluationTimestamp: Long
+
+  """
+  A summary of all the review data that is configured for this framework's children
+  """
+  reviewAssignmentsSummary: ComplianceReviewAssignmentsSummary
+
+  """
+  Is this framework considered applicable? This is a per-user setting that defaults to TRUE.
+  """
+  isApplicableForThisUser: Boolean
+
+  """
+  Account-configured settings for visibility of statistics for this framework
+  and its items. Configurable by the setComplianceFrameworkSummaryConfig mutation.
+  """
+  summaryConfig: ComplianceFrameworkSummaryConfig
+}
+
+input ComplianceFrameworkInput {
+  id: ID!
+}
+
+type ComplianceFrameworkItem implements ComplianceFrameworkItemBase {
+  """The UUID identifier for this compliance framework item"""
+  id: ID!
+
+  """
+  The UUID identifier for the compliance framework which owns this framework item
+  """
+  frameworkId: ID!
+
+  """
+  The UUID identifier for the compliance group which owns this framework item
+  """
+  groupId: ID!
+
+  """
+  The human readable name for this compliance framework item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance framework item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance framework item is displayed in the UI
+  """
+  displayCategory: String
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """
+  The progress of the 'evaluation' (or evidence collection) of this compliance framework item
+  """
+  evaluationProgress: ComplianceEvaluationProgress!
+
+  """
+  The timestamp of the last evaluation for this compliance framework item
+  """
+  lastEvaluationTimestamp: Long
+
+  """
+  An enum representing the current evaluation result of this compliance framework item
+  """
+  evaluationResult: ComplianceEvaluationResult
+
+  """
+  An enum representing the current state of this compliance framework item's audit status
+  """
+  auditStatus: ComplianceFrameworkItemAuditStatus
+
+  """
+  The compliance library items that are associated with this compliance framework item
+  """
+  libraryItems: ComplianceLibraryItemsForFrameworkItem
+
+  """All evidence associated with the compliance framework item"""
+  evidence: ComplianceFrameworkItemEvidence
+
+  """An external web link to this framework item's definition"""
+  webLink: String
+
+  """The display position of the framework item within its group"""
+  orderPosition: Long!
+
+  """
+  A summary of certain statistics of the framework item, for display purposes
+  """
+  summary: ComplianceFrameworkItemSummary
+
+  """
+  The framework metadata that is the parent of this compliance framework item.
+  Returns the base framework properties only. Optional fields will always be null.
+  """
+  frameworkMetadata: ComplianceFramework
+  legacyGraphKey: String @deprecated
+
+  """
+  The reason for the applicability status of this compliance framework item
+  """
+  applicabilityReason: String
+
+  """
+  The review configuration (if one is set) associated with this framework item
+  """
+  reviewConfiguration: ComplianceReviewConfiguration
+}
+
+enum ComplianceFrameworkItemAuditStatus {
+  ACCEPTED
+  ACTION_REQUIRED
+  IN_PROGRESS
+  OPEN
+  READY
+  UNDER_REVIEW
+}
+
+interface ComplianceFrameworkItemBase {
+  """The UUID identifier for this compliance framework item"""
+  id: ID!
+
+  """
+  The UUID identifier for the compliance framework which owns this framework item
+  """
+  frameworkId: ID!
+
+  """
+  The human readable name for this compliance framework item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance framework item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance framework item is displayed in the UI
+  """
+  displayCategory: String
+
+  """
+  An enum representing the current state of this compliance framework item's audit status
+  """
+  auditStatus: ComplianceFrameworkItemAuditStatus
+
+  """An external web link to this framework item's definition"""
+  webLink: String
+
+  """
+  The progress of the 'evaluation' (or evidence collection) of this compliance framework item
+  """
+  evaluationProgress: ComplianceEvaluationProgress!
+
+  """
+  An enum representing the current evaluation result of this compliance framework item
+  """
+  evaluationResult: ComplianceEvaluationResult
+
+  """
+  The timestamp of the last evaluation for this compliance framework item
+  """
+  lastEvaluationTimestamp: Long
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """
+  The framework metadata that is the parent of this compliance framework item.
+  Returns the base framework properties only. Optional fields will always be null.
+  """
+  frameworkMetadata: ComplianceFramework
+}
+
+type ComplianceFrameworkItemEvidence {
+  """
+  Any question evaluation evidence associated with this compliance framework item
+  """
+  questionEvaluations: [ComplianceQuestionEvaluation!]!
+
+  """Any note evidence associated with this compliance framework item"""
+  notes: [ComplianceNote!]!
+
+  """Any link evidence associated with this compliance framework item"""
+  links: [ComplianceLink!]!
+
+  """
+  The questionnaire answer associated with this compliance framework item
+  """
+  questionnaireAnswer: ComplianceQuestionnaireAnswer
+
+  """
+  Any external upload evidence associated with this compliance framework item
+  """
+  externalUploadEvidences: [ExternalUploadEvidence!]!
+}
+
+input ComplianceFrameworkItemInput {
+  id: ID!
+}
+
+"""
+The ComplianceFrameworkItemMetadata contains ONLY the root level properties for a
+ComplianceFrameworkItem and does not contain any children objects (evidence, summary).
+"""
+type ComplianceFrameworkItemMetadata implements ComplianceFrameworkItemBase {
+  """The UUID identifier for this compliance framework item"""
+  id: ID!
+
+  """
+  The UUID identifier for the compliance framework which owns this framework item
+  """
+  frameworkId: ID!
+
+  """
+  The human readable name for this compliance framework item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance framework item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance framework item is displayed in the UI
+  """
+  displayCategory: String
+
+  """
+  An enum representing the current state of this compliance framework item's audit status
+  """
+  auditStatus: ComplianceFrameworkItemAuditStatus
+
+  """An external web link to this framework item's definition"""
+  webLink: String
+
+  """
+  The progress of the 'evaluation' (or evidence collection) of this compliance framework item
+  """
+  evaluationProgress: ComplianceEvaluationProgress!
+
+  """
+  An enum representing the current evaluation result of this compliance framework item
+  """
+  evaluationResult: ComplianceEvaluationResult
+
+  """
+  The timestamp of the last evaluation for this compliance framework item
+  """
+  lastEvaluationTimestamp: Long
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """
+  The framework metadata that is the parent of this compliance framework item.
+  Returns the base framework properties only. Optional fields will always be null.
+  """
+  frameworkMetadata: ComplianceFramework
+}
+
+type ComplianceFrameworkItemSummary {
+  """The UUID identifier for the compliance framework item"""
+  id: ID!
+
+  """
+  Does this framework item have any policy items linked through library items?
+  """
+  hasLinkedPolicyItem: Boolean!
+
+  """A summary of evidence collection for this framework item"""
+  evidenceCollectionSummary: ComplianceFrameworkItemSummaryEvidenceCollection!
+}
+
+type ComplianceFrameworkItemSummaryEvidenceCollection {
+  """The UUID identifier for the compliance framework item"""
+  id: ID!
+
+  """
+  Does the framework item have either internal evidence collected, or external evidence attached?
+  """
+  hasEvidence: Boolean!
+
+  """Does the framework item have internal evidence collected?"""
+  hasInternalEvidenceCollected: Boolean!
+
+  """Does the framework item have external evidence attached?"""
+  hasExternalEvidenceAttached: Boolean!
+
+  """The answer to the questionnaire evidence, if available"""
+  questionnaireAnswer: Answer
+}
+
+type ComplianceFrameworksByFrameworkType {
+  id: ID!
+
+  """All of the compliance frameworks of the BENCHMARK type"""
+  benchmarks: [ComplianceFramework!]!
+
+  """All of the compliance frameworks of the QUESTIONNAIRE type"""
+  questionnaires: [ComplianceFramework!]!
+
+  """All of the compliance frameworks of the STANDARD type"""
+  standards: [ComplianceFramework!]!
+}
+
+type ComplianceFrameworkSummary {
+  """The UUID identifier for the compliance framework"""
+  id: ID!
+
+  """How many total framework items are in the framework?"""
+  totalFrameworkItems: Int!
+
+  """
+  How many framework items in the framework do not have a NON_APPLICABLE evaluation result?
+  """
+  applicableFrameworkItems: Int!
+  compliantPercentageSummary: ComplianceFrameworkSummaryCompliantPercentage!
+  evidenceCollectionSummary: ComplianceFrameworkSummaryEvidenceCollection!
+  gapAnalysisSummary: ComplianceFrameworkSummaryGapAnalysis!
+  policyItemLinkSummary: ComplianceFrameworkSummaryPolicyItemLinks!
+}
+
+type ComplianceFrameworkSummaryCompliantPercentage {
+  """The UUID identifier for the compliance framework"""
+  id: ID!
+  overallCompliantPercentage: Long!
+  compliantPercentageExcludingPoliciesAndProcedures: Long!
+}
+
+type ComplianceFrameworkSummaryConfig {
+  """
+  Should the web app show statistics for the linkages of policies and procedures in this framework?
+  """
+  showPoliciesAndProcedures: Boolean!
+
+  """
+  Should the web app show statistics for evidence collection in this framework?
+  """
+  showEvidence: Boolean!
+
+  """
+  Should the web app show gap analysis and evaluation results for the items in this framework?
+  """
+  showGapAnalysis: Boolean!
+
+  """Should the web app show audit tracking status for this framework?"""
+  showAuditTracking: Boolean!
+}
+
+input ComplianceFrameworkSummaryConfigInput {
+  """
+  Should the web app show statistics for the linkages of policies and procedures in this framework?
+  """
+  showPoliciesAndProcedures: Boolean!
+
+  """
+  Should the web app show statistics for evidence collection in this framework?
+  """
+  showEvidence: Boolean!
+
+  """
+  Should the web app show gap analysis and evaluation results for the items in this framework?
+  """
+  showGapAnalysis: Boolean!
+
+  """Should the web app show audit tracking status for this framework?"""
+  showAuditTracking: Boolean!
+}
+
+type ComplianceFrameworkSummaryEvidenceCollection {
+  """The UUID identifier for the compliance framework"""
+  id: ID!
+
+  """
+  How many framework items have either internal evidence collected, or external evidence attached?
+  """
+  hasEvidence: Int!
+
+  """How many framework items have internal evidence collected?"""
+  hasInternalEvidenceCollected: Int!
+
+  """How many framework items have external evidence attached?"""
+  hasExternalEvidenceAttached: Int!
+
+  """
+  How many framework items have questionnaire-type evidence that has been answered?
+  """
+  hasQuestionnaireAnswer: Int!
+}
+
+type ComplianceFrameworkSummaryGapAnalysis {
+  """The UUID identifier for the compliance framework"""
+  id: ID!
+  fulfilled: Int!
+  gapDetected: Int!
+  warning: Int!
+  unknown: Int!
+}
+
+type ComplianceFrameworkSummaryPolicyItemLinks {
+  """The UUID identifier for the compliance framework"""
+  id: ID!
+  hasLinkedPolicyItem: Int!
+}
+
+enum ComplianceFrameworkType {
+  BENCHMARK
+  QUESTIONNAIRE
+  STANDARD
+}
+
+type ComplianceGroup {
+  """
+  A summary of all the review data that is configured for this group's children
+  """
+  reviewAssignmentsSummary: ComplianceReviewAssignmentsSummary
+
+  """The UUID identifier for this compliance group"""
+  id: ID!
+
+  """The UUID identifier for the compliance framework which owns the group"""
+  frameworkId: ID!
+
+  """
+  The human readable name for this group - Example: Physical Access & Security
+  """
+  name: String!
+
+  """Any other relevant information for this compliance group"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance group is displayed in the UI
+  """
+  displayCategory: String
+
+  """An external web link to this compliance group's definition"""
+  webLink: String
+
+  """The ComplianceFrameworkItems owned by this ComplianceGroup"""
+  frameworkItems: [ComplianceFrameworkItem!]!
+  legacyGraphKey: String @deprecated
+}
+
+"""
+A ComplianceLibraryItem is a reusable set of compliance data that can be assigned to specific ComplianceFrameworkItems.
+It allows the ability to reuse evidence across different ComplianceFrameworks.
+Sometimes, these are referred to as 'Internal Controls'
+"""
+type ComplianceLibraryItem implements ComplianceLibraryItemBase {
+  """The UUID identifier for this compliance library item"""
+  id: ID!
+
+  """
+  The human readable name for this compliance library item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance library item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance library item is displayed in the UI
+  """
+  displayCategory: String
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """
+  The progress of the 'evaluation' (or evidence collection) of this compliance library item
+  """
+  evaluationProgress: ComplianceEvaluationProgress!
+
+  """The timestamp of the last evaluation for this compliance library item"""
+  lastEvaluationTimestamp: Long
+
+  """An external web link to this library item's definition"""
+  webLink: String
+
+  """All evidence associated with the library item"""
+  evidence: ComplianceLibraryItemEvidence
+
+  """All framework items associated with this library item"""
+  frameworkItemMetadatas: [ComplianceFrameworkItemMetadata!]
+
+  """
+  An enum representing the current evaluation result of this compliance library item
+  """
+  evaluationResult: ComplianceEvaluationResult
+
+  """
+  A UUID identifier for the policy item that this compliance library item is linked to
+  """
+  policyItemId: String
+
+  """Data about a linked Procedure"""
+  linkedPolicyItem: LinkedProcedure
+
+  """
+  The review configuration (if one is set) associated with this library item
+  """
+  reviewConfiguration: ComplianceReviewConfiguration
+}
+
+interface ComplianceLibraryItemBase {
+  """The UUID identifier for this compliance library item"""
+  id: ID!
+
+  """
+  The human readable name for this compliance library item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance library item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance library item is displayed in the UI
+  """
+  displayCategory: String
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """
+  The progress of the 'evaluation' (or evidence collection) of this compliance library item
+  """
+  evaluationProgress: ComplianceEvaluationProgress!
+
+  """The timestamp of the last evaluation for this compliance library item"""
+  lastEvaluationTimestamp: Long
+
+  """An external web link to this library item's definition"""
+  webLink: String
+
+  """
+  An enum representing the current evaluation result of this compliance library item
+  """
+  evaluationResult: ComplianceEvaluationResult
+
+  """
+  A UUID identifier for the policy item that this compliance library item is linked to
+  """
+  policyItemId: String
+
+  """Data about a linked Procedure"""
+  linkedPolicyItem: LinkedProcedure
+}
+
+type ComplianceLibraryItemEvidence {
+  """Any note evidence associated with this library item"""
+  notes: [ComplianceNote!]!
+
+  """Any link evidence associated with this library item"""
+  links: [ComplianceLink!]!
+
+  """Any external upload evidence associated with this library item"""
+  externalUploadEvidences: [ExternalUploadEvidence!]!
+
+  """Any question evaluation evidence associated with this library item"""
+  questionEvaluations: [ComplianceQuestionEvaluation!]!
+
+  """
+  All evidence for the library item, regardless of type. Sorted descending by date created/updated.
+  """
+  allEvidence: [ComplianceEvidence!]
+}
+
+input ComplianceLibraryItemInput {
+  """The UUID identifier for the compliance library item to query"""
+  id: ID!
+}
+
+type ComplianceLibraryItemMetadata implements ComplianceLibraryItemBase {
+  """The UUID identifier for this compliance library item"""
+  id: ID!
+
+  """
+  The human readable name for this compliance library item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance library item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance library item is displayed in the UI
+  """
+  displayCategory: String
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """
+  The progress of the 'evaluation' (or evidence collection) of this compliance library item
+  """
+  evaluationProgress: ComplianceEvaluationProgress!
+
+  """The timestamp of the last evaluation for this compliance library item"""
+  lastEvaluationTimestamp: Long
+
+  """An external web link to this library item's definition"""
+  webLink: String
+
+  """
+  An enum representing the current evaluation result of this compliance library item
+  """
+  evaluationResult: ComplianceEvaluationResult
+
+  """
+  A UUID identifier for the policy item that this compliance library item is linked to
+  """
+  policyItemId: String
+
+  """Data about a linked Procedure"""
+  linkedPolicyItem: LinkedProcedure
+}
+
+input ComplianceLibraryItemMetadatasInput {
+  """How to filter the returned library items"""
+  filter: ComplianceLibraryItemsFilter!
+
+  """
+  When filtering by FRAMEWORK_ITEM, this is the uuid identifier to filter by
+  """
+  frameworkItemId: String
+
+  """Returns all pages of data and ignores any pagination options"""
+  returnAllPages: Boolean
+
+  """Cursor for pagination"""
+  cursor: String
+
+  """Pagination page size limit, defaults to 50"""
+  limit: Int
+}
+
+type ComplianceLibraryItemMetadatasOutput {
+  items: [ComplianceLibraryItemMetadata!]!
+  pageInfo: PageInfo!
+}
+
+enum ComplianceLibraryItemsFilter {
+  ACCOUNT
+  FRAMEWORK_ITEM
+}
+
+type ComplianceLibraryItemsForFrameworkItem {
+  """
+  A list of compliance library items that this framework item should inherit its evidence from
+  """
+  inheritedEvidenceLibraryItems: [ComplianceLibraryItem!]!
+
+  """
+  A list of compliance library items that this framework item should ignore its evidence from
+  """
+  ignoredEvidenceLibraryItems: [ComplianceLibraryItem!]!
+}
+
+input ComplianceLibraryItemsInput {
+  """How to filter the returned library items"""
+  filter: ComplianceLibraryItemsFilter!
+
+  """
+  When filtering by FRAMEWORK_ITEM, this is the uuid identifier to filter by
+  """
+  frameworkItemId: String
+}
+
+type ComplianceLibraryItemToComplianceFrameworkItemRelationship {
+  """
+  The UUID identifier of the compliance framework item that is the target of this relationship
+  """
+  frameworkItemId: ID!
+
+  """
+  The UUID identifier of the compliance library item that is the source of this relationship
+  """
+  libraryItemId: ID!
+
+  """The type of relationship between the source and target"""
+  relationshipType: LibraryItemToFrameworkItemRelationshipType!
+}
+
+type ComplianceLink implements ComplianceEvidence {
+  """The UUID identifier for the evidence"""
+  id: ID!
+
+  """The type of evidence"""
+  evidenceType: ComplianceEvidenceType!
+
+  """The timestamp of the last time the evidence was updated"""
+  lastUpdatedTimestamp: Long
+
+  """The user ID of the user that created the evidence"""
+  creatorUserId: ID!
+
+  """The timestamp of the evidence creation date"""
+  createTimestamp: Long!
+
+  """A description for the link"""
+  description: String!
+
+  """The link's URL"""
+  linkUrl: String!
+
+  """A name for the link"""
+  name: String!
+}
+
+type ComplianceNote implements ComplianceEvidence {
+  """The UUID identifier for the evidence"""
+  id: ID!
+
+  """The type of evidence"""
+  evidenceType: ComplianceEvidenceType!
+
+  """The timestamp of the last time the evidence was updated"""
+  lastUpdatedTimestamp: Long
+
+  """The user ID of the user that created the evidence"""
+  creatorUserId: ID!
+
+  """The timestamp of the evidence creation date"""
+  createTimestamp: Long!
+
+  """The content of the note"""
+  body: String!
+
+  """A name for the note"""
+  name: String!
+}
+
+type ComplianceQuestionEvaluation implements ComplianceEvidence {
+  """The UUID identifier of the internal evidence"""
+  id: ID!
+
+  """The type of this evidence, will be QUESTION_EVALUATION for this object"""
+  evidenceType: ComplianceEvidenceType!
+
+  """The date of last update"""
+  lastUpdatedTimestamp: Long
+
+  """The UUID identifier of the associated compliance framework item"""
+  frameworkItemId: String!
+
+  """The UUID identifier of the associated question"""
+  questionId: String!
+
+  """The results of the question evaluation for a compliance framework item"""
+  results: [ComplianceQuestionEvaluationResults!]!
+
+  """
+  The result of the evaluation of the queries contained in the linked question
+  """
+  evaluationResult: ComplianceEvaluationResult!
+}
+
+type ComplianceQuestionEvaluationResults {
+  name: String!
+  query: String!
+  rawResultKey: String!
+  recordCount: Long!
+}
+
+type ComplianceQuestionnaireAnswer implements ComplianceEvidence {
+  """The UUID identifier for the evidence"""
+  id: ID!
+
+  """The type of evidence"""
+  evidenceType: ComplianceEvidenceType!
+
+  """The timestamp of the last time the evidence was updated"""
+  lastUpdatedTimestamp: Long
+
+  """The user ID of the user that created the evidence"""
+  creatorUserId: ID!
+
+  """The timestamp of the evidence creation date"""
+  createTimestamp: Long!
+
+  """The content of the questionnaire answer"""
+  body: String!
+
+  """The answer to the questionnaire"""
+  answer: Answer
+}
+
+type ComplianceReviewAssignmentsSummary {
+  """
+  A computed identifier which uniquifies this ComplianceReviewAssignmentsSummary object
+  """
+  id: ID!
+
+  """
+  All of the owners that are at least partially assigned to this compliance object
+  """
+  partialOwnerAssignments: [PartialComplianceReviewOwnerAssignment!]!
+
+  """
+  All of the review frequencies that are at least partially assigned to this compliance object
+  """
+  partialReviewFrequencyAssignments: [PartialComplianceReviewFrequencyAssignment!]!
+}
+
+type ComplianceReviewConfiguration {
+  """The UUID identifier for this review configuration"""
+  id: ID!
+
+  """
+  The list of user IDs for the users responsible for maintaining this review
+  """
+  ownerUserIds: [String!]!
+
+  """The frequency with which reviews should be conducted"""
+  reviewFrequency: ComplianceReviewFrequency!
+
+  """
+  The timestamp of the next review's due date, based on review frequency and the date of the last review
+  """
+  nextDueDateTimestamp: Long!
+
+  """The timestamp of the last review's completion"""
+  lastDueDateTimestamp: Long
+
+  """
+  The timestamp of the active review's completion (if it has been completed)
+  """
+  currentReviewCompletedOnTimestamp: Long
+
+  """
+  The user ID of the user that completed the active review (if it has been completed)
+  """
+  currentReviewCompletedBy: String
+
+  """
+  The timestamp of the previous review's completion (if one has been completed)
+  """
+  lastReviewCompletedOnTimestamp: Long
+
+  """
+  The user ID of the user that completed the previous review (if one has been completed)
+  """
+  lastReviewCompletedBy: String
+}
+
+type ComplianceReviewer {
+  id: String!
+  userId: String!
+  type: String!
+  userCreateDate: String!
+  fullName: String!
+  profile: ComplianceReviewerProfile!
+}
+
+type ComplianceReviewerProfile {
+  email: String!
+  emailVerified: Boolean!
+}
+
+type ComplianceReviewersOutput {
+  complianceReviewers: [ComplianceReviewer!]!
+}
+
+enum ComplianceReviewFrequency {
+  WEEKLY
+  MONTHLY
+  BI_MONTHLY
+  QUARTERLY
+  SEMI_ANNUALLY
+  ANNUALLY
+}
+
+type ComplianceUserSettings {
+  COMPLIANCE_REVIEW: ChannelConfiguration!
+  COMPLIANCE_SERVICE_STANDARD_DOWNLOAD_FINISHED: ChannelConfiguration!
+  COMPLIANCE_EVALUATION_ERROR: ChannelConfiguration!
+}
+
+type ConfigField {
+  key: String!
+  displayName: String!
+  description: String!
+  type: String
+  format: String
+  defaultValue: JSON
+  helperText: String
+  inputAdornment: String
+  mask: Boolean
+  optional: Boolean
+  immutable: Boolean
+  readonly: Boolean
+  computed: Boolean
+  options: [ConfigFieldOption!]
+  configFields: [ConfigField]
+}
+
+type ConfigFieldOption {
+  value: String!
+  description: String
+  label: String
+  webLink: String
+  default: Boolean
+}
+
+input ConfirmExternalUploadInput {
+  """The UUID identifier for the external upload to confirm"""
+  id: ID!
+}
+
+type CountAlertInstancesOutput {
+  count: Int!
+  pageInfo: PageInfo!
+}
+
+input CreateAssessmentInput {
+  name: String!
+  description: String
+}
+
+type CreateAssessmentOutput {
+  assessment: Assessment!
+}
+
+input CreateComplianceFrameworkInput {
+  """The human readable name of this compliance framework - Example: HIPPA"""
+  name: String!
+
+  """The version of this compliance framework - Example: 2013 or v.1.2"""
+  version: String!
+
+  """The type of compliance framework to create"""
+  frameworkType: ComplianceFrameworkType!
+
+  """An external web link to the framework's definition"""
+  webLink: String
+
+  """Filters question evaluation results for this framework"""
+  scopeFilters: [JSON!]
+}
+
+input CreateComplianceFrameworkItemInput {
+  """
+  The human readable name for this compliance framework item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance framework item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance framework item is displayed in the UI
+  """
+  displayCategory: String
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """
+  The UUID identifier of the compliance framework which owns the compliance group which the framework item is assigned to
+  """
+  frameworkId: ID!
+
+  """
+  The UUID identifier of the compliance group to assign this compliance framework item to
+  """
+  groupId: ID!
+
+  """An external web link to this framework item's definition"""
+  webLink: String
+}
+
+input CreateComplianceGroupInput {
+  """
+  The human readable name of this compliance group - Example: Physical Access & Security
+  """
+  name: String!
+
+  """Any additional information for this compliance group"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance group is displayed in the UI
+  """
+  displayCategory: String
+
+  """
+  The UUID identifier for the compliance framework that this compliance group should be added to
+  """
+  frameworkId: String!
+
+  """An external web link to this compliance group's definition"""
+  webLink: String
+}
+
+input CreateComplianceLibraryItemInput {
+  """
+  The human readable name for this compliance library item - Example: Acceptable Use of End User Computing
+  """
+  name: String!
+
+  """Any other relevant information for this compliance library item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance library item is displayed in the UI
+  """
+  displayCategory: String
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """An external web link to this library item's definition"""
+  webLink: String
+}
+
+input CreateComplianceLinkInput {
+  """
+  The ID of the compliance library item this evidence supports; supply either this value or frameworkItemId
+  """
+  libraryItemId: ID
+
+  """
+  The ID of the compliance framework item which this evidence supports; supply either this value or libraryItemId
+  """
+  frameworkItemId: ID
+
+  """A description for the link"""
+  description: String!
+
+  """The link's URL"""
+  linkUrl: String!
+
+  """A name for the link"""
+  name: String!
+}
+
+input CreateComplianceNoteInput {
+  """
+  The ID of the compliance library item this evidence supports; supply either this value or frameworkItemId
+  """
+  libraryItemId: ID
+
+  """
+  The ID of the compliance framework item which this evidence supports; supply either this value or libraryItemId
+  """
+  frameworkItemId: ID
+
+  """The content of the note"""
+  body: String!
+
+  """A name for the note"""
+  name: String!
+}
+
+input CreateComplianceQuestionnaireAnswerInput {
+  """The ID of the compliance framework item which this evidence supports"""
+  frameworkItemId: ID
+
+  """The content of the questionnaire answer"""
+  body: String!
+
+  """The answer to the questionnaire"""
+  answer: Answer!
+}
+
+input CreateCurrentUserTokenInput {
+  name: String!
+  expiresAt: Long!
+}
+
+input CreateDraftInput {
+  reviewerUserIds: [String!]!
+  policyItemUuid: String!
+}
+
+input CreateEntityV2 {
+  timestamp: Long
+  entity: JSON!
+}
+
+input CreateExternalUploadEvidenceInput {
+  """
+  The ID of the compliance library item this evidence supports; supply either this value or frameworkItemId
+  """
+  libraryItemId: ID
+
+  """
+  The ID of the compliance framework item which this evidence supports; supply either this value or libraryItemId
+  """
+  frameworkItemId: ID
+
+  """Any additional details regarding this evidence"""
+  body: String!
+
+  """The id of the external upload linked to this evidence"""
+  externalUploadId: String!
+}
+
+input CreateExternalUploadInput {
+  """
+  The human readable name of the uploaded file - Example: 'Policy Document v.3
+  """
+  name: String!
+
+  """The name of the uploaded file - Example: 'policy_doc.pdf"""
+  filename: String!
+
+  """Any other relevant information for this external upload"""
+  description: String
+}
+
+input CreateIamTokenInput {
+  type: IamTokenType!
+  subject: String
+  name: String
+  expiresAt: Long
+  policy: String!
+}
+
+input CreateInlineQuestionRuleInstanceInput {
+  question: RuleQuestionDetailsInput!
+  templates: JSON
+  tags: [String!]
+  name: String!
+  description: String
+  specVersion: Int!
+  operations: [RuleOperationInput!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+}
+
+input CreateIntegrationInstanceInput {
+  name: String!
+  sourceIntegrationInstanceId: String
+  pollingInterval: IntegrationPollingInterval
+  pollingIntervalCronExpression: IntegrationPollingIntervalCronExpressionInput
+  integrationDefinitionId: String!
+  description: String
+  config: JSON
+  offsiteComplete: Boolean
+}
+
+type CreateOutput {
+  uuid: String!
+}
+
+input CreatePolicyInput {
+  id: String!
+  file: String!
+  title: String!
+  template: String!
+}
+
+input CreateProcedureInput {
+  id: String!
+  file: String!
+  name: String!
+  policyId: String!
+  template: String!
+  provider: String
+  isRef: Boolean
+  applicable: Boolean
+  adopted: Boolean
+  summary: String!
+}
+
+type CreatePublicSharedUrlResult {
+  tokenId: String!
+  token: String!
+  shareId: String!
+}
+
+input CreateQuestionInput {
+  title: String!
+  name: String
+  tags: [String]
+  description: String
+  showTrend: Boolean
+  pollingInterval: SchedulerPollingInterval
+  queries: [QuestionQueryInput!]!
+  compliance: [QuestionComplianceMetaDataInput!]
+  variables: [QuestionVariableInput!]
+}
+
+input CreateQuestionRuleInstanceInput {
+  question: RuleQuestionDetailsInput!
+  templates: JSON
+  tags: [String!]
+  name: String!
+  description: String
+  specVersion: Int!
+  operations: [RuleOperationInput!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+}
+
+input CreateReferencedQuestionRuleInstanceInput {
+  questionId: String
+  questionName: String
+  templates: JSON
+  tags: [String!]
+  name: String!
+  description: String
+  specVersion: Int!
+  operations: [RuleOperationInput!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+}
+
+input CreateRelationshipV2 {
+  timestamp: Long
+  relationship: JSON!
+}
+
+input CumulativeAlertsEmailRecipient {
+  alertInterval: AlertInterval!
+  emailAddress: String!
+}
+
+type Dashboard {
+  id: String!
+  name: String!
+  type: String!
+}
+
+input DashboardData {
+  dashboardId: String!
+  dashboardName: String!
+  dashboardType: DashboardType!
+  ownerId: String!
+  queryVariablesString: String
+}
+
+type DashboardQueryResult {
+  name: String!
+  query: String!
+  url: String!
+  data: JSON
+  type: String
+}
+
+type DashboardQuestionResult {
+  results: JSON!
+  pageInfo: PageInfo
+}
+
+type DashboardTemplate {
+  widgets: JSON
+  layout: JSON
+}
+
+type DashboardTemplateItem {
+  name: String!
+  template: DashboardTemplate
+}
+
+enum DashboardType {
+  USER
+  ACCOUNT
+}
+
+input DashboardViewport {
+  width: Int!
+  height: Int!
+}
+
+enum DeferredResponseFormat {
+  JSON
+  CSV
+}
+
+enum DeferredResponseOption {
+  DISABLED
+  OPTIONAL
+  FORCE
+}
+
+input DeleteAccountUserGroupsInput {
+  user: ID!
+  groups: [String!]!
+}
+
+input DeleteAccountUserInput {
+  user: ID!
+}
+
+input DeleteAssessmentInput {
+  id: ID!
+}
+
+type DeleteAssessmentOutput {
+  assessment: Assessment!
+}
+
+input DeleteComplianceEvidenceInput {
+  """The UUID identifier for the evidence"""
+  id: ID!
+}
+
+input DeleteComplianceFrameworkInput {
+  """The UUID identifier of the compliance framework to delete"""
+  id: ID!
+}
+
+input DeleteComplianceFrameworkItemInput {
+  """The UUID identifier for the compliance framework item to delete"""
+  id: ID!
+}
+
+input DeleteComplianceGroupInput {
+  """The UUID identifier of the compliance group to delete"""
+  id: ID!
+}
+
+input DeleteComplianceLibraryItemInput {
+  """The UUID identifier of the compliance library item to delete"""
+  id: ID!
+}
+
+input DeleteComplianceLibraryItemsInput {
+  """The UUID identifiers of the compliance library items to delete"""
+  ids: [ID!]!
+}
+
+type DeletedExternalUpload {
+  """The UUID identifier for the deleted external upload"""
+  id: ID!
+}
+
+input DeleteExternalUploadInput {
+  """The UUID identifier for the external upload to delete"""
+  id: ID!
+}
+
+input DeleteGroupInput {
+  group: String!
+}
+
+input DeleteGroupUsersInput {
+  group: ID!
+  users: [String!]!
+}
+
+input DeleteIamAccount {
+  accountId: ID!
+}
+
+type DeleteInfo {
+  success: Boolean!
+}
+
+type DeleteOutput {
+  deletedOn: Float!
+}
+
+type DeleteRuleInstanceResult {
+  id: ID!
+}
+
+type DeletionResult {
+  success: Boolean
+}
+
+input DetachComplianceLibraryItemFromComplianceFrameworkItemInput {
+  """
+  The UUID identifier of the compliance framework item that is the target of this relationship
+  """
+  frameworkItemId: ID!
+
+  """
+  The UUID identifier of the compliance library item that is the source of this relationship
+  """
+  libraryItemId: ID!
+}
+
+input DownloadLinkForEvidenceCollectionJobInput {
+  evidenceCollectionJobId: String!
+}
+
+type DownloadLinkForEvidenceCollectionJobOuput {
+  link: String!
+}
+
+input DownloadLinkForExternalUploadInput {
+  """The UUID identifier for the external upload to download"""
+  id: ID!
+}
+
+type DownloadLinkForExternalUploadOutput {
+  link: String!
+}
+
+input DownloadLinkForFrameworkSummaryEvidenceInput {
+  frameworkId: ID!
+}
+
+type Draft {
+  uuid: String!
+  reviewers: [DraftReviewer!]!
+  state: DraftState!
+  createdOn: Float!
+  deletedOn: Float
+  stateUpdatedOn: Float!
+}
+
+type DraftReviewer {
+  userId: String!
+  state: DraftReviewerState!
+  stateUpdatedOn: Float!
+}
+
+enum DraftReviewerState {
+  APPROVED
+  CHANGE_REQUESTED
+  PENDING
+}
+
+enum DraftState {
+  PUBLISHED
+  APPROVED
+  OPEN
+  DELETED
+}
+
+type Edge {
+  id: String!
+  toVertexId: String!
+  fromVertexId: String!
+  relationship: RelationshipCoreProperties!
+  properties: JSON
+}
+
+input EdgeFilters {
+  _id: String
+  _key: String
+  _type: String
+  _class: String
+}
+
+type EmailConfiguration implements BaseChannelConfiguration {
+  enabled: Boolean!
+}
+
+input EmailConfigurationInput {
+  enabled: Boolean!
+}
+
+type EnabledFeaturesForAccount {
+  features: JSON
+}
+
+enum EndIntegrationJobStatus {
+  COMPLETED
+  FAILED
+}
+
+input EndpointComplianceAdminActivationEmailDetails {
+  accountId: String!
+  emailAddresses: [String!]!
+  numDevices: Int
+  installLink: String
+}
+
+type EndpointComplianceAdminActivationEmailResult {
+  success: Boolean!
+}
+
+input EndpointComplianceAdminConfigDetails {
+  accountId: String!
+  minutesBetweenChecks: String!
+  policy: JSON
+}
+
+type EndpointComplianceAdminConfigResult {
+  accountId: String
+  minutesBetweenChecks: String
+  policy: JSON
+}
+
+type EndpointComplianceServiceUserSettings {
+  ENDPOINT_COMPLIANCE_ACTIVATION_EMAIL: ChannelConfiguration!
+}
+
+type EntitlementConfiguration {
+  accountTrialEndTime: String
+  featureEntitlements: JSON
+  usageLimitEntitlements: JSON
+  valueSetEntitlements: JSON
+}
+
+type EntityContributionsResponse {
+  contributions: JSON!
+}
+
+type EntityCoreProperties {
+  _source: String!
+  _id: String!
+  _key: String!
+  _type: [String]!
+  _class: [String]
+  _scope: String
+  _accountId: String!
+  _integrationName: String
+  _integrationDefinitionId: String
+  _integrationInstanceId: String
+  _integrationType: String
+  _integrationClass: [String]
+  _version: Int!
+  _createdOn: Long!
+  _beginOn: Long!
+  _endOn: Long
+  _latest: Boolean
+  _deleted: Boolean!
+  displayName: String
+}
+
+type EntityMutationResponse {
+  entity: EntityCoreProperties
+  vertex: Vertex
+}
+
+type EntityPropertiesResponse {
+  properties: [String!]!
+  pageInfo: PageInfo!
+}
+
+type EntityPropertyValue {
+  value: Primitive
+  count: Long!
+}
+
+type EntityPropertyValuesResponse {
+  values: [EntityPropertyValue!]!
+  pageInfo: PageInfo!
+}
+
+type EntityResponse {
+  entity: JSON!
+}
+
+input EvaluateAlertRulesFilters {
+  tags: [String!]!
+}
+
+input EvaluateAssessmentInput {
+  id: ID!
+}
+
+type EvaluateAssessmentOutput {
+  assessment: Assessment!
+}
+
+input EvaluateComplianceFrameworkInput {
+  """The UUID identifier of the compliance framework to evaluate"""
+  id: ID!
+
+  """The evaluation trigger. Defaults to MANUAL_BY_USER."""
+  evaluationTrigger: ComplianceEvaluationTrigger
+}
+
+input EvaluateComplianceFrameworkItemInput {
+  """The UUID identifier of the compliance framework item to evaluate"""
+  id: ID!
+}
+
+input EvaluateComplianceLibraryItemInput {
+  """The UUID identifier of the compliance library item to evaluate"""
+  id: ID!
+}
+
+type EvidenceCollectionJob {
+  id: ID!
+  accountId: String!
+  userId: String
+  frameworkId: String
+  frameworkItemId: String
+  libraryItemId: String
+  status: EvidenceCollectionJobStatus!
+  progress: Float
+  createTimestamp: Long!
+  endTimestamp: Long
+}
+
+input EvidenceCollectionJobInput {
+  id: ID!
+}
+
+enum EvidenceCollectionJobStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+input ExportComplianceFrameworkInput {
+  complianceFrameworkId: String!
+}
+
+type ExportComplianceFrameworkOutput {
+  complianceFrameworkJsonString: String!
+}
+
+type ExternalIdRecord {
+  id: ID!
+  createDate: Long!
+  integrationInstanceId: String
+}
+
+type ExternalUpload {
+  """The UUID identifier for this external upload"""
+  id: ID!
+
+  """An identifier for the individual uploading the file"""
+  creatorUserId: String
+
+  """Whether or not the file has been successfully uploaded to S3"""
+  isUploadComplete: Boolean!
+
+  """The name of the uploaded file - Example: 'policy_doc.pdf"""
+  filename: String!
+
+  """
+  The human readable name of the uploaded file - Example: 'Policy Document v.3
+  """
+  name: String!
+
+  """Unique identifier for the file in an S3 bucket"""
+  s3ObjectKey: String!
+
+  """The timestamp of the last update to this external upload record"""
+  lastUpdatedTimestamp: Long!
+
+  """The timestamp for this upload's expiration"""
+  expirationTimestamp: Long
+
+  """Any other relevant information for this external upload"""
+  description: String
+}
+
+type ExternalUploadEvidence implements ComplianceEvidence {
+  """The UUID identifier for the evidence"""
+  id: ID!
+
+  """The type of evidence"""
+  evidenceType: ComplianceEvidenceType!
+
+  """The timestamp of the last time the evidence was updated"""
+  lastUpdatedTimestamp: Long
+
+  """The user ID of the user that created the evidence"""
+  creatorUserId: ID!
+
+  """The timestamp of the evidence creation date"""
+  createTimestamp: Long!
+
+  """Any additional details regarding this evidence"""
+  body: String!
+
+  """The id of the external upload linked to this evidence"""
+  externalUploadId: ID!
+
+  """The actual external upload linked to this evidence"""
+  externalUpload: ExternalUpload
+}
+
+input ExternalUploadInput {
+  """The UUID identifier for the external upload to query"""
+  id: ID!
+}
+
+type FeatureAccessResult {
+  canAccess: Boolean!
+}
+
+input FieldSort {
+  field: String!
+  order: SortOrder
+}
+
+type FileNotification {
+  CSV_DOWNLOAD_SUCCESS: ChannelConfiguration!
+  CSV_DOWNLOAD_FAIL: ChannelConfiguration!
+}
+
+enum FilterType {
+  AND
+  AND_WITH_SAME_FIELD_OR
+  AND_WITH_CLASS_OR
+  OR_WITH_CLASS_OR
+  OR
+}
+
+input GetAllProceduresForAccountInput {
+  endCursor: String
+  size: Int
+}
+
+type GetAuditEventsForAccountOutput {
+  items: [HistoryItem!]!
+  pageInfo: PageInfo!
+}
+
+type GetCompanyValuesOutput {
+  values: JSON!
+}
+
+type GetDashboardLayoutSettingsResult {
+  dashboardId: String!
+  ownerId: String!
+  data: JSON
+}
+
+type GetDashboardQueryWidgetDataResult {
+  dashboardId: String!
+  widgetId: String!
+  ownerId: String!
+  data: [DashboardQueryResult!]
+}
+
+type GetDashboardQuestionWidgetDataResult {
+  dashboardId: String!
+  widgetId: String!
+  ownerId: String!
+  data: DashboardQuestionResult!
+}
+
+type GetDashboardWidgetSettingsResult {
+  dashboardId: String!
+  ownerId: String!
+  data: JSON
+}
+
+input GetEnabledFeaturesForAccountDto {
+  accountId: String!
+}
+
+type GetHistoryForResourceOutput {
+  items: [HistoryItemForResource!]!
+  pageInfo: PageInfo!
+}
+
+type GetInsightsSettingsResult {
+  resourceType: String
+  resourceId: String
+  category: String
+  data: JSON
+}
+
+type GetPaginatedQueryWidgetDataResult {
+  data: JSON
+  type: String
+  cursor: String
+  totalCount: Int
+}
+
+type GetPoliciesOutput {
+  policies: [PolicyAppPolicy!]!
+  pageInfo: PageInfo!
+}
+
+type GetPresignedDashboardDataUrlTypeDefsResult {
+  dashboardId: String!
+  signedUrl: String
+  statusCode: Int
+  error: JSON
+}
+
+type GetProceduresOutput {
+  procedures: [PolicyAppProcedure!]!
+  pageInfo: PageInfo!
+}
+
+type GetSettingsResult {
+  resourceType: String!
+  resourceId: String!
+  category: String!
+  data: JSON
+}
+
+type GetTemplateOutput {
+  template: String!
+}
+
+type GetUserInternalBoardAccessResult {
+  canUserAccessBoard: Boolean!
+}
+
+type GetZipStateOutput {
+  state: InitializationState!
+  downloadUrl: String
+  error: String
+}
+
+type GraphResponse {
+  vertices: [Vertex]!
+  edges: [Edge]!
+}
+
+type HealthCheckResponse {
+  body: String!
+}
+
+type HistoryItem {
+  id: String!
+  resourceType: String!
+  resourceId: String!
+  category: String!
+  timestamp: Long!
+  performedByUserId: String
+  data: JSON!
+}
+
+type HistoryItemForResource {
+  timestamp: Long!
+  performedByUserId: String
+  data: JSON!
+}
+
+type HomeBoardDefaultResult {
+  boardId: String
+}
+
+type HomeBoardPermissions {
+  permissions: JSON!
+}
+
+type HomeBoardResult {
+  boards: [Dashboard!]!
+}
+
+interface IAccount {
+  id: ID!
+  subdomain: String!
+  name: String!
+  owner: String!
+  type: String!
+  status: String!
+  logoUrl: String
+  accessPolicy: IamAccountAccessPolicy
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+interface IAccountUser {
+  id: ID!
+  email: ID!
+  userId: ID!
+  accountId: String!
+  nickName: String!
+  username: String
+  firstName: String
+  lastName: String
+  lastLogin: String
+  previousLogin: String
+  status: String
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+enum IAM_RESOURCE_ID_SOURCE {
+  PARENT
+  ARGS
+  RESULT
+  DYNAMIC
+}
+
+type IamAbacPermission {
+  subject: String!
+  statement: [String!]!
+}
+
+type IamAccount {
+  id: ID!
+  accountId: ID!
+  accountSubdomain: String!
+  accountName: String!
+  accountOwner: String!
+  accountType: String!
+  status: String!
+  accountLogoUrl: String
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamAccountAccessPolicy {
+  accountId: ID!
+  domainWhitelist: [String]
+  providerName: String
+  providerDefaultGroups: [String]
+  restrictedToProvider: Boolean
+}
+
+type IamAccountIdentityProvider {
+  accountId: ID!
+  accountIdentityProviderName: String
+  accountIdentityProviderMetadataUrl: String
+  accountIdentityProviderMetadataFile: String
+}
+
+type IamAccountNode {
+  id: ID!
+  accountId: ID!
+  accountSubdomain: String!
+  accountName: String!
+  accountOwner: String!
+  accountType: String!
+  status: String!
+  accountLogoUrl: String
+  accountAccessPolicy: IamAccountAccessPolicy
+  accountIdentityProvider: IamAccountIdentityProvider
+  accountUsers(limit: Int!, cursor: String): IamAccountUserPage
+  accountGroups(limit: Int!, cursor: String): IamGroupPage
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamAccountPage {
+  items: [IamAccount!]!
+  pageInfo: PageInfo!
+}
+
+type IamAccountUser implements IAccountUser {
+  id: ID!
+  email: ID!
+  userId: ID!
+  accountId: String!
+  nickName: String!
+  username: String
+  firstName: String
+  lastName: String
+  lastLogin: String
+  previousLogin: String
+  userLogins: [IamUserLogin]
+  userAbacPermission: IamAbacPermission
+  status: String
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamAccountUserNode implements IAccountUser {
+  id: ID!
+  email: ID!
+  userId: ID!
+  accountId: String!
+  nickName: String!
+  username: String
+  firstName: String
+  lastName: String
+  lastLogin: String
+  previousLogin: String
+  userLogins: [IamUserLogin!]
+  userAbacPermission: IamAbacPermission
+  userGroups(limit: Int!, cursor: String): IamGroupPage
+  userApiKeys(limit: Int!, cursor: String): IamApiKeysPage
+  invitations(limit: Int, cursor: String): IamInvitationPage
+  tokens(limit: Int, cursor: String): IamTokenPage
+  status: String
+  profilePicture: String
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamAccountUserNodePage {
+  items: [IamAccountUserNode!]!
+  pageInfo: PageInfo!
+}
+
+type IamAccountUserPage {
+  items: [IamAccountUser!]!
+  pageInfo: PageInfo!
+}
+
+type IamApiKey {
+  id: ID!
+  name: String!
+  dateExpires: Long!
+  key: String!
+}
+
+type IamApiKeyMasked {
+  id: ID!
+  name: String!
+  dateExpires: Long!
+}
+
+type IamApiKeysPage {
+  items: [IamApiKeyMasked]!
+  pageInfo: PageInfo!
+}
+
+type IamGroup {
+  accountId: ID!
+  groupId: ID!
+  groupName: String!
+  groupDescription: String
+  groupQueryPolicy: IamQueryPolicy
+  groupAbacPermission: IamAbacPermission
+  status: String!
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamGroupNode {
+  accountId: ID!
+  groupId: ID!
+  groupName: ID!
+  groupDescription: String
+  status: String!
+  groupUsers(limit: Int!, cursor: String): IamAccountUserPage
+  groupQueryPolicy: IamQueryPolicy
+  groupAbacPermission: IamAbacPermission
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamGroupNodePage {
+  items: [IamGroupNode!]!
+  pageInfo: PageInfo!
+}
+
+type IamGroupPage {
+  items: [IamGroup!]!
+  pageInfo: PageInfo!
+}
+
+type IamInvitation {
+  invitationId: ID!
+  userId: ID!
+  email: String!
+  accountId: ID!
+  accountName: String!
+  accountSubdomain: String!
+  groupId: ID!
+  groupName: String!
+  invitationLink: String!
+  invitationInitiatorId: String
+  invitationInitiatorEmail: String
+  status: String!
+}
+
+type IamInvitationPage {
+  items: [IamInvitation!]!
+  pageInfo: PageInfo!
+}
+
+input IamInvitationPatch {
+  invitationId: ID!
+  status: IamInvitationStatus!
+}
+
+enum IamInvitationStatus {
+  ACCEPTED
+  REJECTED
+  REVOKED
+}
+
+type IamQueryPolicy {
+  accountId: ID!
+  groupId: ID!
+  statement: [JSON]
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamQueryPolicyPage {
+  items: [IamQueryPolicy!]!
+  pageInfo: PageInfo!
+}
+
+type IamToken {
+  id: ID!
+  secret: String!
+  token: String
+  category: String
+  subject: String!
+  type: IamTokenType!
+  name: String!
+  accountId: String
+  username: String
+  email: String
+  userId: String
+  policy: String
+  revoked: Boolean!
+  expiresAt: Long!
+  createdAt: Long!
+  csrf: String
+}
+
+type IamTokenPage {
+  items: [IamToken!]!
+  tokens: [IamToken!]
+  pageInfo: PageInfo!
+}
+
+enum IamTokenType {
+  ACCOUNT
+  RESOURCE
+  USER_API
+}
+
+type IamUser {
+  email: ID!
+  userId: ID!
+  nickName: String!
+  firstName: String
+  lastName: String
+  userLogins: [IamUserLogin!]
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamUserLogin {
+  username: ID
+  userId: String
+  email: String
+  providerName: String
+  providerType: String
+  status: String
+  firstName: String
+  lastName: String
+  nickName: String
+  phone: String
+  picture: String
+  _timeCreated: String
+  _timeUpdated: String
+  _lastLogin: String
+  _previousLogin: String
+}
+
+type IamUserLoginPage {
+  items: [IamUserLogin!]!
+  pageInfo: PageInfo!
+}
+
+type IamUserNode {
+  email: ID!
+  userId: ID!
+  nickName: String!
+  firstName: String
+  lastName: String
+  userLogins: [IamUserLogin!]
+  userAccounts: IamAccountUserPage
+  _timeCreated: String
+  _timeUpdated: String
+}
+
+type IamUserNodePage {
+  items: [IamUserNode!]!
+  pageInfo: PageInfo!
+}
+
+type IamUserPage {
+  items: [IamUser!]!
+  pageInfo: PageInfo!
+}
+
+type ImportableAssessmentTemplate {
+  id: ID!
+  name: String!
+}
+
+type ImportableAssessmentTemplatesOutput {
+  importableAssessmentTemplates: [ImportableAssessmentTemplate!]!
+}
+
+"""A Compliance Framework that JupiterOne can ingest and understand"""
+type ImportableComplianceFrameworkTemplate {
+  """The display name of the compliance framework template"""
+  name: String
+
+  """The version of the compliance framework template"""
+  version: String
+
+  """
+  The standard that this framework adheres to.  It should match up with the
+  standard property of our templates in the security-policy-templates github repo
+  """
+  standard: String
+
+  """The URL to view or fetch the compliance framework template"""
+  url: String
+}
+
+input ImportAssessmentByTemplateInput {
+  assessmentTemplateId: ID!
+}
+
+type ImportAssessmentByTemplateOutput {
+  assessment: Assessment!
+}
+
+input ImportComplianceFrameworkByNameInput {
+  complianceFrameworkName: String!
+}
+
+input ImportComplianceFrameworkInput {
+  """The compliance framework in json string format"""
+  complianceFrameworkJsonString: String!
+}
+
+type InAppBody {
+  message: String!
+}
+
+type InAppConfiguration implements BaseChannelConfiguration {
+  enabled: Boolean!
+}
+
+input InAppConfigurationInput {
+  enabled: Boolean!
+}
+
+type InAppNotification {
+  notificationId: String!
+  topic: Topic!
+  body: InAppBody!
+  actionLink: String!
+  createdAt: Float!
+  readDate: Float
+  downloadLink: String
+  downloadText: String
+}
+
+type InAppNotificationResult {
+  notifications: [InAppNotification!]!
+  pageInfo: PageInfo!
+}
+
+enum InitializationState {
+  PENDING
+  COMPLETE
+  NOT_STARTED
+  ERRORED
+}
+
+type InsightsNotification {
+  DASHBOARD_PUBLISHED: ChannelConfiguration!
+  DASHBOARD_PDF_DOWNLOAD_SUCCESS: ChannelConfiguration!
+  DASHBOARD_PDF_DOWNLOAD_FAIL: ChannelConfiguration!
+}
+
+type IntegrationDefinition {
+  id: String!
+  name: String!
+  type: String!
+  title: String!
+  oAuth: OAuth
+  offsiteUrl: String
+  offsiteButtonTitle: String
+  offsiteStatusQuery: String
+  integrationType: String!
+  version: String
+  integrationClass: [String!]!
+  configFields: [ConfigField!]!
+  beta: Boolean
+  repoWebLink: String
+  invocationPaused: Boolean
+  managedExecutionDisabled: Boolean
+  integrationPlatformFeatures: IntegrationPlatformFeatures
+}
+
+type IntegrationEvent {
+  id: ID!
+  jobId: String!
+  name: String!
+  description: String!
+  createDate: Long!
+}
+
+type IntegrationEventsResult {
+  events: [IntegrationEvent]!
+  pageInfo: PageInfo
+}
+
+type IntegrationInstance {
+  id: ID!
+  name: String!
+  accountId: String!
+  sourceIntegrationInstanceId: String
+  pollingInterval: IntegrationPollingInterval
+  pollingIntervalCronExpression: IntegrationPollingIntervalCronExpression
+  integrationDefinitionId: String!
+  integrationDefinition: IntegrationDefinition
+  description: String
+  config: JSON
+  offsiteComplete: Boolean
+  instanceRelationship: IntegrationInstanceRelationship
+  jobs(status: IntegrationJobStatus, cursor: String, size: Int): IntegrationJobsResult!
+}
+
+enum IntegrationInstanceRelationship {
+  PARENT
+  CHILD
+  STANDALONE
+}
+
+type IntegrationInstancesStatusResult {
+  status: String
+  statusesByDefinition: JSON
+}
+
+type IntegrationInstanceToken {
+  tokenId: String!
+  token: String!
+  createdAt: Long!
+  expiresAt: Long!
+}
+
+type IntegrationJob {
+  id: ID!
+  status: IntegrationJobStatus
+  integrationInstanceId: String!
+  integrationDefinitionId: String
+  integrationInstance: IntegrationInstance
+  integrationDefinition: IntegrationDefinition
+  createDate: Long!
+  endDate: Long
+  errorsOccurred: Boolean!
+}
+
+input IntegrationJobKey {
+  id: String!
+  integrationInstanceId: String!
+}
+
+type IntegrationJobsResult {
+  jobs: [IntegrationJob!]!
+  pageInfo: PageInfo!
+}
+
+enum IntegrationJobStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  PERSISTING_DATA
+}
+
+type IntegrationPlatformFeatures {
+  supportsChildInstances: Boolean
+}
+
+enum IntegrationPollingInterval {
+  DISABLED
+  THIRTY_MINUTES
+  ONE_HOUR
+  FOUR_HOURS
+  EIGHT_HOURS
+  TWELVE_HOURS
+  ONE_DAY
+  ONE_WEEK
+}
+
+type IntegrationPollingIntervalCronExpression {
+  hour: Int
+  dayOfWeek: Int
+}
+
+input IntegrationPollingIntervalCronExpressionInput {
+  hour: Int
+  dayOfWeek: Int
+}
+
+type IntegrationsUserSettings {
+  INTEGRATION_FAILURE: ChannelConfiguration!
+  INTEGRATION_FAST_TRACK_FIRST_JOB_COMPLETED: ChannelConfiguration!
+  INTEGRATION_FIRST_SUCCESSFUL_JOB_COMPLETED: ChannelConfiguration!
+}
+
+input InternalEvidenceInput {
+  """The UUID identifier of the associated compliance framework item"""
+  frameworkItemId: String!
+}
+
+type InvitationServiceUserSettings {
+  INVITATION_SERVICE_GROUP_INVITATION: ChannelConfiguration!
+}
+
+type InvocationResult {
+  success: Boolean
+  integrationJobId: String
+}
+
+type InvokeExportDashboardPdfResult {
+  dashboardId: String!
+  statusCode: Int
+  fileKey: String
+  error: JSON
+}
+
+input IpAddressRange {
+  from: String!
+  to: String!
+}
+
+enum ItemType {
+  policy
+  procedure
+}
+
+type J1Query {
+  query: String!
+  name: String
+  version: String
+  includeDeleted: Boolean
+}
+
+input J1QueryInput {
+  query: String!
+  name: String
+  version: String
+  includeDeleted: Boolean
+}
+
+type JanitorUserSettings {
+  JANITOR_UNCONFIRMED_USER_DELETION_NOTICE: ChannelConfiguration!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+enum LibraryItemToFrameworkItemRelationshipType {
+  """Disregard evidence defined on the compliance library item"""
+  IGNORE_EVIDENCE
+
+  """
+  Use all evidence defined on the compliance library item for the compliance framework item
+  """
+  INHERIT_EVIDENCE
+}
+
+type LinkedPolicy {
+  """The uuid of the linked policy"""
+  id: String!
+
+  """The human-readable ref of the linked policy - example: program"""
+  ref: String!
+
+  """The name of the linked policy"""
+  name: String!
+}
+
+type LinkedProcedure {
+  """The uuid of the linked procedure"""
+  id: String!
+
+  """
+  The human-readable ref of the linked procedure - example: cp-access-control
+  """
+  ref: String!
+
+  """The name of the linked procedure"""
+  name: String
+
+  """Is this procedure adopted or not"""
+  isAdopted: Boolean
+
+  """The policy for this linked procedure"""
+  linkedPolicy: LinkedPolicy
+}
+
+type ListActiveAlertInstancesOutput {
+  instances: [AlertInstance!]!
+  pageInfo: PageInfo!
+}
+
+type ListAlertInstancesInCreatedOnDateRangeOutput {
+  instances: [AlertInstance!]!
+  pageInfo: PageInfo!
+}
+
+type ListCollectionResultsOutput {
+  results: [ResultRecord!]!
+  pageInfo: PageInfo!
+}
+
+input ListIamTokenInput {
+  type: IamTokenType!
+  subject: String
+  subjectBeginsWith: String
+}
+
+type ListIntegrationDefinitionsResult {
+  definitions: [IntegrationDefinition]!
+  pageInfo: PageInfo!
+}
+
+type ListIntegrationInstancesResult {
+  instances: [IntegrationInstance]!
+  pageInfo: PageInfo!
+}
+
+input ListIntegrationInstancesSearchFilter {
+  name: String
+  includeOnlySourceInstances: Boolean
+  sourceIntegrationInstanceId: String
+}
+
+type ListIntegrationInstanceTokensResult {
+  tokens: [IntegrationInstanceToken!]!
+  pageInfo: PageInfo!
+}
+
+type ListQuestionsCategoriesResult {
+  categories: [QuestionsCategory!]!
+}
+
+type ListQuestionsResult {
+  questions: [Question!]!
+  totalHits: Int!
+  pageInfo: PageInfo!
+}
+
+type ListQuestionsResultWithTotal {
+  questions: [Question!]!
+  totalHits: Int!
+  pageInfo: PageInfo!
+}
+
+type ListQuestionsTagsResult {
+  tags: [QuestionTagsCount!]!
+  pageInfo: PageInfo!
+}
+
+enum ListQuestionsType {
+  ACCOUNT_ONLY
+  MANAGED_ONLY
+  ACCOUNT_AND_MANAGED
+}
+
+input ListRuleInstancesFilters {
+  tags: [String!]
+}
+
+type ListRuleInstancesOutput {
+  questionInstances: [QuestionRuleInstance!]!
+  reportInstances: [ReportRuleInstance!]!
+  pageInfo: PageInfo!
+}
+
+type ListSharedDashboardTokensResult {
+  tokens: [TokenResult!]!
+  pageInfo: PageInfo
+}
+
+type ListVerticesResponse {
+  total: Int!
+  vertices: [Vertex]!
+  pageInfo: PageInfo!
+}
+
+type LoginServiceSettings {
+  LOGIN_FORGOT_SSO_EMAIL: ChannelConfiguration!
+}
+
+"""The `Long` scalar type represents 52-bit integers"""
+scalar Long
+
+type ManualRuleEvaluationResult {
+  id: String!
+  outputs: [RuleEvaluationOutput!]
+}
+
+input MapQuestionsToFrameworkItemInput {
+  """The UUID identifier of the associated compliance framework item"""
+  frameworkItemId: String!
+
+  """The UUID identifiers of the associated questions"""
+  questionIds: [String!]!
+}
+
+input MapQuestionsToLibraryItemInput {
+  """The UUID identifier of the associated compliance library item"""
+  libraryItemId: String!
+
+  """The UUID identifiers of the associated questions"""
+  questionIds: [String!]!
+}
+
+input MapQuestionToFramework {
+  questionId: String!
+
+  """The name of the framework to apply question to"""
+  frameworkName: String!
+
+  """
+  The human readable identifier to perform matching for this map operation
+  """
+  refs: [String!]!
+}
+
+input MapQuestionToFrameworkItemInput {
+  """The UUID identifier of the associated compliance framework item"""
+  frameworkItemId: String!
+
+  """The UUID identifier of the associated question"""
+  questionId: String!
+}
+
+input MapQuestionToLibraryItemInput {
+  """The UUID identifier of the associated compliance library item"""
+  libraryItemId: String!
+
+  """The UUID identifier of the associated question"""
+  questionId: String!
+}
+
+type MetricsSlice {
+  startTime: String!
+  endTime: String!
+  peakAccumulatedInvocations: Int!
+  totalInvocations: Int!
+  totalRequests: Int!
+  rejectedInvocations: Int!
+  rejectedRequests: Int!
+  configuredInvocationCapacity: Int!
+  configuredInvocationWindowSeconds: Int!
+}
+
+input MoveComplianceFrameworkItemDownInput {
+  """
+  The UUID identifier of the compliance framework item to move down in position
+  """
+  id: ID!
+}
+
+input MoveComplianceFrameworkItemUpInput {
+  """
+  The UUID identifier of the compliance framework item to move up in position
+  """
+  id: ID!
+}
+
+type Mutation {
+  createComplianceFramework(input: CreateComplianceFrameworkInput!): ComplianceFramework
+  updateComplianceFramework(input: UpdateComplianceFrameworkInput!): ComplianceFramework
+  deleteComplianceFramework(input: DeleteComplianceFrameworkInput!): ID!
+  evaluateComplianceFramework(input: EvaluateComplianceFrameworkInput!): ComplianceFramework
+  createComplianceFrameworkItem(input: CreateComplianceFrameworkItemInput!): ComplianceFrameworkItem
+  deleteComplianceFrameworkItem(input: DeleteComplianceFrameworkItemInput!): ID!
+  updateComplianceFrameworkItem(input: UpdateComplianceFrameworkItemInput!): ComplianceFrameworkItem
+  evaluateComplianceFrameworkItem(input: EvaluateComplianceFrameworkItemInput!): ComplianceFrameworkItemBase
+  moveComplianceFrameworkItemUp(input: MoveComplianceFrameworkItemUpInput!): ComplianceFramework
+  moveComplianceFrameworkItemDown(input: MoveComplianceFrameworkItemDownInput!): ComplianceFramework
+  setComplianceFrameworkItemEvaluationApplicability(input: SetComplianceFrameworkItemEvaluationApplicability!): ComplianceFrameworkItem
+  createComplianceLibraryItem(input: CreateComplianceLibraryItemInput!): ComplianceLibraryItem
+  deleteComplianceLibraryItem(input: DeleteComplianceLibraryItemInput!): ID!
+  deleteComplianceLibraryItems(input: DeleteComplianceLibraryItemsInput!): [ID!]!
+  updateComplianceLibraryItem(input: UpdateComplianceLibraryItemInput!): ComplianceLibraryItem
+  attachComplianceLibraryItemToComplianceFrameworkItem(input: AttachComplianceLibraryItemToComplianceFrameworkItemInput!): ComplianceLibraryItemToComplianceFrameworkItemRelationship
+  updateComplianceLibraryItemToComplianceFrameworkItemRelationship(input: UpdateComplianceLibraryItemToComplianceFrameworkItemRelationshipInput!): ComplianceLibraryItemToComplianceFrameworkItemRelationship
+  detachComplianceLibraryItemFromComplianceFrameworkItem(input: DetachComplianceLibraryItemFromComplianceFrameworkItemInput!): ComplianceLibraryItemToComplianceFrameworkItemRelationship
+
+  """
+  Initiates evaluation of a ComplianceLibraryItem, which involves a background process
+  to determine the evaluationStatus
+  """
+  evaluateComplianceLibraryItem(input: EvaluateComplianceLibraryItemInput!): ComplianceLibraryItem
+  mapQuestionToFrameworkItem(input: MapQuestionToFrameworkItemInput!): ComplianceQuestionEvaluation
+  unMapQuestionFromFrameworkItem(input: UnMapQuestionFromFrameworkItemInput!): UnMapQuestionFromFrameworkItemOutput!
+  mapQuestionsToFrameworkItem(input: MapQuestionsToFrameworkItemInput!): [ComplianceQuestionEvaluation]
+  unMapQuestionsFromFrameworkItem(input: UnMapQuestionsFromFrameworkItemInput!): UnMapQuestionsFromFrameworkItemOutput!
+  mapQuestionToLibraryItem(input: MapQuestionToLibraryItemInput!): ComplianceQuestionEvaluation
+  unMapQuestionFromLibraryItem(input: UnMapQuestionFromLibraryItemInput!): UnMapQuestionFromLibraryItemOutput!
+  mapQuestionsToLibraryItem(input: MapQuestionsToLibraryItemInput!): [ComplianceQuestionEvaluation]
+  unMapQuestionsFromLibraryItem(input: UnMapQuestionsFromLibraryItemInput!): UnMapQuestionsFromLibraryItemOutput!
+  batchMapQuestionToFrameworks(input: BatchMapQuestionToFrameworksInput!): BatchMapQuestionToFrameworksOutput!
+  batchUnmapQuestionFromFrameworks(input: BatchUnmapQuestionFromFrameworksInput!): BatchUnmapQuestionFromFrameworksOutput!
+  createComplianceNote(input: CreateComplianceNoteInput!): ComplianceNote
+  updateComplianceNote(input: UpdateComplianceNoteInput!): ComplianceNote
+  createComplianceLink(input: CreateComplianceLinkInput!): ComplianceLink
+  updateComplianceLink(input: UpdateComplianceLinkInput!): ComplianceLink
+  createComplianceQuestionnaireAnswer(input: CreateComplianceQuestionnaireAnswerInput!): ComplianceQuestionnaireAnswer
+  updateComplianceQuestionnaireAnswer(input: UpdateComplianceQuestionnaireAnswerInput!): ComplianceQuestionnaireAnswer
+  createExternalUploadEvidence(input: CreateExternalUploadEvidenceInput!): ExternalUploadEvidence
+  updateExternalUploadEvidence(input: UpdateExternalUploadEvidenceInput!): ExternalUploadEvidence
+  deleteComplianceExternalEvidence(input: DeleteComplianceEvidenceInput!): ID!
+  importComplianceFramework(input: ImportComplianceFrameworkInput!): ComplianceFramework
+  importComplianceFrameworkByName(input: ImportComplianceFrameworkByNameInput!): ComplianceFramework
+  exportComplianceFramework(input: ExportComplianceFrameworkInput!): ExportComplianceFrameworkOutput
+  setReviewConfigurationsForComplianceFramework(frameworkId: ID!, input: SetComplianceReviewConfigurationInput!): ComplianceFramework!
+  setReviewConfigurationsForComplianceGroup(groupId: ID!, input: SetComplianceReviewConfigurationInput!): ComplianceGroup!
+  setReviewConfigurationForComplianceFrameworkItem(frameworkItemId: ID!, input: SetComplianceReviewConfigurationInput!): ComplianceFrameworkItem!
+  setReviewConfigurationForComplianceLibraryItem(libraryItemId: ID!, input: SetComplianceReviewConfigurationInput!): ComplianceLibraryItem!
+  deleteReviewConfigurationsForComplianceFramework(frameworkId: ID!): ComplianceFramework!
+  deleteReviewConfigurationsForComplianceGroup(groupId: ID!): ComplianceGroup!
+  deleteReviewConfigurationForComplianceFrameworkItem(frameworkItemId: ID!): ComplianceFrameworkItem!
+  deleteReviewConfigurationForComplianceLibraryItem(libraryItemId: ID!): ComplianceLibraryItem!
+  resolveReviewsForComplianceFrameworkItem(frameworkItemId: ID!): ComplianceFrameworkItem!
+  resolveReviewsForComplianceLibraryItem(libraryItemId: ID!): ComplianceLibraryItem!
+  createComplianceGroup(input: CreateComplianceGroupInput!): ComplianceGroup
+  deleteComplianceGroup(input: DeleteComplianceGroupInput!): ID!
+  updateComplianceGroup(input: UpdateComplianceGroupInput!): ComplianceGroup
+  createExternalUpload(input: CreateExternalUploadInput!): PresignedExternalUploadOutput
+  confirmExternalUpload(input: ConfirmExternalUploadInput!): PresignedCompletedExternalUploadOutput
+  updateExternalUpload(input: UpdateExternalUploadInput!): ExternalUpload
+  replaceExternalUpload(input: ReplaceExternalUploadInput!): PresignedExternalUploadOutput
+  deleteExternalUpload(input: DeleteExternalUploadInput!): DeletedExternalUpload!
+  startEvidenceCollectionJobforFrameworkItem(input: StartEvidenceCollectionJobForFrameworkItemInput!): EvidenceCollectionJob
+  startEvidenceCollectionJobforFramework(input: StartEvidenceCollectionJobForFrameworkInput!): EvidenceCollectionJob
+  startEvidenceCollectionJobforLibraryItem(input: StartEvidenceCollectionJobForLibraryItemInput!): EvidenceCollectionJob
+
+  """
+  Update the preferred settings for the current user regarding framework applicability
+  """
+  setComplianceFrameworkIsApplicableForThisUser(input: SetComplianceFrameworkIsApplicableInput!): ID!
+
+  """
+  Update the preferred settings for the account regarding framework summary statistics
+  """
+  setComplianceFrameworkSummaryConfig(input: SetComplianceFrameworkSummaryConfigInput!): ID!
+  invokeExportDashboardPdf(dashboardData: DashboardData!, dashboardBaseUrl: String!, dashboardViewport: DashboardViewport, isDashboardPublic: Boolean): InvokeExportDashboardPdfResult!
+  createPublicSharedUrl(dashboardId: String!, dashboardName: String!, allowedIpAddressRanges: [IpAddressRange!]): CreatePublicSharedUrlResult!
+  revokeSharedDashboardToken(tokenId: String!): RevokeSharedTokenResult!
+  setInsightsSettings(resourceType: String!, category: String!, data: JSON): SetInsightsSettingsResult!
+  setBoardSettings(resourceType: String!, category: String!, data: [Board!]!): SetInsightsSettingsResult!
+  setSingleBoardSettings(boardId: String!, resourceType: String!, category: String!, data: Board): SetInsightsSettingsResult!
+  setWidgetBoardSettings(boardId: String!, resourceType: String!, data: JSON): SetInsightsSettingsResult!
+  setCategorizedBoardsSettings(resourceType: String!, data: JSON): SetInsightsSettingsResult!
+  setInternalBoardPermissionsSettings(boardId: String!, data: JSON): SetInsightsSettingsResult!
+  setLayoutSettings(boardId: String!, resourceType: String!, data: JSON): SetInsightsSettingsResult!
+  setWidgetSettings(boardId: String!, resourceType: String!, data: [Widget!]): SetInsightsSettingsResult!
+  publishDashboard(published: Boolean!, boardId: String!): PublishDashboardResult
+  setHomeBoardPermissionsSettings(boardId: String!, permissions: JSON): PublishDashboardResult
+  setHomeBoardDefault(boardId: String): PublishDashboardResult
+  sendEndpointComplianceActivationEmails(config: EndpointComplianceAdminActivationEmailDetails!): EndpointComplianceAdminActivationEmailResult
+  setEndpointAdminConfig(config: EndpointComplianceAdminConfigDetails!): EndpointComplianceAdminConfigResult
+  startFeatureEntitlementTrial(featureEntitlementName: String!): StartFeatureEntitlementTrialResult!
+  iamSetAccount(input: SetAccountInput!): IamAccountNode!
+  setAccountAccessPolicy(input: SetAccountAccessPolicyInput!): IamAccountAccessPolicy!
+  setAccountIdentityProvider(input: SetAccountIdentityProviderInput!): IamAccountIdentityProvider!
+  iamSetGroup(input: SetGroupInput!): IamGroupNode!
+  iamSetUser(input: SetAccountUserInput!): IamAccountUserNode!
+  updateCurrentUser(input: UpdateCurrentUserInput!): IamAccountUserNode!
+  iamDeleteAccountIdentityProvider: DeleteInfo!
+  iamDeleteGroup(input: DeleteGroupInput!): DeleteInfo!
+  iamDeleteGroupUsers(input: DeleteGroupUsersInput!): DeleteInfo!
+  iamAddGroupUsers(input: AddGroupUsersInput!): IamGroupNode!
+  iamDeleteUser(input: DeleteAccountUserInput!): DeleteInfo!
+  iamDeleteUserFromGroups(input: DeleteAccountUserGroupsInput!): DeleteInfo!
+  iamAddUserToGroups(input: AddAccountUserGroupsInput!): IamAccountUserNode!
+  updateInvitation(input: IamInvitationPatch!): IamInvitation!
+  createToken(input: CreateIamTokenInput, token: TokenInput): IamToken!
+  revokeToken(id: String!): IamToken
+  createCurrentUserToken(input: CreateCurrentUserTokenInput!): IamToken!
+  createIamGroup(name: String!, description: String, abacPermissions: [String!], queryPolicy: [JSON!]): V1Group!
+  updateIamGroup(id: String!, name: String, description: String, abacPermissions: [String!], queryPolicy: [JSON!]): V1Group!
+  addIamUserToGroupByEmail(userEmail: String!, groupId: String!): SuccessStatusResult!
+  removeIamUserFromGroupByEmail(userEmail: String!, groupId: String!): SuccessStatusResult!
+  deleteIamGroup(name: String!): SuccessStatusResult!
+  generateExternalId: String!
+  createIntegrationInstance(instance: CreateIntegrationInstanceInput!): IntegrationInstance
+  createIntegrationInstanceToken(id: String!): IntegrationInstanceToken
+  updateIntegrationInstance(id: String!, update: UpdateIntegrationInstanceInput!): IntegrationInstance
+  bulkUpdateIntegrationInstances(ids: [String!]!, update: UpdateIntegrationInstanceInput!): BulkUpdateIntegrationInstancesOutput
+  deleteIntegrationInstance(id: String!): DeletionResult
+  revokeIntegrationInstanceToken(tokenId: String!): DeletionResult
+  invokeIntegrationInstance(id: String!): InvocationResult
+  reportIssue(data: ReportIssueInput!): ReportIssueOutput!
+  setUserNotificationSettingsForTopic(update: SetUserNotificationSettingsForTopicInput!): ChannelConfiguration!
+  readNotification(notificationId: String!): InAppNotification
+  readAllNotifications: Boolean!
+  setParameter(name: String!, value: ParameterValue!, secret: Boolean): ParameterMutationResult!
+  deleteParameter(name: String!): ParameterMutationResult!
+  _empty: String!
+  resetEntity(entityId: String!, resetPropertyNames: [String!]!): EntityResponse!
+  updateEntityV2(timestamp: Long, entity: JSON!): EntityResponse!
+  deleteEntityV2(entityId: String!, timestamp: Long, hardDelete: Boolean): EntityResponse!
+  createEntityV2(input: CreateEntityV2): EntityResponse!
+  updateRelationshipV2(timestamp: Long, relationship: JSON!): RelationshipResponse!
+  deleteRelationshipV2(relationshipId: String!, timestamp: Long, hardDelete: Boolean): RelationshipResponse!
+  createRelationshipV2(input: CreateRelationshipV2): RelationshipResponse!
+  createPolicy(data: CreatePolicyInput!): PolicyAppPolicy!
+  updatePolicy(uuid: String!, update: UpdatePolicyInput!): PolicyAppPolicy!
+  createProcedure(data: CreateProcedureInput!): PolicyAppProcedure!
+  updateProcedure(uuid: String!, update: UpdateProcedureInput!): PolicyAppProcedure!
+  deletePolicy(uuid: String!): DeleteOutput!
+  deleteProcedure(uuid: String!): DeleteOutput!
+  createDraft(input: CreateDraftInput!): Draft!
+  updateDraft(draftUuid: String!, update: UpdateDraftInput!): Draft!
+  reviewDraft(draftUuid: String!, reviewState: DraftReviewerState!): Draft!
+  deleteDraft(draftUuid: String!): DeleteOutput!
+  publishDraft(draftUuid: String!): Draft!
+  initializePolicies: PolicyAppInitializationOutput!
+  reorderPolicy(input: ReorderPolicyInput!): PolicyAppPolicy!
+  reorderProcedure(input: ReorderProcedureInput!): PolicyAppProcedure!
+  updateCompanyValues(values: JSON!): GetCompanyValuesOutput!
+  zipPolicies: ZipPoliciesOutput!
+  upsertPolicyById(data: CreatePolicyInput!): PolicyAppPolicy!
+  upsertProcedureById(data: CreateProcedureInput!): PolicyAppProcedure!
+  reorderAllItemsByMapping(mapping: PolicyMappingInput!): GetPoliciesOutput!
+  acceptSecurityPolicyForUser: AcceptSecurityPolicyOutput!
+  createQueryAnalyticEvent(name: String!, event: JSON!): QueryAnalyticEventResponse!
+  createEntity(entityKey: String!, entityType: String!, entityClass: [String!]!, timestamp: Long, properties: JSON): EntityMutationResponse
+  updateEntity(entityId: String!, timestamp: Long, properties: JSON): EntityMutationResponse
+  deleteEntity(entityId: String!, timestamp: Long, hardDelete: Boolean): EntityMutationResponse
+  acceptSecurityPolicy(timestamp: Long): EntityMutationResponse
+  createRelationship(relationshipKey: String!, relationshipType: String!, relationshipClass: String!, fromEntityId: String!, toEntityId: String!, timestamp: Long, properties: JSON): RelationshipMutationResponse
+  updateRelationship(relationshipId: String!, timestamp: Long, properties: JSON): RelationshipMutationResponse
+  deleteRelationship(relationshipId: String!, timestamp: Long, hardDelete: Boolean): RelationshipMutationResponse
+  buildCsv(filters: VertexFilters, propertyFilters: JSON, filterType: FilterType): BuildCsvResponse!
+  buildJson(filters: VertexFilters, propertyFilters: JSON, filterType: FilterType): BuildJsonResponse!
+  upsertEntityRawData(entityId: String!, source: String!, rawData: [JSON!]!): RawDataUpsertResponse!
+  deleteEntityRawData(entityId: String!, source: String!, names: [String!]!): RawDataDeleteResponse!
+  createQuestion(question: CreateQuestionInput!): Question!
+  updateQuestion(id: ID!, update: QuestionUpdate!): Question!
+  deleteQuestion(id: ID!): Question!
+  createAssessment(input: CreateAssessmentInput!): CreateAssessmentOutput!
+  updateAssessment(input: UpdateAssessmentInput!): UpdateAssessmentOutput!
+  deleteAssessment(input: DeleteAssessmentInput!): DeleteAssessmentOutput!
+  addQuestionsToAssessment(input: AddQuestionsToAssessmentInput!): AddQuestionsToAssessmentOutput!
+  removeQuestionsFromAssessment(input: RemoveQuestionsFromAssessmentInput!): RemoveQuestionsFromAssessmentOutput!
+  evaluateAssessment(input: EvaluateAssessmentInput!): EvaluateAssessmentOutput!
+  importAssessmentByTemplate(input: ImportAssessmentByTemplateInput!): ImportAssessmentByTemplateOutput!
+  tokenRateLimits(tokenId: ID!): TokenRateLimitsMutation!
+  createQuestionRuleInstance(instance: CreateQuestionRuleInstanceInput!): QuestionRuleInstance! @deprecated(reason: "Use createInlineQuestionRuleInstance or createReferencedQuestionRuleInstance instead.")
+  createInlineQuestionRuleInstance(instance: CreateInlineQuestionRuleInstanceInput!): QuestionRuleInstance!
+  createReferencedQuestionRuleInstance(instance: CreateReferencedQuestionRuleInstanceInput!): QuestionRuleInstance!
+  importAlertRulesFromFormat(format: [RulePackRuleInput!]!): UpsertRuleInstancesOutput!
+  importAlertRulePack(rulePackName: String!, ruleNames: [String!]!, autoEvaluate: Boolean): UpsertRuleInstancesOutput! @deprecated
+  upsertDailyEmailReportRuleInstance(recipients: [String!]!, minAlertLevelThreshold: AlertLevel): ReportRuleInstance!
+  upsertCumulativeAlertsEmailReportRuleInstances(recipients: [CumulativeAlertsEmailRecipient!]!, minAlertLevelThreshold: AlertLevel): [ReportRuleInstance!]!
+  updateQuestionRuleInstance(instance: UpdateQuestionRuleInstanceInput!): QuestionRuleInstance! @deprecated(reason: "Use updateInlineQuestionRuleInstance or updateReferencedQuestionRuleInstance instead.")
+  updateInlineQuestionRuleInstance(instance: UpdateInlineQuestionRuleInstanceInput!): QuestionRuleInstance!
+  updateReferencedQuestionRuleInstance(instance: UpdateReferencedQuestionRuleInstanceInput!): QuestionRuleInstance!
+  deleteRuleInstance(id: ID!): DeleteRuleInstanceResult!
+  evaluateRuleInstance(id: ID!): ManualRuleEvaluationResult!
+  evaluateAlertRules(filters: EvaluateAlertRulesFilters!): [ManualRuleEvaluationResult!]!
+  updateAlertInstance(instance: UpdateAlertInstanceInput!): AlertInstance!
+  setSettings(resourceType: String!, resourceId: String, category: String!, data: JSON): SetSettingsResult!
+  completeUserAction(input: CompleteUserActionInput!): UserAction
+}
+
+type OAuth {
+  oAuthUrlGeneratorPath: String
+}
+
+type OffsiteStatus {
+  flowCompletedSuccessfully: Boolean!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+}
+
+type ParameterListPagedResponse {
+  items: [ParameterResponse!]!
+  pageInfo: PageInfo!
+}
+
+type ParameterMutationResult {
+  success: Boolean!
+}
+
+type ParameterResponse {
+  name: String!
+  value: ParameterValue!
+  lastUpdatedOn: String!
+  secret: Boolean!
+}
+
+scalar ParameterValue
+
+type PartialComplianceReviewFrequencyAssignment {
+  """
+  A computed identifier which uniquifies this PartialComplianceReviewFrequencyAssignment object
+  """
+  id: ID!
+
+  """
+  The review frequency assigned to at least some of the framework items in scope
+  """
+  reviewFrequency: ComplianceReviewFrequency!
+
+  """
+  Are all review configurations in scope assigned to this review frequency?
+  """
+  allReviewConfigurationsAssigned: Boolean!
+}
+
+type PartialComplianceReviewOwnerAssignment {
+  """
+  A computed identifier which uniquifies this PartialComplianceReviewOwnerAssignment object
+  """
+  id: ID!
+
+  """The user ID of the owner"""
+  ownerUserId: String!
+
+  """Is the owner assigned to review all framework items in scope?"""
+  allFrameworkItemsAssigned: Boolean!
+}
+
+enum PersistedResultType {
+  RAW
+  JSON
+  CSV
+}
+
+type PoliciesUserSettings {
+  POLICY_DRAFT_APPROVED: ChannelConfiguration!
+}
+
+type PolicyAppInitializationOutput {
+  state: InitializationState!
+}
+
+type PolicyAppPolicy {
+  uuid: String!
+  currentDraftUuid: String
+  id: String!
+  lexoRank: String!
+  deletedOn: Float
+  file: String!
+  title: String!
+  revisionNumber: Int!
+  draftMetadata: Draft
+  createdOn: Float!
+  updatedOn: Float!
+  approvedOn: Float
+  reviewedOn: Float
+  template: String
+  procedures: GetProceduresOutput
+}
+
+type PolicyAppProcedure {
+  uuid: String!
+  currentDraftUuid: String
+  id: String!
+  policyId: String!
+  lexoRank: String!
+  deletedOn: Float
+  file: String!
+  adopted: Boolean
+  applicable: Boolean
+  isRef: Boolean
+  guidance: String
+  provider: String
+  summary: String
+  type: String
+  name: String!
+  revisionNumber: Int!
+  draftMetadata: Draft
+  createdOn: Float!
+  updatedOn: Float!
+  approvedOn: Float
+  reviewedOn: Float
+  considerations: [String]
+  policy: PolicyAppPolicy
+  template: String
+}
+
+"""
+PolicyHistoryFilters allow filtering of policy history by date range, and
+allows selection to include approvals and/or drafts in the response
+"""
+input PolicyHistoryFilters {
+  """ The date at which to begin the search for policy audit trails """
+  startDate: Long
+
+  """ The date at which to end the search for policy audit trails """
+  endDate: Long
+
+  """ Whether to include draft approvals in the response """
+  showApprovals: Boolean
+
+  """ Whether to include policy and procedure drafts in the response """
+  showDrafts: Boolean
+
+  """ A list of policy IDs for which to retrieve audit history"""
+  policyUuids: [String!]
+}
+
+input PolicyMappingInput {
+  policies: [PolicyMappingPolicy!]!
+}
+
+input PolicyMappingPolicy {
+  id: String!
+  procedures: [String!]!
+}
+
+type PresignedCompletedExternalUploadOutput {
+  """The UUID identifier for this external upload"""
+  id: ID!
+
+  """An identifier for the individual uploading the file"""
+  creatorUserId: String
+
+  """Whether or not the file has been successfully uploaded to S3"""
+  isUploadComplete: Boolean!
+
+  """The name of the uploaded file - Example: 'policy_doc.pdf"""
+  filename: String!
+
+  """
+  The human readable name of the uploaded file - Example: 'Policy Document v.3
+  """
+  name: String!
+
+  """Unique identifier for the file in an S3 bucket"""
+  s3ObjectKey: String!
+
+  """The timestamp of the last update to this external upload record"""
+  lastUpdatedTimestamp: Long!
+
+  """Any other relevant information for this external upload"""
+  description: String
+
+  """Presigned link to access the external upload in S3"""
+  url: String!
+}
+
+type PresignedExternalUploadOutput {
+  """The UUID identifier for this external upload"""
+  id: ID!
+
+  """The name of the uploaded file - Example: 'policy_doc.pdf"""
+  filename: String!
+
+  """Presigned link to post an external upload to S3"""
+  url: String!
+
+  """The ExternalUpload record associated with this presigned object"""
+  upload: ExternalUpload!
+
+  """The S3 fields needed to use the above post URL"""
+  presignedPostHeaderFields: [UploadFormFieldKeyValuePair!]!
+}
+
+scalar Primitive
+
+type Property {
+  id: ID!
+  accountId: String!
+  valueType: String!
+  name: String!
+  entity: String!
+  count: Long!
+}
+
+type PublishDashboardResult {
+  resultCode: String
+}
+
+type Query {
+  assetCategories: [AssetCategory!]!
+  queryRelatedEntities(leftEntityTypesOrClasses: [String!]!): [RelatedEntities!]!
+  queryProperties(entity: String): [Property!]!
+
+  """
+  GQL typedefs does not allow you to define an object with arbitrary string values,
+  but essentially the output of this endpoint will be an object where the keys
+  are the passed in entitySources, and the values are an array of PropertyValues
+    type SourceToProperties: {
+      [key: string]: [Property!]!
+    }
+  """
+  queryPropertiesForMultipleSources(entitySources: [String!]!): JSON!
+  queryRelationships(sourceEntity: String, sourceVerbs: [String!]): [Relationship!]!
+
+  """
+  GQL typedefs does not allow you to define an object with arbitrary string values,
+  but essentially the output of this endpoint will be an object where the keys
+  are the passed in entitySources, and the values are an array of RelationshipValues
+    type SourceToRelationship: {
+      [key: string]: [Relationship!]!
+    }
+  """
+  queryRelationshipsForMultipleSources(sourceEntities: [String!]!, sourceVerbs: [String!]): JSON!
+  queryUniqueRelationships(leftEntityTypesOrClasses: [String!]!, rightEntityTypesOrClasses: [String!]): [UniqueRelationship!]!
+  complianceHealthCheck: HealthCheckResponse!
+  complianceFramework(input: ComplianceFrameworkInput!): ComplianceFramework
+  complianceFrameworks: ComplianceFrameworksByFrameworkType!
+  complianceFrameworkItem(input: ComplianceFrameworkItemInput!): ComplianceFrameworkItem!
+  complianceLibraryItems(input: ComplianceLibraryItemsInput!): [ComplianceLibraryItem!] @deprecated(reason: "please use complianceLibraryItemMetadatas")
+  complianceLibraryItemMetadatas(input: ComplianceLibraryItemMetadatasInput!): ComplianceLibraryItemMetadatasOutput!
+  complianceLibraryItem(input: ComplianceLibraryItemInput!): ComplianceLibraryItem
+  importableComplianceFrameworkTemplates: [ImportableComplianceFrameworkTemplate!]!
+  complianceReviewers: ComplianceReviewersOutput!
+  externalUpload(input: ExternalUploadInput!): ExternalUpload
+  externalUploads: [ExternalUpload!]!
+  downloadLinkForExternalUpload(input: DownloadLinkForExternalUploadInput!): DownloadLinkForExternalUploadOutput
+  evidenceCollectionJob(input: EvidenceCollectionJobInput!): EvidenceCollectionJob
+  downloadLinkForEvidenceCollectionJob(input: DownloadLinkForEvidenceCollectionJobInput!): DownloadLinkForEvidenceCollectionJobOuput!
+  downloadLinkForFrameworkSummaryEvidence(input: DownloadLinkForFrameworkSummaryEvidenceInput!): DownloadLinkForEvidenceCollectionJobOuput!
+  dashboardHealthCheck: String!
+  getPresignedDashboardDataUrl(dashboardId: String!, method: String!, fileKey: String): GetPresignedDashboardDataUrlTypeDefsResult!
+  getDashboardQueryWidgetData(dashboardId: String!, widgetId: String!, ownerId: String!, dashboardType: DashboardType, queryVariables: JSON, isJ1ManagedBoard: Boolean, isFetchAllData: Boolean, rowMetadata: Boolean): GetDashboardQueryWidgetDataResult!
+  getDashboardQuestionWidgetData(dashboardId: String!, widgetId: String!, ownerId: String!, dashboardType: DashboardType, beginTimestamp: Long!, endTimestamp: Long!, cursor: String, queryVariables: JSON, isJ1ManagedBoard: Boolean): GetDashboardQuestionWidgetDataResult!
+  getDashboardTemplates: [DashboardTemplateItem!]!
+  getPaginatedQueryWidgetData(queryInput: WidgetQueryInput!): GetPaginatedQueryWidgetDataResult!
+  getDashboardWidgetSettings(dashboardId: String!, ownerId: String!, dashboardType: DashboardType): GetDashboardWidgetSettingsResult!
+  getDashboardLayoutSettings(dashboardId: String!, ownerId: String!, dashboardType: DashboardType): GetDashboardLayoutSettingsResult!
+  listSharedDashboardTokens(dashboardId: String!, cursor: String): ListSharedDashboardTokensResult!
+  getUserInternalBoardAccess(boardId: String!): GetUserInternalBoardAccessResult!
+  getInsightsSettings(resourceType: String!, category: String!, resourceId: String): GetInsightsSettingsResult!
+  getBoardSettings(category: String!, resourceType: String!): GetInsightsSettingsResult!
+  getCategorizedBoardSettings(resourceType: String!): GetInsightsSettingsResult!
+  getInternalBoardPermissionsSettings(dashboardId: String!, resourceType: String!): GetInsightsSettingsResult!
+  getLayoutSettings(boardId: String!, resourceType: String!): GetInsightsSettingsResult!
+  getWidgetSettings(boardId: String!, resourceType: String!): GetInsightsSettingsResult!
+  getHomeBoardPermissionsSettings(boardId: String!): HomeBoardPermissions
+  getHomeBoards(showAll: Boolean): HomeBoardResult
+  getHomeBoardDefault: HomeBoardDefaultResult
+  getEndpointAdminConfig: JSON
+  getDefaultEndpointAdminConfig: JSON
+  getEntitlementConfiguration: EntitlementConfiguration
+  checkFeatureEntitlementAccess(featureEntitlementName: String!): FeatureAccessResult!
+  checkUsageLimitEntitlementAccess(usageLimitEntitlementName: String!): UsageLimitAccessResult!
+  checkValueSetEntitlementAccess(valueSetEntitlementName: String!): ValueSetEntitlementAccessResult!
+  getEnabledFeaturesForAccount(getEnabledFeaturesForAccountDto: GetEnabledFeaturesForAccountDto!): EnabledFeaturesForAccount!
+  getHistoryForResource(resourceType: String!, resourceId: String, category: String!, limit: Int, cursor: String): GetHistoryForResourceOutput!
+  getAuditEventsForAccount(limit: Int, cursor: String): GetAuditEventsForAccountOutput!
+  getLogsForSyncJob(syncJobId: String!, limit: Int, cursor: String): GetHistoryForResourceOutput!
+  iamGetAccount: IamAccountNode!
+  iamGetAccountList(limit: Int!, cursor: String): IamAccountPage!
+  iamGetGroup(group: String!): IamGroupNode!
+  iamGetGroupList(limit: Int!, cursor: String): IamGroupPage!
+  iamGetGroupBatch(groups: [String!]!): [IamGroup!]!
+  iamGetUser(user: String!): IamAccountUserNode!
+  iamGetUserList(limit: Int!, cursor: String): IamAccountUserPage!
+  iamGetUserBatch(users: [String!]!): [IamAccountUser!]!
+  iamGetCurrentUser: IamAccountUserNode!
+  invitations: IamInvitationPage!
+  token(id: ID!): IamToken!
+  tokens(search: ListIamTokenInput, limit: Int, cursor: String): IamTokenPage!
+  iamGroups(limit: Int!, cursor: String): V1GroupsPagedResponse!
+  iamGroupUsers(groupId: String!, limit: Int!, cursor: String): V1UsersPagedResponse!
+  iamGroupQueryPolicy(groupId: String!): V1GroupQueryPolicyResponse!
+  iamAccountQueryPolicies(limit: Int!, cursor: String): V1QueryPolicyPagedResponse!
+  externalIdRecord(id: String!): ExternalIdRecord
+  githubInstallationStatus(state: String!): OffsiteStatus
+  integrationInstance(id: String!): IntegrationInstance
+  integrationInstanceTokens(id: String!, cursor: String, limit: Int): ListIntegrationInstanceTokensResult
+  integrationInstanceCount(definitionId: String): Int
+  integrationInstances(definitionId: String, cursor: String, limit: Int, filter: ListIntegrationInstancesSearchFilter): ListIntegrationInstancesResult
+  integrationInstancesStatus(definitionId: String, v2: Boolean): IntegrationInstancesStatusResult
+  getIntegrationInstance(id: String!): IntegrationInstance @deprecated(reason: "Use 'integrationInstance' instead")
+  listIntegrationInstances(definitionId: String, cursor: String, limit: Int, filter: ListIntegrationInstancesSearchFilter): ListIntegrationInstancesResult @deprecated(reason: "Use 'integrationInstances' instead")
+  findIntegrationDefinition(integrationType: String!): IntegrationDefinition
+  integrationDefinition(id: String): IntegrationDefinition
+  integrationDefinitions(cursor: String): ListIntegrationDefinitionsResult
+  listIntegrationDefinitions(cursor: String): ListIntegrationDefinitionsResult @deprecated(reason: "Use 'integrationDefinitions' instead")
+  integrationJob(id: ID!, integrationInstanceId: String!): IntegrationJob
+  integrationJobs(status: IntegrationJobStatus, integrationInstanceId: String, integrationInstanceIds: [String], integrationDefinitionId: String, cursor: String, size: Int): IntegrationJobsResult!
+  integrationEvent(id: ID, jobId: String!, integrationInstanceId: String!): IntegrationEvent
+  integrationEvents(cursor: String, size: Int, jobId: String!, integrationInstanceId: String!): IntegrationEventsResult!
+  reportIssueHealthCheck: ReportIssueOutput!
+  userNotificationSettings: UserSettings!
+  userNotificationSettingsForTopic(topic: Topic!): TopicConfiguration!
+  inAppNotifications(onlyUnread: Boolean, endCursor: String): InAppNotificationResult!
+  unreadNotificationCount: Int!
+  parameter(name: String!): ParameterResponse
+  parameterList(limit: Int, cursor: String): ParameterListPagedResponse!
+  _empty: String!
+  persisterHealthCheck: String!
+  entityRawDataLegacy(entityId: String!, source: String!, name: String, versionId: String): RawDataQueryResponseLegacy!
+  entityRawDataVersionsLegacy(entityId: String!, source: String!, name: String!, startVersion: String, maxResults: Int): RawDataVersionsQueryResponseLegacy!
+  fetchEntityById(entityId: String!): EntityResponse!
+  fetchEntityContributionsById(entityId: String!): EntityContributionsResponse!
+  fetchRelationshipById(relationshipId: String!): RelationshipResponse!
+  getAllProceduresForAccount(input: GetAllProceduresForAccountInput!): GetProceduresOutput!
+  getPolicy(policyId: String!): PolicyAppPolicy!
+  getPolicies(endCursor: String): GetPoliciesOutput!
+  getProcedures(policyId: String!, endCursor: String): GetProceduresOutput!
+  getProcedure(procedureId: String!): PolicyAppProcedure
+  getTemplate(uuid: String!): GetTemplateOutput!
+  getDraftTemplate(uuid: String!): GetTemplateOutput!
+  getInitializationState: PolicyAppInitializationOutput!
+  getCompanyValues: GetCompanyValuesOutput!
+  getZipState(uuid: String!): GetZipStateOutput!
+  searchPolicyItems(input: SearchPolicyItemsInput!): SearchPolicyItemsOutput!
+
+  """Download audit trail events for all policies from an account"""
+  getPolicyHistoryForAccount(
+    """
+    "json" or "csv"
+    """
+    format: String
+    filters: PolicyHistoryFilters
+  ): SignedPolicyAuditLink!
+  securityPolicyAcceptance: SecurityPolicyAcceptanceOutput!
+  vertex(id: String, filters: VertexFilters, propertyFilters: JSON): Vertex
+  listVertices(size: Int, filters: VertexFilters, propertyFilters: JSON, filterType: FilterType, sort: [FieldSort], after: String, search: String): ListVerticesResponse @deprecated(reason: "Use listVerticesV2 for better default sort performance.")
+  listVerticesV2(size: Int, filters: VertexFilters, propertyFilters: JSON, filterType: FilterType, sort: [FieldSort], after: String, search: String): ListVerticesResponse
+  entityProperties(filters: VertexFilters, propertyFilters: JSON, filterType: FilterType, after: String): EntityPropertiesResponse!
+  entityPropertyValues(filters: VertexFilters, propertyFilters: JSON, filterType: FilterType, property: String!): EntityPropertyValuesResponse!
+  edge(id: String, label: String, filters: EdgeFilters): Edge
+  queryGraph: GraphResponse!
+  queryV1(query: String!, variables: JSON, dryRun: Boolean, deferredResponse: DeferredResponseOption, deferredFormat: DeferredResponseFormat, remember: Boolean, includeDeleted: Boolean, flags: QueryV1Flags, cursor: String, scopeFilters: [JSON!], sourceMetadata: SourceMetadataInput): QueryV1Response!
+  accountEntity: QueryV1Response!
+  entityCount(filters: VertexFilters, filterType: FilterType, search: String): Int
+  typeCounts(classes: [String], filterType: FilterType, propertyFilters: JSON, search: String): JSON
+  allEntityCounts: JSON
+  health: String!
+  entityRawData(entityId: String!, source: String!, name: String, versionId: String): RawDataQueryResponse!
+  entityRawDataVersions(entityId: String!, source: String!, name: String!, startVersion: String, maxResults: Int): RawDataVersionsQueryResponse!
+  questionsHealthCheck: String!
+  question(id: ID!): Question!
+  questions(type: ListQuestionsType, searchQuery: String, integrationDefinitionId: String, complianceStandard: String, complianceStandardRequirement: String, tags: [String], mustTags: [String], shouldTags: [String], categories: [String], limit: Int, cursor: String): ListQuestionsResult!
+
+  """
+  Lists tags in default ascending order,
+  limit parameter is a configurable limit with a max of 1000,
+  order will order the results case insensitive in the current page
+  """
+  questionsTags(cursor: String, limit: Int, order: SortOrder): ListQuestionsTagsResult!
+  questionsCategories: ListQuestionsCategoriesResult!
+  evaluateQuestion(id: ID!): QuestionEvaluation!
+  findSimilarQuestions(termsToMatch: [String]!, limit: Int, cursor: String): ListQuestionsResult!
+  assessment(input: AssessmentInput!): AssessmentOutput!
+  assessments: AssessmentsOutput!
+  importableAssessmentTemplates: ImportableAssessmentTemplatesOutput!
+  tokenRateLimits(tokenId: ID!): TokenRateLimitsQuery! @deprecated(reason: "Query.tokenRateLimits is deprecated. Use Query.accountRateLimits.tokenRateLimits instead.")
+  accountRateLimits: AccountRateLimitsQuery!
+  listCollectionResults(collectionType: CollectionType!, collectionOwnerId: String!, beginTimestamp: Long!, endTimestamp: Long!, limit: Int, cursor: String, tag: String): ListCollectionResultsOutput!
+  getRawDataDownloadUrl(rawDataKey: String!): String!
+  accountHasRules: Boolean!
+  alertRulePacks: [AlertRulePack!]!
+  provisionedAlertPollingIntervals: [SchedulerPollingInterval!]!
+  questionRuleTags: [String!]!
+  questionRuleInstance(id: ID!, version: Int): QuestionRuleInstance
+  dailyAlertEmailReportRuleInstance: ReportRuleInstance @deprecated
+  cumulativeAlertsEmailReportRuleInstances: [ReportRuleInstance]
+  listRuleInstances(limit: Int, cursor: String, filters: ListRuleInstancesFilters): ListRuleInstancesOutput!
+  listAlertInstances(alertStatus: AlertStatus, limit: Int, cursor: String): ListActiveAlertInstancesOutput
+  countAlertInstances(alertStatus: AlertStatus, limit: Int, cursor: String): CountAlertInstancesOutput
+  listAlertInstancesInCreatedOnDateRange(beginOn: Long!, endOn: Long!, limit: Int, cursor: String): ListAlertInstancesInCreatedOnDateRangeOutput
+  getRawResultPresignedDownloadUrl(alertId: ID!, queryName: String!): String!
+  alertInstance(id: ID!): AlertInstance
+  getSettings(resourceType: String!, resourceId: String, category: String!): GetSettingsResult!
+  userActionHealthCheck: HealthCheckResponse!
+  userActions: [UserAction!]!
+}
+
+type QueryAnalyticEventResponse {
+  success: Boolean!
+}
+
+enum QueryResultsAre {
+  BAD
+  GOOD
+  INFORMATIVE
+  UNKNOWN
+}
+
+input QueryV1Flags {
+  allPages: Boolean
+  computedProperties: Boolean
+  rowMetadata: Boolean
+  variableResultSize: Boolean
+}
+
+type QueryV1Response {
+  type: String!
+  data: JSON
+  url: String
+  totalCount: Long
+  cursor: String
+  correlationId: String
+}
+
+type Question {
+  id: ID!
+  sourceId: String
+  title: String!
+  name: String
+  tags: [String]
+  description: String
+  showTrend: Boolean
+  pollingInterval: SchedulerPollingInterval
+  queries: [QuestionQuery!]!
+  defaultAnswerTemplate: String
+  variables: [QuestionVariable!]
+  compliance: [QuestionComplianceMetaData!]
+  integrationDefinitionId: String
+  accountId: String
+  lastUpdatedTimestamp: Long!
+}
+
+type QuestionComplianceDetails {
+  name: String!
+  description: String
+}
+
+input QuestionComplianceDetailsInput {
+  name: String!
+  description: String
+}
+
+type QuestionComplianceMetaData {
+  type: String @deprecated(reason: "Use \"standard\" field")
+  details: [QuestionComplianceDetails!] @deprecated(reason: "Use \"requirements\" field")
+  standard: String!
+  requirements: [String!]
+  controls: [String!]
+}
+
+input QuestionComplianceMetaDataInput {
+  standard: String!
+  requirements: [String!]
+  controls: [String!]
+}
+
+type QuestionEvaluation {
+  answerText: String
+  outputs: [QuestionEvaluationOutput!]!
+}
+
+type QuestionEvaluationOutput {
+  name: String!
+  value: Primitive!
+}
+
+enum QuestionPollingInterval {
+  DISABLED
+  THIRTY_MINUTES
+  ONE_HOUR
+  ONE_DAY
+}
+
+type QuestionQuery {
+  query: String!
+  version: String
+  name: String
+  resultsAre: QueryResultsAre
+  includeDeleted: Boolean
+}
+
+input QuestionQueryInput {
+  query: String!
+  version: String
+  name: String
+  resultsAre: QueryResultsAre
+  includeDeleted: Boolean
+}
+
+type QuestionRuleInstance implements RuleInstance {
+  id: ID!
+  accountId: String!
+  name: String!
+  description: String
+  version: Int!
+  specVersion: Int!
+  latest: Boolean!
+  deleted: Boolean!
+  type: RuleInstanceType!
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+  operations: [RuleOperation!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  latestAlertId: String
+  latestAlertIsActive: Boolean
+  state: RuleState @deprecated
+  lastEvaluationEndOn: Long
+  question: RuleQuestionDetails
+  questionId: String
+  questionName: String
+  templates: JSON
+  tags: [String!]!
+}
+
+type QuestionsCategory {
+  name: String!
+}
+
+type QuestionTagsCount {
+  """The actual tag"""
+  name: String!
+
+  """The amount that it is used"""
+  count: Int!
+}
+
+input QuestionUpdate {
+  title: String
+  queries: [QuestionQueryInput]
+  compliance: [QuestionComplianceMetaDataInput!]
+  tags: [String]
+  description: String
+  showTrend: Boolean
+  pollingInterval: SchedulerPollingInterval
+}
+
+type QuestionVariable {
+  name: String!
+  required: Boolean
+  default: Primitive
+}
+
+input QuestionVariableInput {
+  name: String!
+  required: Boolean
+  default: Primitive
+}
+
+type RateLimitMetricsQuery {
+  timeRange(startTime: String!, endTime: String!, slices: Int!): [MetricsSlice!]!
+}
+
+type RateLimitPolicy {
+  invocationWindowSeconds: Int!
+  invocationCapacity: Int!
+}
+
+type RateLimitPolicyMutation {
+  setRateLimitPolicy(rateLimitPolicy: SetRateLimitPolicyOptions!): Boolean
+  clearRateLimitPolicy: Boolean
+}
+
+type RateLimitPolicyQuery {
+  rateLimitPolicy: RateLimitPolicy
+  metrics: RateLimitMetricsQuery!
+}
+
+type RawDataDeleteResponse {
+  deleteCount: Int!
+}
+
+type RawDataDescriptor {
+  name: String!
+  rawDataKey: String!
+  persistedResultType: PersistedResultType!
+  recordCount: Int
+  recordCreateCount: Int
+  recordUpdateCount: Int
+  recordDeleteCount: Int
+}
+
+type RawDataJSONEntity {
+  contentType: String
+  name: String
+  data: JSON!
+}
+
+type RawDataJSONEntityLegacy {
+  contentType: String
+  name: String
+  data: JSON!
+}
+
+union RawDataQueryPayload = RawDataJSONEntity | RawDataTextEntity
+
+union RawDataQueryPayloadLegacy = RawDataJSONEntityLegacy | RawDataTextEntityLegacy
+
+type RawDataQueryResponse {
+  entityId: String!
+  payload: [RawDataQueryPayload!]!
+}
+
+type RawDataQueryResponseLegacy {
+  entityId: String!
+  payload: [RawDataQueryPayloadLegacy!]!
+}
+
+type RawDataTextEntity {
+  contentType: String
+  name: String
+  data: String!
+}
+
+type RawDataTextEntityLegacy {
+  contentType: String
+  name: String
+  data: String!
+}
+
+type RawDataUpsertResponse {
+  status: Boolean!
+}
+
+type RawDataVersion {
+  versionId: String!
+  lastModifiedTimestamp: Long!
+  sizeBytes: Int!
+  latest: Boolean!
+}
+
+type RawDataVersionLegacy {
+  versionId: String!
+  lastModifiedTimestamp: Long!
+  sizeBytes: Int!
+  latest: Boolean!
+}
+
+type RawDataVersionsQueryResponse {
+  entityId: String!
+  versions: [RawDataVersion!]!
+}
+
+type RawDataVersionsQueryResponseLegacy {
+  entityId: String!
+  versions: [RawDataVersionLegacy!]!
+}
+
+type RelatedEntities {
+  leftEntityTypeOrClass: String!
+  rightEntityTypeOrClass: String!
+}
+
+type Relationship {
+  id: ID!
+  accountId: String!
+  name: String!
+  sourceEntity: String!
+  targetEntity: String!
+  count: Long!
+}
+
+type RelationshipCoreProperties {
+  _source: String!
+  _id: String!
+  _key: String!
+  _type: String!
+  _class: String
+  _scope: String
+  _accountId: String!
+  _integrationName: String
+  _integrationDefinitionId: String
+  _integrationInstanceId: String
+  _integrationType: String
+  _integrationClass: String
+  _version: Int!
+  _createdOn: Long!
+  _beginOn: Long!
+  _endOn: Long
+  _fromEntityKey: String
+  _toEntityKey: String
+  _fromEntityId: String!
+  _toEntityId: String!
+  _latest: Boolean
+  _deleted: Boolean!
+  displayName: String
+}
+
+type RelationshipMutationResponse {
+  relationship: RelationshipCoreProperties
+  edge: Edge
+}
+
+type RelationshipResponse {
+  relationship: JSON!
+}
+
+input RemoveQuestionsFromAssessmentInput {
+  id: ID!
+  questionIds: [ID!]!
+}
+
+type RemoveQuestionsFromAssessmentOutput {
+  assessment: Assessment!
+}
+
+input ReorderPolicyInput {
+  itemUuid: String!
+  beforeItemUuid: String
+  afterItemUuid: String
+}
+
+input ReorderProcedureInput {
+  itemUuid: String!
+  policyUuid: String!
+  beforeItemUuid: String
+  afterItemUuid: String
+}
+
+input ReplaceExternalUploadFields {
+  """
+  The new filename that will replace the old filename - Example: 'policy_doc.pdf
+  """
+  filename: String!
+}
+
+input ReplaceExternalUploadInput {
+  """The UUID identifier for the external upload to replace"""
+  id: ID!
+
+  """The replacement to make on this External Upload"""
+  updates: ReplaceExternalUploadFields!
+}
+
+input ReportIssueInput {
+  title: String!
+  stepsToReproduce: String!
+  expectedBehavior: String!
+  severity: String
+  accountName: String!
+  userName: String
+  attachments: String
+}
+
+type ReportIssueOutput {
+  created: Boolean!
+}
+
+type ReportRuleInstance implements RuleInstance {
+  id: ID!
+  accountId: String!
+  name: String!
+  description: String
+  version: Int!
+  specVersion: Int!
+  latest: Boolean!
+  deleted: Boolean!
+  type: RuleInstanceType!
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+  operations: [RuleOperation!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  latestAlertId: String
+  latestAlertIsActive: Boolean
+  state: RuleState @deprecated
+  lastEvaluationEndOn: Long
+}
+
+type ResultRecord {
+  rawDataDescriptors: [RawDataDescriptor!]
+  accountId: String!
+  timestamp: Long!
+  outputs: [ResultRecordOutput!]!
+  collectionType: CollectionType!
+  collectionOwnerId: String!
+  collectionOwnerVersion: String!
+  tag: String
+}
+
+type ResultRecordOutput {
+  name: String!
+  value: Primitive
+}
+
+type RevokeSharedTokenResult {
+  tokenId: String!
+}
+
+type RuleEvaluationOutput {
+  name: String!
+  value: Primitive
+}
+
+type RuleEvaluationResult {
+  evaluationBeginOn: Long
+  evaluationEndOn: Long
+  answerText: String
+  outputs: [RuleEvaluationOutput!]
+  rawDataDescriptors: [RawDataDescriptor!]
+}
+
+interface RuleInstance {
+  id: ID!
+  accountId: String!
+  name: String!
+  description: String
+  version: Int!
+  specVersion: Int!
+  latest: Boolean!
+  deleted: Boolean!
+  type: RuleInstanceType!
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+  operations: [RuleOperation!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  latestAlertId: String
+  latestAlertIsActive: Boolean
+  state: RuleState @deprecated
+  lastEvaluationEndOn: Long
+}
+
+enum RuleInstanceType {
+  QUESTION
+  REPORT
+}
+
+type RuleOperation {
+  when: JSON
+  actions: [JSON!]
+}
+
+input RuleOperationInput {
+  when: JSON
+  actions: [JSON!]
+}
+
+input RulePackRuleInput {
+  name: String!
+  description: String
+  queries: [AlertRuleQueryInput!]!
+  alertLevel: AlertLevel
+  templates: JSON
+}
+
+type RuleQuestionDetails {
+  queries: [J1Query!]!
+}
+
+input RuleQuestionDetailsInput {
+  queries: [J1QueryInput!]!
+}
+
+type RulesServiceUserSettings {
+  RULE_SERVICE_ALERT: ChannelConfiguration!
+  RULE_SERVICE_CUMULATIVE_ALERT: ChannelConfiguration!
+  RULE_SERVICE_EVALUATION_FAILURE: ChannelConfiguration!
+}
+
+type RuleState {
+  actions: JSON
+}
+
+input RuleStateInput {
+  actions: JSON
+}
+
+enum SchedulerPollingInterval {
+  DISABLED
+  THIRTY_MINUTES
+  ONE_HOUR
+  FOUR_HOURS
+  EIGHT_HOURS
+  TWELVE_HOURS
+  ONE_DAY
+  ONE_WEEK
+}
+
+type SearchPolicyItemResult {
+  id: String!
+  uuid: String!
+  title: String!
+  itemType: ItemType!
+  accountId: String!
+  highlightedSnippet: String!
+  policyId: String
+}
+
+input SearchPolicyItemsInput {
+  searchText: String!
+}
+
+type SearchPolicyItemsOutput {
+  results: [SearchPolicyItemResult]!
+  highlightStartDelimiter: String!
+  highlightEndDelimiter: String!
+}
+
+type SecurityAlertUserSettings {
+  SECURITY_ALERT_NORMAL: ChannelConfiguration!
+  SECURITY_ALERT_WARNING: ChannelConfiguration!
+  SECURITY_ALERT_CRITICAL: ChannelConfiguration!
+}
+
+type SecurityPolicyAcceptanceOutput {
+  hasAcceptedSecurityPolicy: Boolean!
+}
+
+input SetAccountAccessPolicyInput {
+  domainWhitelist: [String!]
+  restrictedToProvider: Boolean
+}
+
+input SetAccountIdentityProviderInput {
+  accountIdentityProviderMetadataUrl: String
+  accountIdentityProviderMetadataFile: String
+}
+
+input SetAccountInput {
+  accountId: ID!
+  accountName: String
+  accountOwner: String
+  accountLogoUrl: String
+}
+
+input SetAccountUserInput {
+  user: ID!
+  groups: [String!]
+}
+
+input SetComplianceFrameworkIsApplicableInput {
+  """The UUID identifier for the compliance framework"""
+  frameworkId: ID!
+
+  """
+  Should the framework be marked as applicable (if TRUE) or not-applicable (if FALSE) by the mutation?
+  """
+  isApplicableForThisUser: Boolean!
+}
+
+input SetComplianceFrameworkItemEvaluationApplicability {
+  """
+  The UUID identifier of the compliance framework item to set applicability
+  """
+  id: ID!
+
+  """
+  Should this compliance framework item contribute to the evaluation status of the overall compliance framework?
+  """
+  evaluationApplicable: Boolean!
+
+  """The reason for the evaluationApplicable status"""
+  applicabilityReason: String
+}
+
+input SetComplianceFrameworkSummaryConfigInput {
+  frameworkId: ID!
+  summaryConfig: ComplianceFrameworkSummaryConfigInput!
+}
+
+input SetComplianceReviewConfigurationInput {
+  """
+  The list of user IDs for the users that will be responsible for maintaining the review
+  """
+  ownerUserIds: [String!]!
+
+  """The frequency with which reviews should be conducted"""
+  reviewFrequency: ComplianceReviewFrequency!
+
+  """
+  An internal web link associated with the framework item and/or review configuration
+  """
+  actionLink: String!
+}
+
+input SetGroupInput {
+  groupId: ID
+  groupName: ID
+  groupDescription: String
+  groupQueryPolicy: JSON
+  groupAbacPermission: [String!]
+  groupUsers: [String!]
+}
+
+type SetInsightsSettingsResult {
+  resultCode: String
+}
+
+input SetRateLimitPolicyOptions {
+  invocationWindowSeconds: Int!
+  invocationCapacity: Int!
+}
+
+type SetSettingsResult {
+  resourceType: String!
+  resourceId: String!
+  category: String!
+  resultCode: SetSettingsResultCode!
+}
+
+enum SetSettingsResultCode {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+input SetUserNotificationSettingsForTopicInput {
+  topic: Topic!
+  channelConfigurationUpdate: ChannelConfigurationUpdate!
+}
+
+enum Severity {
+  INFORMATIONAL
+  WARNING
+  CRITICAL
+}
+
+"""
+PolicyHistory is returned as a signed link to an S3 bucket from which
+the results can be downloaded for a limited time.
+"""
+type SignedPolicyAuditLink {
+  """
+  A signed link to an S3 bucket from which the results can be downloaded 
+  """
+  downloadUrl: String!
+
+  """
+  An indicator for whether or not any results exist after filters are applied 
+  """
+  hasResults: Boolean!
+}
+
+input SlackChannelConfigurationInput {
+  enabled: Boolean!
+  integrationInstanceId: String
+  slackChannels: [String!]
+}
+
+type SlackConfiguration implements BaseChannelConfiguration {
+  enabled: Boolean!
+  integrationInstanceId: String!
+  slackChannels: [String!]!
+}
+
+input SlackConfigurationInput {
+  enabled: Boolean!
+  integrationInstanceId: String!
+  slackChannels: [String!]!
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+input SourceMetadataInput {
+  appName: String
+  appVersion: String
+  resourceType: String
+  resourceId: String
+}
+
+input StartEvidenceCollectionJobForFrameworkInput {
+  frameworkId: ID!
+}
+
+input StartEvidenceCollectionJobForFrameworkItemInput {
+  frameworkItemId: ID!
+}
+
+input StartEvidenceCollectionJobForLibraryItemInput {
+  libraryItemId: ID!
+}
+
+type StartFeatureEntitlementTrialResult {
+  resultCode: String!
+  message: String
+}
+
+type SuccessStatusResult {
+  success: Boolean!
+}
+
+type TaskServiceUserSettings {
+  TASK_NOTIFICATION: ChannelConfiguration!
+}
+
+input TokenInput {
+  name: String
+  category: String
+  policy: String
+}
+
+type TokenRateLimitsMutation {
+  apiInvocationRateLimit: RateLimitPolicyMutation!
+}
+
+type TokenRateLimitsQuery {
+  apiInvocationRateLimit: RateLimitPolicyQuery!
+}
+
+type TokenResult {
+  id: String!
+  token: String!
+  shareId: String!
+  accountId: String!
+  name: String!
+  resourceType: String!
+  revoked: Boolean!
+  createdAt: Long!
+  expiresAt: Long!
+  policy: JSON!
+}
+
+enum Topic {
+  ACCOUNT_SERVICE_DELETION_EMAIL
+  ACCOUNT_SERVICE_DELETION_NOTICE
+  ACCOUNT_SERVICE_DELETION_REMINDER
+  COMPLIANCE_REVIEW
+  COMPLIANCE_SERVICE_STANDARD_DOWNLOAD_FINISHED
+  DASHBOARD_PDF_DOWNLOAD_FAIL
+  DASHBOARD_PDF_DOWNLOAD_SUCCESS
+  CSV_DOWNLOAD_FAIL
+  CSV_DOWNLOAD_SUCCESS
+  ENDPOINT_COMPLIANCE_ACTIVATION_EMAIL
+  COMPLIANCE_EVALUATION_ERROR
+  INTEGRATION_FAILURE
+  INTEGRATION_FAST_TRACK_FIRST_JOB_COMPLETED
+  INTEGRATION_FIRST_SUCCESSFUL_JOB_COMPLETED
+  INVITATION_SERVICE_GROUP_INVITATION
+  JANITOR_UNCONFIRMED_USER_DELETION_NOTICE
+  LOGIN_FORGOT_SSO_EMAIL
+  POLICY_DRAFT_APPROVED
+  RULE_SERVICE_ALERT
+  RULE_SERVICE_CUMULATIVE_ALERT
+  RULE_SERVICE_EVALUATION_FAILURE
+  SECURITY_ALERT_CRITICAL
+  SECURITY_ALERT_NORMAL
+  SECURITY_ALERT_WARNING
+  TASK_NOTIFICATION
+  USER_SERVICE_USER_DELETION
+  USER_SERVICE_USER_DELETION_NOTICE
+  USER_SERVICE_USER_DELETION_REMINDER
+  DASHBOARD_PUBLISHED
+}
+
+type TopicConfiguration {
+  channels: ChannelConfiguration!
+}
+
+type UniqueRelationship {
+  verb: String!
+}
+
+input UnmapQuestionFromFramework {
+  questionId: String!
+
+  """The name of the framework to remove question from"""
+  frameworkName: String!
+
+  """
+  The human readable identifier to perform matching for this unmap operation
+  """
+  refs: [String!]!
+}
+
+input UnMapQuestionFromFrameworkItemInput {
+  """The UUID identifier of the associated compliance framework item"""
+  frameworkItemId: String!
+
+  """The UUID identifier of the associated question"""
+  questionId: String!
+}
+
+type UnMapQuestionFromFrameworkItemOutput {
+  """
+  The UUID identifier of the question to compliance framework item mapping
+  """
+  id: String!
+}
+
+input UnMapQuestionFromLibraryItemInput {
+  """The UUID identifier of the associated compliance library item"""
+  libraryItemId: String!
+
+  """The UUID identifier of the associated question"""
+  questionId: String!
+}
+
+type UnMapQuestionFromLibraryItemOutput {
+  """The UUID identifier of the question to compliance library item mapping"""
+  id: String!
+}
+
+input UnMapQuestionsFromFrameworkItemInput {
+  """The UUID identifier of the associated compliance framework item"""
+  frameworkItemId: String!
+
+  """The UUID identifiers of the associated questions"""
+  questionIds: [String!]!
+}
+
+type UnMapQuestionsFromFrameworkItemOutput {
+  """
+  The UUID identifiers of the question to compliance framework item mapping
+  """
+  ids: [String!]!
+}
+
+input UnMapQuestionsFromLibraryItemInput {
+  """The UUID identifier of the associated compliance library item"""
+  libraryItemId: String!
+
+  """The UUID identifiers of the associated questions"""
+  questionIds: [String!]!
+}
+
+type UnMapQuestionsFromLibraryItemOutput {
+  """
+  The UUID identifiers of the question to compliance library item mapping
+  """
+  ids: [String!]!
+}
+
+input UpdateAlertInstanceInput {
+  id: ID!
+  level: AlertLevel!
+  status: AlertStatus!
+}
+
+input UpdateAssessmentInput {
+  id: ID!
+  name: String
+  description: String
+}
+
+type UpdateAssessmentOutput {
+  assessment: Assessment!
+}
+
+input UpdateComplianceFrameworkFields {
+  """The human readable name of this compliance framework - Example: HIPPA"""
+  name: String!
+
+  """
+  An external web link to the framework's definition.  Not supplying this value will delete it
+  """
+  webLink: String
+
+  """Filters question evaluation results for this framework"""
+  scopeFilters: [JSON!]
+}
+
+input UpdateComplianceFrameworkInput {
+  """The UUID identifier for the compliance framework to make updates to"""
+  id: ID!
+
+  """The updates to perform on the compliance framework"""
+  updates: UpdateComplianceFrameworkFields!
+}
+
+input UpdateComplianceFrameworkItemFields {
+  """
+  An enum representing the current state of this compliance framework item's audit status
+  """
+  auditStatus: ComplianceFrameworkItemAuditStatus
+
+  """
+  The human readable name for this item - Example: Acceptable Use of End User Computing
+  """
+  name: String
+
+  """Any other relevant information for this compliance framework item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance framework item is displayed in the UI
+  """
+  displayCategory: String
+
+  """
+  A UUID identifier for the compliance group that owns this compliance group
+  """
+  groupId: ID
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """An external web link to this framework item's definition"""
+  webLink: String
+}
+
+input UpdateComplianceFrameworkItemInput {
+  """The UUID identifier of the compliance framework item to update"""
+  id: ID!
+
+  """The updates to perform on the given compliance framework item"""
+  updates: UpdateComplianceFrameworkItemFields!
+}
+
+input UpdateComplianceGroupFields {
+  """
+  The human readable name for this group - Example: Physical Access & Security
+  """
+  name: String
+
+  """Any other relevant information for this compliance group"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance group is displayed in the UI
+  """
+  displayCategory: String
+
+  """
+  A UUID identifier for the compliance framework that owns this compliance group
+  """
+  frameworkId: ID
+
+  """An external web link to this compliance group's definition"""
+  webLink: String
+}
+
+input UpdateComplianceGroupInput {
+  """The UUID identifier for the compliance group to make updates to"""
+  id: ID!
+
+  """The updates to perform on the compliance group"""
+  updates: UpdateComplianceGroupFields!
+}
+
+input UpdateComplianceLibraryItemFields {
+  """
+  The human readable name for this compliance library item - Example: Acceptable Use of End User Computing
+  """
+  name: String
+
+  """Any other relevant information for this compliance framework item"""
+  description: String
+
+  """
+  A string used to contextualize how this compliance framework item is displayed in the UI
+  """
+  displayCategory: String
+
+  """
+  A UUID identifier for the policy item that this compliance library item is linked to
+  """
+  policyItemId: ID
+
+  """A legacy identifier used for backwards compatibility purposes"""
+  ref: String
+
+  """An external web link to this library item's definition"""
+  webLink: String
+}
+
+input UpdateComplianceLibraryItemInput {
+  """The UUID identifier of the compliance library item to update"""
+  id: ID!
+
+  """The updates to perform on the given compliance library item"""
+  updates: UpdateComplianceLibraryItemFields!
+}
+
+input UpdateComplianceLibraryItemToComplianceFrameworkItemRelationshipFields {
+  """The type of relationship between the source and target"""
+  relationshipType: LibraryItemToFrameworkItemRelationshipType
+}
+
+input UpdateComplianceLibraryItemToComplianceFrameworkItemRelationshipInput {
+  """
+  The UUID identifier of the compliance framework item that is the target of this relationship
+  """
+  frameworkItemId: ID!
+
+  """
+  The UUID identifier of the compliance library item that is the source of this relationship
+  """
+  libraryItemId: ID!
+
+  """The updates to be applied to this relationship"""
+  updates: UpdateComplianceLibraryItemToComplianceFrameworkItemRelationshipFields!
+}
+
+input UpdateComplianceLinkFields {
+  """A description for the link"""
+  description: String
+
+  """The link's URL"""
+  linkUrl: String
+
+  """A name for the link"""
+  name: String
+}
+
+input UpdateComplianceLinkInput {
+  """The UUID identifier for the link"""
+  id: ID!
+
+  """The updates to perform on the given compliance link"""
+  updates: UpdateComplianceLinkFields!
+}
+
+input UpdateComplianceNoteFields {
+  """The content of the note"""
+  body: String
+
+  """A name for the note"""
+  name: String
+}
+
+input UpdateComplianceNoteInput {
+  """The UUID identifier for the note"""
+  id: ID!
+
+  """The updates to perform on the given compliance note"""
+  updates: UpdateComplianceNoteFields!
+}
+
+input UpdateComplianceQuestionnaireAnswerFields {
+  """The content of the questionnaire answer"""
+  body: String!
+
+  """The answer to the questionnaire"""
+  answer: Answer
+}
+
+input UpdateComplianceQuestionnaireAnswerInput {
+  """The UUID identifier for the questionnaire answer"""
+  id: ID!
+
+  """The updates to perform on the given questionnaire answer"""
+  updates: UpdateComplianceQuestionnaireAnswerFields!
+}
+
+input UpdateCurrentUserInput {
+  nickName: String!
+}
+
+input UpdateDraftInput {
+  template: String
+  reviewerUserIds: [String!]
+}
+
+type UpdateEntitlementsOutput {
+  resultCode: String!
+}
+
+input UpdateExternalUploadEvidenceFields {
+  """The id of the updated external upload linked to this evidence"""
+  externalUploadId: String
+
+  """Any additional details to update regarding this evidence"""
+  body: String
+}
+
+input UpdateExternalUploadEvidenceInput {
+  """The UUID identifier for the external upload evidence"""
+  id: ID!
+
+  """The updates to perform on the given external upload evidence"""
+  updates: UpdateExternalUploadEvidenceFields!
+}
+
+input UpdateExternalUploadFields {
+  """
+  The human readable name of the uploaded file - Example: 'Policy Document v.3
+  """
+  name: String
+
+  """Any other relevant information for this external upload"""
+  description: String
+}
+
+input UpdateExternalUploadInput {
+  """The UUID identifier for the external upload to update"""
+  id: ID!
+
+  """The updates to perform on this External Upload"""
+  updates: UpdateExternalUploadFields!
+}
+
+input UpdateInlineQuestionRuleInstanceInput {
+  question: RuleQuestionDetailsInput!
+  id: ID!
+  version: Int!
+  state: RuleStateInput
+  latestAlertId: String
+  templates: JSON
+  tags: [String!]
+  name: String!
+  description: String
+  specVersion: Int!
+  operations: [RuleOperationInput!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+}
+
+input UpdateIntegrationInstanceInput {
+  name: String
+  sourceIntegrationInstanceId: String
+  pollingInterval: IntegrationPollingInterval
+  pollingIntervalCronExpression: IntegrationPollingIntervalCronExpressionInput
+  description: String
+  config: JSON
+  offsiteComplete: Boolean
+}
+
+input UpdatePolicyInput {
+  id: String!
+  file: String!
+  title: String!
+}
+
+input UpdateProcedureInput {
+  id: String
+  file: String
+  name: String
+  summary: String
+  adopted: Boolean
+  provider: String
+  applicable: Boolean
+  isRef: Boolean
+}
+
+input UpdateQuestionRuleInstanceInput {
+  question: RuleQuestionDetailsInput!
+  id: ID!
+  version: Int!
+  state: RuleStateInput
+  latestAlertId: String
+  templates: JSON
+  tags: [String!]
+  name: String!
+  description: String
+  specVersion: Int!
+  operations: [RuleOperationInput!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+}
+
+input UpdateReferencedQuestionRuleInstanceInput {
+  questionId: String
+  questionName: String
+  id: ID!
+  version: Int!
+  state: RuleStateInput
+  latestAlertId: String
+  templates: JSON
+  tags: [String!]
+  name: String!
+  description: String
+  specVersion: Int!
+  operations: [RuleOperationInput!]!
+  outputs: [String!]
+  pollingInterval: SchedulerPollingInterval
+  notifyOnFailure: Boolean
+  triggerActionsOnNewEntitiesOnly: Boolean
+}
+
+type UploadFormFieldKeyValuePair {
+  """AWS S3-specific header key - Example: 'X-Amz-Algorithm'"""
+  key: String!
+
+  """AWS S3-specific header value for the above key"""
+  value: String!
+}
+
+type UpsertRuleInstancesOutput {
+  newRules: [QuestionRuleInstance!]!
+  updatedRules: [QuestionRuleInstance!]!
+}
+
+type UsageLimitAccessResult {
+  canAccess: Boolean!
+  usage: Float!
+  limit: Int!
+}
+
+type UserAction {
+  id: ID!
+
+  """The type of the action"""
+  userActionType: UserActionType!
+
+  """Header title content on the todo card in the UI"""
+  displayName: String!
+
+  """Description displayed on the todo card in the UI"""
+  description: String!
+
+  """An action can be scoped to a user or account level"""
+  scope: ActionScope!
+
+  """
+  A status representing whether or not this action has been completed by the user or for the account
+  """
+  status: ActionStatus!
+
+  """The ABAC permissions associated with this action"""
+  abac: JSON!
+
+  """In-app link to the location to complete the action"""
+  link: String
+
+  """When the action was completed"""
+  completedAt: String
+}
+
+enum UserActionType {
+  ENABLE_J1_PLAYGROUND
+  REVIEW_INTEGRATIONS
+  SETUP_ANY_INTEGRATION
+  VIEW_INSIGHTS
+  SETUP_ANOTHER_INTEGRATION
+  ASK_A_QUESTION
+  VIEW_ALERTS
+  CREATE_ALERT
+  VIEW_POLICIES_AND_PROCEDURES
+  CREATE_POLICY
+  REVIEW_COMPLIANCE
+  CREATE_ASSESSMENT
+  DEFINE_CRITICAL_ASSETS
+}
+
+type UserServiceUserSettings {
+  USER_SERVICE_USER_DELETION: ChannelConfiguration!
+  USER_SERVICE_USER_DELETION_NOTICE: ChannelConfiguration!
+  USER_SERVICE_USER_DELETION_REMINDER: ChannelConfiguration!
+}
+
+type UserSettings {
+  _id: ID!
+  POLICIES: PoliciesUserSettings!
+  COMPLIANCE: ComplianceUserSettings!
+  INTEGRATIONS: IntegrationsUserSettings!
+  ALERTS: RulesServiceUserSettings!
+  TASK_SERVICE: TaskServiceUserSettings!
+  ENDPOINT_COMPLIANCE_SERVICE: EndpointComplianceServiceUserSettings!
+  ACCOUNT_SERVICE: AccountServiceUserSettings!
+  INVITATION_SERVICE: InvitationServiceUserSettings!
+  JANITOR: JanitorUserSettings!
+  USER_SERVICE: UserServiceUserSettings!
+  LOGIN_SERVICE: LoginServiceSettings!
+  J1_RAPID_RESPONSE: SecurityAlertUserSettings!
+  FILE: FileNotification!
+  INSIGHTS: InsightsNotification!
+}
+
+type V1Group {
+  id: String!
+  name: String!
+  description: String
+}
+
+type V1GroupQueryPolicyResponse {
+  id: String!
+  queryPolicy: [JSON]!
+}
+
+type V1GroupsPagedResponse {
+  items: [V1Group!]!
+  pageInfo: PageInfo!
+}
+
+type V1QueryPolicyPagedResponse {
+  items: [V1GroupQueryPolicyResponse!]!
+  pageInfo: PageInfo!
+}
+
+type V1User {
+  id: String!
+  email: String
+}
+
+type V1UsersPagedResponse {
+  items: [V1User!]!
+  pageInfo: PageInfo!
+}
+
+type ValueSetEntitlementAccessResult {
+  items: [ValueSetEntitlementItem!]!
+}
+
+type ValueSetEntitlementItem {
+  displayName: String!
+  canAccess: Boolean!
+  value: JSON!
+}
+
+type Vertex {
+  id: String!
+  entity: EntityCoreProperties!
+  properties: JSON
+  neighbors(depth: Int): GraphResponse
+  edges: [Edge]!
+}
+
+input VertexFilters {
+  _id: String
+  _key: String
+  _type: [String]
+  _class: [String]
+}
+
+input Widget {
+  id: String!
+  title: String
+  description: String
+  config: WidgetConfig!
+  type: String!
+  questionId: String
+  noResultMessage: String
+}
+
+input WidgetConfig {
+  queries: [WidgetQuery!]!
+  settings: JSON
+}
+
+input WidgetQuery {
+  name: String!
+  query: String!
+}
+
+input WidgetQueryInput {
+  query: String!
+  cursor: String
+}
+
+type ZipPoliciesOutput {
+  uuid: String!
+}
+

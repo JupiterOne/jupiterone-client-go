@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/jupiterone/jupiterone-client-go/internal/graphql"
 	"github.com/jupiterone/jupiterone-client-go/jupiterone/domain"
 )
 
@@ -30,22 +31,22 @@ const (
 
 // Cannot move this to domain until we fix the import cycle issue.
 type QueryInput struct {
-	Query            string                 `json:"query"`
-	Cursor           string                 `json:"cursor"`
-	DeferredFormat   DeferredResponseFormat `json:"deferredFormat"`
-	DeferredResponse DeferredResponseOption `json:"deferredResponse"`
-	DryRun           bool                   `json:"dryRun"`
-	Flags            *QueryV1Flags          `json:"flags"`
-	IncludeDeleted   bool                   `json:"includeDeleted"`
-	Remember         bool                   `json:"remember"`
-	Variables        map[string]interface{} `json:"variables"`
+	Query            string                         `json:"query"`
+	Cursor           string                         `json:"cursor"`
+	DeferredFormat   graphql.DeferredResponseFormat `json:"deferredFormat"`
+	DeferredResponse graphql.DeferredResponseOption `json:"deferredResponse"`
+	DryRun           bool                           `json:"dryRun"`
+	Flags            *graphql.QueryV1Flags          `json:"flags"`
+	IncludeDeleted   bool                           `json:"includeDeleted"`
+	Remember         bool                           `json:"remember"`
+	Variables        map[string]interface{}         `json:"variables"`
 }
 
 func (q *QueryService) Query(qi QueryInput) (interface{}, error) {
 	var queryResults interface{}
 
 	if qi.Flags == nil {
-		qi.Flags = &QueryV1Flags{
+		qi.Flags = &graphql.QueryV1Flags{
 			AllPages:           true,
 			ComputedProperties: false,
 			RowMetadata:        false,
@@ -54,14 +55,14 @@ func (q *QueryService) Query(qi QueryInput) (interface{}, error) {
 	}
 
 	if qi.DeferredFormat == "" {
-		qi.DeferredFormat = DeferredResponseFormatJson
+		qi.DeferredFormat = graphql.DeferredResponseFormatJson
 	}
 
 	if qi.DeferredResponse == "" {
-		qi.DeferredResponse = DeferredResponseOptionForce
+		qi.DeferredResponse = graphql.DeferredResponseOptionForce
 	}
 
-	graphQLResponse, err := QueryJupiterOne(
+	graphQLResponse, err := graphql.QueryJupiterOne(
 		context.Background(),
 		q.client.gqlClient,
 		qi.Query,

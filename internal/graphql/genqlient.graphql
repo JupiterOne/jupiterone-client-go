@@ -1,0 +1,313 @@
+query ListVerticesV2(
+  $classes: [String]
+  $types: [String]
+  $after: String
+  $size: Int
+  $propertyFilters: JSON
+  $filterType: FilterType
+  $search: String
+  $sort: [FieldSort]
+) {
+  listVerticesV2(
+    filters: { _class: $classes, _type: $types }
+    filterType: $filterType
+    propertyFilters: $propertyFilters
+    after: $after
+    size: $size
+    search: $search
+    sort: $sort
+  ) {
+    vertices {
+      id
+      properties
+      entity {
+        _id
+        _class
+        _type
+        _integrationName
+        displayName
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    total
+  }
+}
+
+query Vertex($filters: VertexFilters, $id: String, $propertyFilters: JSON) {
+  vertex(filters: $filters, id: $id, propertyFilters: $propertyFilters) {
+    edges {
+      fromVertexId
+      id
+      properties
+      relationship {
+        __typename
+        _accountId
+        _beginOn
+        _class
+        _createdOn
+        _deleted
+        _endOn
+        _fromEntityId
+        _fromEntityKey
+        _id
+        _integrationDefinitionId
+        _integrationInstanceId
+        _integrationName
+        _key
+        _latest
+        _scope
+        _source
+        _toEntityId
+        _toEntityKey
+        _type
+        _version
+        displayName
+      }
+      toVertexId
+    }
+    entity {
+      __typename
+      _accountId
+      _beginOn
+      _class
+      _createdOn
+      _deleted
+      _endOn
+      _id
+      _integrationDefinitionId
+      _integrationInstanceId
+      _integrationName
+      _key
+      _latest
+      _scope
+      _source
+      _type
+      _version
+      displayName
+    }
+    id
+    properties
+  }
+}
+
+query QueryJupiterOne(
+  $query: String!
+  $cursor: String
+  $deferredFormat: DeferredResponseFormat
+  $deferredResponse: DeferredResponseOption
+  $dryRun: Boolean
+  $flags: QueryV1Flags
+  $includeDeleted: Boolean
+  $remember: Boolean
+  $variables: JSON
+) {
+  queryV1(
+    query: $query
+    cursor: $cursor
+    deferredFormat: $deferredFormat
+    deferredResponse: $deferredResponse
+    dryRun: $dryRun
+    flags: $flags
+    includeDeleted: $includeDeleted
+    remember: $remember
+    variables: $variables
+  ) {
+    cursor
+    data
+    totalCount
+    type
+    url
+  }
+}
+
+# End Query
+# Integrations
+
+query ListJobs($integrationInstanceId: String!, $cursor: String, $size: Int) {
+  integrationJobs(
+    integrationInstanceId: $integrationInstanceId
+    cursor: $cursor
+    size: $size
+  ) {
+    jobs {
+      id
+      createDate
+      endDate
+      errorsOccurred
+      status
+      integrationInstanceId
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+
+query ListEvents(
+  $jobId: String!
+  $integrationInstanceId: String!
+  $cursor: String
+  $size: Int
+) {
+  integrationEvents(
+    size: $size
+    cursor: $cursor
+    jobId: $jobId
+    integrationInstanceId: $integrationInstanceId
+  ) {
+    events {
+      id
+      jobId
+      name
+      description
+      createDate
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+
+query IntegrationDefinitions($cursor: String) {
+  integrationDefinitions(cursor: $cursor) {
+    definitions {
+      id
+      integrationType
+      integrationClass
+      name
+      repoWebLink
+      title
+      configFields {
+        key
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+query GetIntegrationDefinition($id: String) {
+  integrationDefinition(id: $id) {
+    id
+    integrationType
+    integrationClass
+    name
+    title
+    repoWebLink
+  }
+}
+
+query ListIntegrationInstances($cursor: String) {
+  integrationInstances(cursor: $cursor) {
+    instances {
+      id
+      name
+      description
+      integrationDefinitionId
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+fragment IntegrationInstanceValues on IntegrationInstance {
+  id
+  name
+  accountId
+  sourceIntegrationInstanceId
+  pollingInterval
+  pollingIntervalCronExpression {
+    hour
+    dayOfWeek
+    __typename
+  }
+  integrationDefinition {
+    name
+    integrationType
+    __typename
+  }
+  integrationDefinitionId
+  description
+  config
+  offsiteComplete
+  jobs {
+    jobs {
+      ...IntegrationInstanceJobValues
+      __typename
+    }
+    __typename
+  }
+  instanceRelationship
+  __typename
+}
+fragment IntegrationInstanceJobValues on IntegrationJob {
+  id
+  status
+  integrationInstanceId
+  createDate
+  endDate
+  errorsOccurred
+  __typename
+}
+query GetIntegrationInstance($integrationInstanceId: String!) {
+  integrationInstance(id: $integrationInstanceId) {
+    ...IntegrationInstanceValues
+    __typename
+  }
+}
+
+mutation UpdateIntegrationInstance(
+  $id: String!
+  $update: UpdateIntegrationInstanceInput!
+) {
+  updateIntegrationInstance(id: $id, update: $update) {
+    id
+    name
+    pollingInterval
+    pollingIntervalCronExpression {
+      hour
+      dayOfWeek
+      __typename
+    }
+    integrationDefinitionId
+    description
+    config
+    offsiteComplete
+    __typename
+  }
+}
+
+mutation DeleteAnIntegrationInstance($id: String!) {
+  deleteIntegrationInstance(id: $id) {
+    success
+  }
+}
+
+mutation InvokeInstance($id: String!) {
+  invokeIntegrationInstance(id: $id) {
+    success
+  }
+}
+
+mutation CreateInstance($instance: CreateIntegrationInstanceInput!) {
+  createIntegrationInstance(instance: $instance) {
+    id
+    name
+    description
+    pollingInterval
+    integrationDefinitionId
+    description
+    config
+  }
+}
+
+# End Integrations
