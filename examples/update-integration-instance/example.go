@@ -32,7 +32,6 @@ func main() {
 	results, err := client.Query.Query(j1.QueryInput{
 		Query: "FIND jupiterone_integration AS x RETURN x.id",
 	})
-
 	if err != nil {
 		log.Fatalf("failed query output: %v", err)
 	}

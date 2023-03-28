@@ -76,6 +76,7 @@ func (s *IntegrationService) DeleteInstance(id string) (*graphql.DeleteAnIntegra
 func (s *IntegrationService) GetIntegrationInstance(id string) (*graphql.GetIntegrationInstanceResponse, error) {
 	return graphql.GetIntegrationInstance(context.Background(), s.client.gqlClient, id)
 }
+
 func (s *IntegrationService) UpdateIntegrationInstance(id string, payload graphql.UpdateIntegrationInstanceInput) (*graphql.UpdateIntegrationInstanceResponse, error) {
 	return graphql.UpdateIntegrationInstance(context.Background(), s.client.gqlClient, id, payload)
 }
