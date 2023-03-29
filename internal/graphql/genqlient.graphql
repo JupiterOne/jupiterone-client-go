@@ -305,7 +305,15 @@ mutation InvokeInstance($id: String!) {
   }
 }
 
-mutation CreateInstance($instance: CreateIntegrationInstanceInput!) {
+# @genqlient(for: "CreateIntegrationInstanceInput.sourceIntegrationInstanceId", omitempty: true, pointer: true)
+# @genqlient(for: "CreateIntegrationInstanceInput.pollingInterval", omitempty: true, pointer: true)
+# @genqlient(for: "CreateIntegrationInstanceInput.pollingIntervalCronExpression", omitempty: true, pointer: true)
+# @genqlient(for: "CreateIntegrationInstanceInput.description", omitempty: true, pointer: true)
+# @genqlient(for: "CreateIntegrationInstanceInput.config", omitempty: true, pointer: true)
+# @genqlient(for: "CreateIntegrationInstanceInput.offsiteComplete", omitempty: true, pointer: true)
+mutation CreateInstance(
+  $instance: CreateIntegrationInstanceInput!
+) {
   createIntegrationInstance(instance: $instance) {
     id
     name

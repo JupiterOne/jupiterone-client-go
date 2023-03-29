@@ -52,31 +52,31 @@ func (v *CreateInstanceResponse) GetCreateIntegrationInstance() CreateInstanceCr
 }
 
 type CreateIntegrationInstanceInput struct {
-	Name                          string                                        `json:"name"`
-	SourceIntegrationInstanceId   string                                        `json:"sourceIntegrationInstanceId"`
-	PollingInterval               IntegrationPollingInterval                    `json:"pollingInterval"`
-	PollingIntervalCronExpression IntegrationPollingIntervalCronExpressionInput `json:"pollingIntervalCronExpression"`
-	IntegrationDefinitionId       string                                        `json:"integrationDefinitionId"`
-	Description                   string                                        `json:"description"`
-	Config                        map[string]interface{}                        `json:"config"`
-	OffsiteComplete               bool                                          `json:"offsiteComplete"`
+	Name                          string                                         `json:"name"`
+	SourceIntegrationInstanceId   *string                                        `json:"sourceIntegrationInstanceId,omitempty"`
+	PollingInterval               *IntegrationPollingInterval                    `json:"pollingInterval,omitempty"`
+	PollingIntervalCronExpression *IntegrationPollingIntervalCronExpressionInput `json:"pollingIntervalCronExpression,omitempty"`
+	IntegrationDefinitionId       string                                         `json:"integrationDefinitionId"`
+	Description                   *string                                        `json:"description,omitempty"`
+	Config                        *map[string]interface{}                        `json:"config,omitempty"`
+	OffsiteComplete               *bool                                          `json:"offsiteComplete,omitempty"`
 }
 
 // GetName returns CreateIntegrationInstanceInput.Name, and is useful for accessing the field via an interface.
 func (v *CreateIntegrationInstanceInput) GetName() string { return v.Name }
 
 // GetSourceIntegrationInstanceId returns CreateIntegrationInstanceInput.SourceIntegrationInstanceId, and is useful for accessing the field via an interface.
-func (v *CreateIntegrationInstanceInput) GetSourceIntegrationInstanceId() string {
+func (v *CreateIntegrationInstanceInput) GetSourceIntegrationInstanceId() *string {
 	return v.SourceIntegrationInstanceId
 }
 
 // GetPollingInterval returns CreateIntegrationInstanceInput.PollingInterval, and is useful for accessing the field via an interface.
-func (v *CreateIntegrationInstanceInput) GetPollingInterval() IntegrationPollingInterval {
+func (v *CreateIntegrationInstanceInput) GetPollingInterval() *IntegrationPollingInterval {
 	return v.PollingInterval
 }
 
 // GetPollingIntervalCronExpression returns CreateIntegrationInstanceInput.PollingIntervalCronExpression, and is useful for accessing the field via an interface.
-func (v *CreateIntegrationInstanceInput) GetPollingIntervalCronExpression() IntegrationPollingIntervalCronExpressionInput {
+func (v *CreateIntegrationInstanceInput) GetPollingIntervalCronExpression() *IntegrationPollingIntervalCronExpressionInput {
 	return v.PollingIntervalCronExpression
 }
 
@@ -86,13 +86,13 @@ func (v *CreateIntegrationInstanceInput) GetIntegrationDefinitionId() string {
 }
 
 // GetDescription returns CreateIntegrationInstanceInput.Description, and is useful for accessing the field via an interface.
-func (v *CreateIntegrationInstanceInput) GetDescription() string { return v.Description }
+func (v *CreateIntegrationInstanceInput) GetDescription() *string { return v.Description }
 
 // GetConfig returns CreateIntegrationInstanceInput.Config, and is useful for accessing the field via an interface.
-func (v *CreateIntegrationInstanceInput) GetConfig() map[string]interface{} { return v.Config }
+func (v *CreateIntegrationInstanceInput) GetConfig() *map[string]interface{} { return v.Config }
 
 // GetOffsiteComplete returns CreateIntegrationInstanceInput.OffsiteComplete, and is useful for accessing the field via an interface.
-func (v *CreateIntegrationInstanceInput) GetOffsiteComplete() bool { return v.OffsiteComplete }
+func (v *CreateIntegrationInstanceInput) GetOffsiteComplete() *bool { return v.OffsiteComplete }
 
 type DeferredResponseFormat string
 
