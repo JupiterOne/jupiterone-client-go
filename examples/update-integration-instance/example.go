@@ -36,8 +36,30 @@ func main() {
 		log.Fatalf("failed query output: %v", err)
 	}
 
-	for _, result := range results.([]map[string]interface{}) {
-		integrationInstanceId := result["x.id"].(string)
+	resultsAsMap, ok := results.(map[string]interface{})
+	if !ok {
+		log.Fatalf("failed to convert results to map[string]interface{}")
+	}
+
+	data, ok := resultsAsMap["data"].([]interface{})
+	if !ok {
+		log.Fatalf("failed to convert data to []interface{}")
+	}
+
+	for _, dataRow := range data {
+
+		valuesHash, ok := dataRow.(map[string]interface{})
+		if !ok {
+			log.Printf("failed to convert dataRow to map[string]interface{}")
+			continue
+		}
+
+		integrationInstanceId, ok := valuesHash["x.id"].(string)
+		if !ok {
+			log.Printf("failed to retrieve integration instance id")
+			continue
+		}
+
 		integrationInstance, err := client.Integration.GetIntegrationInstance(integrationInstanceId)
 		if err != nil {
 			log.Printf("failed query output: %v", err)
@@ -49,16 +71,7 @@ func main() {
 		}
 
 		input := graphql.UpdateIntegrationInstanceInput{
-			Name:                        integrationInstance.IntegrationInstance.Name,
-			SourceIntegrationInstanceId: integrationInstance.IntegrationInstance.SourceIntegrationInstanceId,
-			PollingInterval:             integrationInstance.IntegrationInstance.PollingInterval,
-			PollingIntervalCronExpression: graphql.IntegrationPollingIntervalCronExpressionInput{
-				DayOfWeek: integrationInstance.IntegrationInstance.PollingIntervalCronExpression.DayOfWeek,
-				Hour:      integrationInstance.IntegrationInstance.PollingIntervalCronExpression.Hour,
-			},
-			Description:     integrationInstance.IntegrationInstance.Name,
-			Config:          integrationInstance.IntegrationInstance.Config,
-			OffsiteComplete: integrationInstance.IntegrationInstance.OffsiteComplete,
+			Config: &integrationInstance.IntegrationInstance.Config,
 		}
 
 		resp, err := client.Integration.UpdateIntegrationInstance(integrationInstanceId, input)

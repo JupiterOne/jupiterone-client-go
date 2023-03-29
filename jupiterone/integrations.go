@@ -27,7 +27,7 @@ func (s *IntegrationService) GetDefinition(id string) (*graphql.GetIntegrationDe
 }
 
 // ListInstances list the integration instances for the JupiterOne account.
-// ListInstances returns a reference to an AnIntegrationInstanceResponse which
+// ListInstances returns a reference to ListIntegrationInstancesResponse which
 // contains the Instances and the PageInfo used to request additional instances.
 // The first call to ListInstances should pass nil for the cursor. To paginate
 // through all instances, the caller should check if PageInfo.HasNextPage

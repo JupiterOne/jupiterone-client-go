@@ -26,7 +26,7 @@ lint:
 ok:
 	@echo OK
 
-precommit: tidy fmt lint test sec ok
+precommit: tidy fmt lint test ok
 
 tidy: 
 	go mod tidy

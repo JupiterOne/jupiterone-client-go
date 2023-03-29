@@ -1168,41 +1168,41 @@ const (
 )
 
 type UpdateIntegrationInstanceInput struct {
-	Name                          string                                        `json:"name"`
-	SourceIntegrationInstanceId   string                                        `json:"sourceIntegrationInstanceId"`
-	PollingInterval               IntegrationPollingInterval                    `json:"pollingInterval"`
-	PollingIntervalCronExpression IntegrationPollingIntervalCronExpressionInput `json:"pollingIntervalCronExpression"`
-	Description                   string                                        `json:"description"`
-	Config                        map[string]interface{}                        `json:"config"`
-	OffsiteComplete               bool                                          `json:"offsiteComplete"`
+	Name                          *string                                        `json:"name,omitempty"`
+	SourceIntegrationInstanceId   *string                                        `json:"sourceIntegrationInstanceId,omitempty"`
+	PollingInterval               *IntegrationPollingInterval                    `json:"pollingInterval,omitempty"`
+	PollingIntervalCronExpression *IntegrationPollingIntervalCronExpressionInput `json:"pollingIntervalCronExpression,omitempty"`
+	Description                   *string                                        `json:"description,omitempty"`
+	Config                        *map[string]interface{}                        `json:"config,omitempty"`
+	OffsiteComplete               *bool                                          `json:"offsiteComplete,omitempty"`
 }
 
 // GetName returns UpdateIntegrationInstanceInput.Name, and is useful for accessing the field via an interface.
-func (v *UpdateIntegrationInstanceInput) GetName() string { return v.Name }
+func (v *UpdateIntegrationInstanceInput) GetName() *string { return v.Name }
 
 // GetSourceIntegrationInstanceId returns UpdateIntegrationInstanceInput.SourceIntegrationInstanceId, and is useful for accessing the field via an interface.
-func (v *UpdateIntegrationInstanceInput) GetSourceIntegrationInstanceId() string {
+func (v *UpdateIntegrationInstanceInput) GetSourceIntegrationInstanceId() *string {
 	return v.SourceIntegrationInstanceId
 }
 
 // GetPollingInterval returns UpdateIntegrationInstanceInput.PollingInterval, and is useful for accessing the field via an interface.
-func (v *UpdateIntegrationInstanceInput) GetPollingInterval() IntegrationPollingInterval {
+func (v *UpdateIntegrationInstanceInput) GetPollingInterval() *IntegrationPollingInterval {
 	return v.PollingInterval
 }
 
 // GetPollingIntervalCronExpression returns UpdateIntegrationInstanceInput.PollingIntervalCronExpression, and is useful for accessing the field via an interface.
-func (v *UpdateIntegrationInstanceInput) GetPollingIntervalCronExpression() IntegrationPollingIntervalCronExpressionInput {
+func (v *UpdateIntegrationInstanceInput) GetPollingIntervalCronExpression() *IntegrationPollingIntervalCronExpressionInput {
 	return v.PollingIntervalCronExpression
 }
 
 // GetDescription returns UpdateIntegrationInstanceInput.Description, and is useful for accessing the field via an interface.
-func (v *UpdateIntegrationInstanceInput) GetDescription() string { return v.Description }
+func (v *UpdateIntegrationInstanceInput) GetDescription() *string { return v.Description }
 
 // GetConfig returns UpdateIntegrationInstanceInput.Config, and is useful for accessing the field via an interface.
-func (v *UpdateIntegrationInstanceInput) GetConfig() map[string]interface{} { return v.Config }
+func (v *UpdateIntegrationInstanceInput) GetConfig() *map[string]interface{} { return v.Config }
 
 // GetOffsiteComplete returns UpdateIntegrationInstanceInput.OffsiteComplete, and is useful for accessing the field via an interface.
-func (v *UpdateIntegrationInstanceInput) GetOffsiteComplete() bool { return v.OffsiteComplete }
+func (v *UpdateIntegrationInstanceInput) GetOffsiteComplete() *bool { return v.OffsiteComplete }
 
 // UpdateIntegrationInstanceResponse is returned by UpdateIntegrationInstance on success.
 type UpdateIntegrationInstanceResponse struct {

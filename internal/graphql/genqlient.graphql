@@ -265,6 +265,13 @@ query GetIntegrationInstance($integrationInstanceId: String!) {
   }
 }
 
+# @genqlient(for: "UpdateIntegrationInstanceInput.name", omitempty: true, pointer: true)
+# @genqlient(for: "UpdateIntegrationInstanceInput.sourceIntegrationInstanceId", omitempty: true, pointer: true)
+# @genqlient(for: "UpdateIntegrationInstanceInput.pollingInterval", omitempty: true, pointer: true)
+# @genqlient(for: "UpdateIntegrationInstanceInput.pollingIntervalCronExpression", omitempty: true, pointer: true)
+# @genqlient(for: "UpdateIntegrationInstanceInput.description", omitempty: true, pointer: true)
+# @genqlient(for: "UpdateIntegrationInstanceInput.config", omitempty: true, pointer: true)
+# @genqlient(for: "UpdateIntegrationInstanceInput.offsiteComplete", omitempty: true, pointer: true)
 mutation UpdateIntegrationInstance(
   $id: String!
   $update: UpdateIntegrationInstanceInput!
