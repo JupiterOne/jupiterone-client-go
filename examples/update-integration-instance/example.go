@@ -60,11 +60,28 @@ func main() {
 			continue
 		}
 
+		/*
+
+			The following code is the core of this script.
+			It follows the standard pattern of: get current
+			state, update the state, and then save the state.
+
+		*/
+
 		integrationInstance, err := client.Integration.GetIntegrationInstance(integrationInstanceId)
 		if err != nil {
 			log.Printf("failed query output: %v", err)
 			continue
 		}
+
+		/*
+
+			If for example, here, we want to delete a tag, instead
+			of adding a tag, we would use the following code:
+
+			delete(tags.(map[string]interface{}), "j1.sourcefilter")
+
+		*/
 
 		if tags, ok := integrationInstance.IntegrationInstance.Config["@tag"]; ok {
 			tags.(map[string]interface{})["j1.sourcefilter"] = "layer0"
