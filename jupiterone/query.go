@@ -20,16 +20,6 @@ func NetworkError(errm string) error {
 	return fmt.Errorf("NetworkError %w : %s", ErrNetworkMessage, errm)
 }
 
-// Finished is the status of a query when it has completed
-// this is helpful for the consumer to know if their job is
-// actually complete or if it just failed.
-const (
-	Finished   = "FINISHED"
-	inProgress = "IN_PROGRESS"
-	sleepTime  = 5
-)
-
-// Cannot move this to domain until we fix the import cycle issue.
 type QueryInput struct {
 	Query            string                         `json:"query"`
 	Cursor           string                         `json:"cursor"`
@@ -41,6 +31,21 @@ type QueryInput struct {
 	Remember         bool                           `json:"remember"`
 	Variables        map[string]interface{}         `json:"variables"`
 }
+
+type IQueryService interface {
+	Query(qi QueryInput) (interface{}, error)
+	AsList(queryResults interface{}) (domain.QueryResult[[]domain.QueryDataVertex], error)
+	AsTree(queryResults interface{}) (domain.QueryResult[domain.QueryDataTreeResultFormat], error)
+}
+
+// Finished is the status of a query when it has completed
+// this is helpful for the consumer to know if their job is
+// actually complete or if it just failed.
+const (
+	Finished   = "FINISHED"
+	inProgress = "IN_PROGRESS"
+	sleepTime  = 5
+)
 
 func (q *QueryService) Query(qi QueryInput) (interface{}, error) {
 	var queryResults interface{}

@@ -35,7 +35,7 @@ type Client struct {
 	Integration     *IntegrationService
 	Audit           *AuditService
 	Synchronization *SynchronizationService
-	Query           *QueryService
+	Query           IQueryService
 }
 
 type service struct {
