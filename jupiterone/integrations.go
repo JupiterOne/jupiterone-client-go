@@ -3,7 +3,7 @@ package jupiterone
 import (
 	"context"
 
-	"github.com/jupiterone/jupiterone-client-go/internal/graphql"
+	"github.com/jupiterone/jupiterone-client-go/jupiterone/graphql"
 )
 
 // IntegrationService handles the integration-related API requests.

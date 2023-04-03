@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jupiterone/jupiterone-client-go/internal/graphql"
 	"github.com/jupiterone/jupiterone-client-go/jupiterone/domain"
+	"github.com/jupiterone/jupiterone-client-go/jupiterone/graphql"
 )
 
 type QueryService service
