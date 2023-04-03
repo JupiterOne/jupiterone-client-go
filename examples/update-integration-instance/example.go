@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/jupiterone/jupiterone-client-go/internal/graphql"
 	j1 "github.com/jupiterone/jupiterone-client-go/jupiterone"
+	graphql "github.com/jupiterone/jupiterone-client-go/jupiterone/graphql"
 )
 
 func getEnvWithDefault(key string, defaultVal string) string {
