@@ -28,6 +28,7 @@ query ListVerticesV2(
         displayName
       }
     }
+    # @genqlient(typename: "PageInfo")
     pageInfo {
       endCursor
       hasNextPage
@@ -132,6 +133,7 @@ query ListJobs($integrationInstanceId: String!, $cursor: String, $size: Int) {
     cursor: $cursor
     size: $size
   ) {
+    # @genqlient(typename: "IntegrationJob")
     jobs {
       id
       createDate
@@ -140,6 +142,7 @@ query ListJobs($integrationInstanceId: String!, $cursor: String, $size: Int) {
       status
       integrationInstanceId
     }
+    # @genqlient(typename: "PageInfo")
     pageInfo {
       endCursor
       hasNextPage
@@ -159,6 +162,7 @@ query ListEvents(
     jobId: $jobId
     integrationInstanceId: $integrationInstanceId
   ) {
+    # @genqlient(typename: "IntegrationEvent")
     events {
       id
       jobId
@@ -166,6 +170,7 @@ query ListEvents(
       description
       createDate
     }
+    # @genqlient(typename: "PageInfo")
     pageInfo {
       endCursor
       hasNextPage
@@ -175,6 +180,7 @@ query ListEvents(
 
 query IntegrationDefinitions($cursor: String) {
   integrationDefinitions(cursor: $cursor) {
+    # @genqlient(typename: "IntegrationDefinition")
     definitions {
       id
       integrationType
@@ -186,9 +192,10 @@ query IntegrationDefinitions($cursor: String) {
         key
       }
     }
+    # @genqlient(typename: "PageInfo")
     pageInfo {
-      hasNextPage
       endCursor
+      hasNextPage
     }
   }
 }
@@ -206,15 +213,17 @@ query GetIntegrationDefinition($id: String) {
 
 query ListIntegrationInstances($cursor: String) {
   integrationInstances(cursor: $cursor) {
+    # @genqlient(typename: "IntegrationInstance")
     instances {
       id
       name
       description
       integrationDefinitionId
     }
+    # @genqlient(typename: "PageInfo")
     pageInfo {
-      hasNextPage
       endCursor
+      hasNextPage
     }
   }
 }
@@ -258,6 +267,7 @@ fragment IntegrationInstanceJobValues on IntegrationJob {
   errorsOccurred
   __typename
 }
+
 query GetIntegrationInstance($integrationInstanceId: String!) {
   integrationInstance(id: $integrationInstanceId) {
     ...IntegrationInstanceValues

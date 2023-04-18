@@ -359,92 +359,62 @@ func (v *GetIntegrationInstanceResponse) GetIntegrationInstance() GetIntegration
 	return v.IntegrationInstance
 }
 
+// IntegrationDefinition includes the requested fields of the GraphQL type IntegrationDefinition.
+type IntegrationDefinition struct {
+	Id               string                                         `json:"id"`
+	IntegrationType  string                                         `json:"integrationType"`
+	IntegrationClass []string                                       `json:"integrationClass"`
+	Name             string                                         `json:"name"`
+	RepoWebLink      string                                         `json:"repoWebLink"`
+	Title            string                                         `json:"title"`
+	ConfigFields     []IntegrationDefinitionConfigFieldsConfigField `json:"configFields"`
+}
+
+// GetId returns IntegrationDefinition.Id, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinition) GetId() string { return v.Id }
+
+// GetIntegrationType returns IntegrationDefinition.IntegrationType, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinition) GetIntegrationType() string { return v.IntegrationType }
+
+// GetIntegrationClass returns IntegrationDefinition.IntegrationClass, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinition) GetIntegrationClass() []string { return v.IntegrationClass }
+
+// GetName returns IntegrationDefinition.Name, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinition) GetName() string { return v.Name }
+
+// GetRepoWebLink returns IntegrationDefinition.RepoWebLink, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinition) GetRepoWebLink() string { return v.RepoWebLink }
+
+// GetTitle returns IntegrationDefinition.Title, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinition) GetTitle() string { return v.Title }
+
+// GetConfigFields returns IntegrationDefinition.ConfigFields, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinition) GetConfigFields() []IntegrationDefinitionConfigFieldsConfigField {
+	return v.ConfigFields
+}
+
+// IntegrationDefinitionConfigFieldsConfigField includes the requested fields of the GraphQL type ConfigField.
+type IntegrationDefinitionConfigFieldsConfigField struct {
+	Key string `json:"key"`
+}
+
+// GetKey returns IntegrationDefinitionConfigFieldsConfigField.Key, and is useful for accessing the field via an interface.
+func (v *IntegrationDefinitionConfigFieldsConfigField) GetKey() string { return v.Key }
+
 // IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult includes the requested fields of the GraphQL type ListIntegrationDefinitionsResult.
 type IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult struct {
-	Definitions []IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition `json:"definitions"`
-	PageInfo    IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo                           `json:"pageInfo"`
+	Definitions []IntegrationDefinition `json:"definitions"`
+	PageInfo    PageInfo                `json:"pageInfo"`
 }
 
 // GetDefinitions returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult.Definitions, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult) GetDefinitions() []IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition {
+func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult) GetDefinitions() []IntegrationDefinition {
 	return v.Definitions
 }
 
 // GetPageInfo returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult.PageInfo, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult) GetPageInfo() IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo {
+func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult) GetPageInfo() PageInfo {
 	return v.PageInfo
-}
-
-// IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition includes the requested fields of the GraphQL type IntegrationDefinition.
-type IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition struct {
-	Id               string                                                                                                                                `json:"id"`
-	IntegrationType  string                                                                                                                                `json:"integrationType"`
-	IntegrationClass []string                                                                                                                              `json:"integrationClass"`
-	Name             string                                                                                                                                `json:"name"`
-	RepoWebLink      string                                                                                                                                `json:"repoWebLink"`
-	Title            string                                                                                                                                `json:"title"`
-	ConfigFields     []IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinitionConfigFieldsConfigField `json:"configFields"`
-}
-
-// GetId returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition.Id, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition) GetId() string {
-	return v.Id
-}
-
-// GetIntegrationType returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition.IntegrationType, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition) GetIntegrationType() string {
-	return v.IntegrationType
-}
-
-// GetIntegrationClass returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition.IntegrationClass, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition) GetIntegrationClass() []string {
-	return v.IntegrationClass
-}
-
-// GetName returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition.Name, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition) GetName() string {
-	return v.Name
-}
-
-// GetRepoWebLink returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition.RepoWebLink, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition) GetRepoWebLink() string {
-	return v.RepoWebLink
-}
-
-// GetTitle returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition.Title, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition) GetTitle() string {
-	return v.Title
-}
-
-// GetConfigFields returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition.ConfigFields, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinition) GetConfigFields() []IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinitionConfigFieldsConfigField {
-	return v.ConfigFields
-}
-
-// IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinitionConfigFieldsConfigField includes the requested fields of the GraphQL type ConfigField.
-type IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinitionConfigFieldsConfigField struct {
-	Key string `json:"key"`
-}
-
-// GetKey returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinitionConfigFieldsConfigField.Key, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultDefinitionsIntegrationDefinitionConfigFieldsConfigField) GetKey() string {
-	return v.Key
-}
-
-// IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo includes the requested fields of the GraphQL type PageInfo.
-type IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo struct {
-	HasNextPage bool   `json:"hasNextPage"`
-	EndCursor   string `json:"endCursor"`
-}
-
-// GetHasNextPage returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
-
-// GetEndCursor returns IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResultPageInfo) GetEndCursor() string {
-	return v.EndCursor
 }
 
 // IntegrationDefinitionsResponse is returned by IntegrationDefinitions on success.
@@ -456,6 +426,50 @@ type IntegrationDefinitionsResponse struct {
 func (v *IntegrationDefinitionsResponse) GetIntegrationDefinitions() IntegrationDefinitionsIntegrationDefinitionsListIntegrationDefinitionsResult {
 	return v.IntegrationDefinitions
 }
+
+// IntegrationEvent includes the requested fields of the GraphQL type IntegrationEvent.
+type IntegrationEvent struct {
+	Id          string `json:"id"`
+	JobId       string `json:"jobId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	CreateDate  int    `json:"createDate"`
+}
+
+// GetId returns IntegrationEvent.Id, and is useful for accessing the field via an interface.
+func (v *IntegrationEvent) GetId() string { return v.Id }
+
+// GetJobId returns IntegrationEvent.JobId, and is useful for accessing the field via an interface.
+func (v *IntegrationEvent) GetJobId() string { return v.JobId }
+
+// GetName returns IntegrationEvent.Name, and is useful for accessing the field via an interface.
+func (v *IntegrationEvent) GetName() string { return v.Name }
+
+// GetDescription returns IntegrationEvent.Description, and is useful for accessing the field via an interface.
+func (v *IntegrationEvent) GetDescription() string { return v.Description }
+
+// GetCreateDate returns IntegrationEvent.CreateDate, and is useful for accessing the field via an interface.
+func (v *IntegrationEvent) GetCreateDate() int { return v.CreateDate }
+
+// IntegrationInstance includes the requested fields of the GraphQL type IntegrationInstance.
+type IntegrationInstance struct {
+	Id                      string `json:"id"`
+	Name                    string `json:"name"`
+	Description             string `json:"description"`
+	IntegrationDefinitionId string `json:"integrationDefinitionId"`
+}
+
+// GetId returns IntegrationInstance.Id, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetId() string { return v.Id }
+
+// GetName returns IntegrationInstance.Name, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetName() string { return v.Name }
+
+// GetDescription returns IntegrationInstance.Description, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetDescription() string { return v.Description }
+
+// GetIntegrationDefinitionId returns IntegrationInstance.IntegrationDefinitionId, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetIntegrationDefinitionId() string { return v.IntegrationDefinitionId }
 
 // IntegrationInstanceJobValues includes the GraphQL fields of IntegrationJob requested by the fragment IntegrationInstanceJobValues.
 type IntegrationInstanceJobValues struct {
@@ -730,6 +744,34 @@ func (v *IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollin
 	return v.Typename
 }
 
+// IntegrationJob includes the requested fields of the GraphQL type IntegrationJob.
+type IntegrationJob struct {
+	Id                    string               `json:"id"`
+	CreateDate            int                  `json:"createDate"`
+	EndDate               int                  `json:"endDate"`
+	ErrorsOccurred        bool                 `json:"errorsOccurred"`
+	Status                IntegrationJobStatus `json:"status"`
+	IntegrationInstanceId string               `json:"integrationInstanceId"`
+}
+
+// GetId returns IntegrationJob.Id, and is useful for accessing the field via an interface.
+func (v *IntegrationJob) GetId() string { return v.Id }
+
+// GetCreateDate returns IntegrationJob.CreateDate, and is useful for accessing the field via an interface.
+func (v *IntegrationJob) GetCreateDate() int { return v.CreateDate }
+
+// GetEndDate returns IntegrationJob.EndDate, and is useful for accessing the field via an interface.
+func (v *IntegrationJob) GetEndDate() int { return v.EndDate }
+
+// GetErrorsOccurred returns IntegrationJob.ErrorsOccurred, and is useful for accessing the field via an interface.
+func (v *IntegrationJob) GetErrorsOccurred() bool { return v.ErrorsOccurred }
+
+// GetStatus returns IntegrationJob.Status, and is useful for accessing the field via an interface.
+func (v *IntegrationJob) GetStatus() IntegrationJobStatus { return v.Status }
+
+// GetIntegrationInstanceId returns IntegrationJob.IntegrationInstanceId, and is useful for accessing the field via an interface.
+func (v *IntegrationJob) GetIntegrationInstanceId() string { return v.IntegrationInstanceId }
+
 type IntegrationJobStatus string
 
 const (
@@ -783,68 +825,18 @@ func (v *InvokeInstanceResponse) GetInvokeIntegrationInstance() InvokeInstanceIn
 
 // ListEventsIntegrationEventsIntegrationEventsResult includes the requested fields of the GraphQL type IntegrationEventsResult.
 type ListEventsIntegrationEventsIntegrationEventsResult struct {
-	Events   []ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent `json:"events"`
-	PageInfo ListEventsIntegrationEventsIntegrationEventsResultPageInfo                 `json:"pageInfo"`
+	Events   []IntegrationEvent `json:"events"`
+	PageInfo PageInfo           `json:"pageInfo"`
 }
 
 // GetEvents returns ListEventsIntegrationEventsIntegrationEventsResult.Events, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResult) GetEvents() []ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent {
+func (v *ListEventsIntegrationEventsIntegrationEventsResult) GetEvents() []IntegrationEvent {
 	return v.Events
 }
 
 // GetPageInfo returns ListEventsIntegrationEventsIntegrationEventsResult.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResult) GetPageInfo() ListEventsIntegrationEventsIntegrationEventsResultPageInfo {
+func (v *ListEventsIntegrationEventsIntegrationEventsResult) GetPageInfo() PageInfo {
 	return v.PageInfo
-}
-
-// ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent includes the requested fields of the GraphQL type IntegrationEvent.
-type ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent struct {
-	Id          string `json:"id"`
-	JobId       string `json:"jobId"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	CreateDate  int    `json:"createDate"`
-}
-
-// GetId returns ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent.Id, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent) GetId() string {
-	return v.Id
-}
-
-// GetJobId returns ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent.JobId, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent) GetJobId() string {
-	return v.JobId
-}
-
-// GetName returns ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent.Name, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent) GetName() string {
-	return v.Name
-}
-
-// GetDescription returns ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent.Description, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent) GetDescription() string {
-	return v.Description
-}
-
-// GetCreateDate returns ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent.CreateDate, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResultEventsIntegrationEvent) GetCreateDate() int {
-	return v.CreateDate
-}
-
-// ListEventsIntegrationEventsIntegrationEventsResultPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListEventsIntegrationEventsIntegrationEventsResultPageInfo struct {
-	EndCursor   string `json:"endCursor"`
-	HasNextPage bool   `json:"hasNextPage"`
-}
-
-// GetEndCursor returns ListEventsIntegrationEventsIntegrationEventsResultPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResultPageInfo) GetEndCursor() string {
-	return v.EndCursor
-}
-
-// GetHasNextPage returns ListEventsIntegrationEventsIntegrationEventsResultPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListEventsIntegrationEventsIntegrationEventsResultPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
 }
 
 // ListEventsResponse is returned by ListEvents on success.
@@ -859,62 +851,18 @@ func (v *ListEventsResponse) GetIntegrationEvents() ListEventsIntegrationEventsI
 
 // ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult includes the requested fields of the GraphQL type ListIntegrationInstancesResult.
 type ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult struct {
-	Instances []ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance `json:"instances"`
-	PageInfo  ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo                       `json:"pageInfo"`
+	Instances []IntegrationInstance `json:"instances"`
+	PageInfo  PageInfo              `json:"pageInfo"`
 }
 
 // GetInstances returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult.Instances, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult) GetInstances() []ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance {
+func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult) GetInstances() []IntegrationInstance {
 	return v.Instances
 }
 
 // GetPageInfo returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult) GetPageInfo() ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo {
+func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResult) GetPageInfo() PageInfo {
 	return v.PageInfo
-}
-
-// ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance includes the requested fields of the GraphQL type IntegrationInstance.
-type ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance struct {
-	Id                      string `json:"id"`
-	Name                    string `json:"name"`
-	Description             string `json:"description"`
-	IntegrationDefinitionId string `json:"integrationDefinitionId"`
-}
-
-// GetId returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance.Id, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance) GetId() string {
-	return v.Id
-}
-
-// GetName returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance.Name, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance) GetName() string {
-	return v.Name
-}
-
-// GetDescription returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance.Description, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance) GetDescription() string {
-	return v.Description
-}
-
-// GetIntegrationDefinitionId returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance.IntegrationDefinitionId, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultInstancesIntegrationInstance) GetIntegrationDefinitionId() string {
-	return v.IntegrationDefinitionId
-}
-
-// ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo struct {
-	HasNextPage bool   `json:"hasNextPage"`
-	EndCursor   string `json:"endCursor"`
-}
-
-// GetHasNextPage returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
-
-// GetEndCursor returns ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListIntegrationInstancesIntegrationInstancesListIntegrationInstancesResultPageInfo) GetEndCursor() string {
-	return v.EndCursor
 }
 
 // ListIntegrationInstancesResponse is returned by ListIntegrationInstances on success.
@@ -929,73 +877,15 @@ func (v *ListIntegrationInstancesResponse) GetIntegrationInstances() ListIntegra
 
 // ListJobsIntegrationJobsIntegrationJobsResult includes the requested fields of the GraphQL type IntegrationJobsResult.
 type ListJobsIntegrationJobsIntegrationJobsResult struct {
-	Jobs     []ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob `json:"jobs"`
-	PageInfo ListJobsIntegrationJobsIntegrationJobsResultPageInfo             `json:"pageInfo"`
+	Jobs     []IntegrationJob `json:"jobs"`
+	PageInfo PageInfo         `json:"pageInfo"`
 }
 
 // GetJobs returns ListJobsIntegrationJobsIntegrationJobsResult.Jobs, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResult) GetJobs() []ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob {
-	return v.Jobs
-}
+func (v *ListJobsIntegrationJobsIntegrationJobsResult) GetJobs() []IntegrationJob { return v.Jobs }
 
 // GetPageInfo returns ListJobsIntegrationJobsIntegrationJobsResult.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResult) GetPageInfo() ListJobsIntegrationJobsIntegrationJobsResultPageInfo {
-	return v.PageInfo
-}
-
-// ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob includes the requested fields of the GraphQL type IntegrationJob.
-type ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob struct {
-	Id                    string               `json:"id"`
-	CreateDate            int                  `json:"createDate"`
-	EndDate               int                  `json:"endDate"`
-	ErrorsOccurred        bool                 `json:"errorsOccurred"`
-	Status                IntegrationJobStatus `json:"status"`
-	IntegrationInstanceId string               `json:"integrationInstanceId"`
-}
-
-// GetId returns ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob.Id, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob) GetId() string { return v.Id }
-
-// GetCreateDate returns ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob.CreateDate, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob) GetCreateDate() int {
-	return v.CreateDate
-}
-
-// GetEndDate returns ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob.EndDate, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob) GetEndDate() int {
-	return v.EndDate
-}
-
-// GetErrorsOccurred returns ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob.ErrorsOccurred, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob) GetErrorsOccurred() bool {
-	return v.ErrorsOccurred
-}
-
-// GetStatus returns ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob.Status, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob) GetStatus() IntegrationJobStatus {
-	return v.Status
-}
-
-// GetIntegrationInstanceId returns ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob.IntegrationInstanceId, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultJobsIntegrationJob) GetIntegrationInstanceId() string {
-	return v.IntegrationInstanceId
-}
-
-// ListJobsIntegrationJobsIntegrationJobsResultPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListJobsIntegrationJobsIntegrationJobsResultPageInfo struct {
-	EndCursor   string `json:"endCursor"`
-	HasNextPage bool   `json:"hasNextPage"`
-}
-
-// GetEndCursor returns ListJobsIntegrationJobsIntegrationJobsResultPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultPageInfo) GetEndCursor() string {
-	return v.EndCursor
-}
-
-// GetHasNextPage returns ListJobsIntegrationJobsIntegrationJobsResultPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListJobsIntegrationJobsIntegrationJobsResultPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
+func (v *ListJobsIntegrationJobsIntegrationJobsResult) GetPageInfo() PageInfo { return v.PageInfo }
 
 // ListJobsResponse is returned by ListJobs on success.
 type ListJobsResponse struct {
@@ -1010,7 +900,7 @@ func (v *ListJobsResponse) GetIntegrationJobs() ListJobsIntegrationJobsIntegrati
 // ListVerticesV2ListVerticesV2ListVerticesResponse includes the requested fields of the GraphQL type ListVerticesResponse.
 type ListVerticesV2ListVerticesV2ListVerticesResponse struct {
 	Vertices []ListVerticesV2ListVerticesV2ListVerticesResponseVerticesVertex `json:"vertices"`
-	PageInfo ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo         `json:"pageInfo"`
+	PageInfo PageInfo                                                         `json:"pageInfo"`
 	Total    int                                                              `json:"total"`
 }
 
@@ -1020,28 +910,10 @@ func (v *ListVerticesV2ListVerticesV2ListVerticesResponse) GetVertices() []ListV
 }
 
 // GetPageInfo returns ListVerticesV2ListVerticesV2ListVerticesResponse.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListVerticesV2ListVerticesV2ListVerticesResponse) GetPageInfo() ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo {
-	return v.PageInfo
-}
+func (v *ListVerticesV2ListVerticesV2ListVerticesResponse) GetPageInfo() PageInfo { return v.PageInfo }
 
 // GetTotal returns ListVerticesV2ListVerticesV2ListVerticesResponse.Total, and is useful for accessing the field via an interface.
 func (v *ListVerticesV2ListVerticesV2ListVerticesResponse) GetTotal() int { return v.Total }
-
-// ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo struct {
-	EndCursor   string `json:"endCursor"`
-	HasNextPage bool   `json:"hasNextPage"`
-}
-
-// GetEndCursor returns ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo) GetEndCursor() string {
-	return v.EndCursor
-}
-
-// GetHasNextPage returns ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListVerticesV2ListVerticesV2ListVerticesResponsePageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
 
 // ListVerticesV2ListVerticesV2ListVerticesResponseVerticesVertex includes the requested fields of the GraphQL type Vertex.
 type ListVerticesV2ListVerticesV2ListVerticesResponseVerticesVertex struct {
@@ -1106,6 +978,18 @@ type ListVerticesV2Response struct {
 func (v *ListVerticesV2Response) GetListVerticesV2() ListVerticesV2ListVerticesV2ListVerticesResponse {
 	return v.ListVerticesV2
 }
+
+// PageInfo includes the requested fields of the GraphQL type PageInfo.
+type PageInfo struct {
+	EndCursor   string `json:"endCursor"`
+	HasNextPage bool   `json:"hasNextPage"`
+}
+
+// GetEndCursor returns PageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *PageInfo) GetEndCursor() string { return v.EndCursor }
+
+// GetHasNextPage returns PageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *PageInfo) GetHasNextPage() bool { return v.HasNextPage }
 
 // QueryJupiterOneQueryV1QueryV1Response includes the requested fields of the GraphQL type QueryV1Response.
 type QueryJupiterOneQueryV1QueryV1Response struct {
@@ -1974,8 +1858,8 @@ query IntegrationDefinitions ($cursor: String) {
 			}
 		}
 		pageInfo {
-			hasNextPage
 			endCursor
+			hasNextPage
 		}
 	}
 }
@@ -2095,8 +1979,8 @@ query ListIntegrationInstances ($cursor: String) {
 			integrationDefinitionId
 		}
 		pageInfo {
-			hasNextPage
 			endCursor
+			hasNextPage
 		}
 	}
 }

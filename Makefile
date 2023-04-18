@@ -19,6 +19,9 @@ fmt:
 fmtcheck:
 	@./scripts/fmtcheck.sh
 
+generate-types:
+	go run github.com/Khan/genqlient jupiterone/graphql/genqlient.yaml
+
 lint:
 	@echo "==> Checking source code against linters..."
 	@golangci-lint run ./$(PKG_NAME)/...
