@@ -234,6 +234,7 @@ fragment IntegrationInstanceValues on IntegrationInstance {
   accountId
   sourceIntegrationInstanceId
   pollingInterval
+  # @genqlient(typename: "PollingIntervalCronExpression")
   pollingIntervalCronExpression {
     hour
     dayOfWeek
@@ -303,7 +304,7 @@ mutation UpdateIntegrationInstance(
   }
 }
 
-mutation DeleteAnIntegrationInstance($id: String!) {
+mutation DeleteIntegrationInstance($id: String!) {
   deleteIntegrationInstance(id: $id) {
     success
   }
@@ -312,6 +313,7 @@ mutation DeleteAnIntegrationInstance($id: String!) {
 mutation InvokeInstance($id: String!) {
   invokeIntegrationInstance(id: $id) {
     success
+    integrationJobId
   }
 }
 

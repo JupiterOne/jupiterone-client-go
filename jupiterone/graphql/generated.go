@@ -109,23 +109,23 @@ const (
 	DeferredResponseOptionForce    DeferredResponseOption = "FORCE"
 )
 
-// DeleteAnIntegrationInstanceDeleteIntegrationInstanceDeletionResult includes the requested fields of the GraphQL type DeletionResult.
-type DeleteAnIntegrationInstanceDeleteIntegrationInstanceDeletionResult struct {
+// DeleteIntegrationInstanceDeleteIntegrationInstanceDeletionResult includes the requested fields of the GraphQL type DeletionResult.
+type DeleteIntegrationInstanceDeleteIntegrationInstanceDeletionResult struct {
 	Success bool `json:"success"`
 }
 
-// GetSuccess returns DeleteAnIntegrationInstanceDeleteIntegrationInstanceDeletionResult.Success, and is useful for accessing the field via an interface.
-func (v *DeleteAnIntegrationInstanceDeleteIntegrationInstanceDeletionResult) GetSuccess() bool {
+// GetSuccess returns DeleteIntegrationInstanceDeleteIntegrationInstanceDeletionResult.Success, and is useful for accessing the field via an interface.
+func (v *DeleteIntegrationInstanceDeleteIntegrationInstanceDeletionResult) GetSuccess() bool {
 	return v.Success
 }
 
-// DeleteAnIntegrationInstanceResponse is returned by DeleteAnIntegrationInstance on success.
-type DeleteAnIntegrationInstanceResponse struct {
-	DeleteIntegrationInstance DeleteAnIntegrationInstanceDeleteIntegrationInstanceDeletionResult `json:"deleteIntegrationInstance"`
+// DeleteIntegrationInstanceResponse is returned by DeleteIntegrationInstance on success.
+type DeleteIntegrationInstanceResponse struct {
+	DeleteIntegrationInstance DeleteIntegrationInstanceDeleteIntegrationInstanceDeletionResult `json:"deleteIntegrationInstance"`
 }
 
-// GetDeleteIntegrationInstance returns DeleteAnIntegrationInstanceResponse.DeleteIntegrationInstance, and is useful for accessing the field via an interface.
-func (v *DeleteAnIntegrationInstanceResponse) GetDeleteIntegrationInstance() DeleteAnIntegrationInstanceDeleteIntegrationInstanceDeletionResult {
+// GetDeleteIntegrationInstance returns DeleteIntegrationInstanceResponse.DeleteIntegrationInstance, and is useful for accessing the field via an interface.
+func (v *DeleteIntegrationInstanceResponse) GetDeleteIntegrationInstance() DeleteIntegrationInstanceDeleteIntegrationInstanceDeletionResult {
 	return v.DeleteIntegrationInstance
 }
 
@@ -227,7 +227,7 @@ func (v *GetIntegrationInstanceIntegrationInstance) GetPollingInterval() Integra
 }
 
 // GetPollingIntervalCronExpression returns GetIntegrationInstanceIntegrationInstance.PollingIntervalCronExpression, and is useful for accessing the field via an interface.
-func (v *GetIntegrationInstanceIntegrationInstance) GetPollingIntervalCronExpression() IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression {
+func (v *GetIntegrationInstanceIntegrationInstance) GetPollingIntervalCronExpression() PollingIntervalCronExpression {
 	return v.IntegrationInstanceValues.PollingIntervalCronExpression
 }
 
@@ -304,7 +304,7 @@ type __premarshalGetIntegrationInstanceIntegrationInstance struct {
 
 	PollingInterval IntegrationPollingInterval `json:"pollingInterval"`
 
-	PollingIntervalCronExpression IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression `json:"pollingIntervalCronExpression"`
+	PollingIntervalCronExpression PollingIntervalCronExpression `json:"pollingIntervalCronExpression"`
 
 	IntegrationDefinition IntegrationInstanceValuesIntegrationDefinition `json:"integrationDefinition"`
 
@@ -515,20 +515,20 @@ const (
 
 // IntegrationInstanceValues includes the GraphQL fields of IntegrationInstance requested by the fragment IntegrationInstanceValues.
 type IntegrationInstanceValues struct {
-	Id                            string                                                                                         `json:"id"`
-	Name                          string                                                                                         `json:"name"`
-	AccountId                     string                                                                                         `json:"accountId"`
-	SourceIntegrationInstanceId   string                                                                                         `json:"sourceIntegrationInstanceId"`
-	PollingInterval               IntegrationPollingInterval                                                                     `json:"pollingInterval"`
-	PollingIntervalCronExpression IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression `json:"pollingIntervalCronExpression"`
-	IntegrationDefinition         IntegrationInstanceValuesIntegrationDefinition                                                 `json:"integrationDefinition"`
-	IntegrationDefinitionId       string                                                                                         `json:"integrationDefinitionId"`
-	Description                   string                                                                                         `json:"description"`
-	Config                        map[string]interface{}                                                                         `json:"config"`
-	OffsiteComplete               bool                                                                                           `json:"offsiteComplete"`
-	Jobs                          IntegrationInstanceValuesJobsIntegrationJobsResult                                             `json:"jobs"`
-	InstanceRelationship          IntegrationInstanceRelationship                                                                `json:"instanceRelationship"`
-	Typename                      string                                                                                         `json:"__typename"`
+	Id                            string                                             `json:"id"`
+	Name                          string                                             `json:"name"`
+	AccountId                     string                                             `json:"accountId"`
+	SourceIntegrationInstanceId   string                                             `json:"sourceIntegrationInstanceId"`
+	PollingInterval               IntegrationPollingInterval                         `json:"pollingInterval"`
+	PollingIntervalCronExpression PollingIntervalCronExpression                      `json:"pollingIntervalCronExpression"`
+	IntegrationDefinition         IntegrationInstanceValuesIntegrationDefinition     `json:"integrationDefinition"`
+	IntegrationDefinitionId       string                                             `json:"integrationDefinitionId"`
+	Description                   string                                             `json:"description"`
+	Config                        map[string]interface{}                             `json:"config"`
+	OffsiteComplete               bool                                               `json:"offsiteComplete"`
+	Jobs                          IntegrationInstanceValuesJobsIntegrationJobsResult `json:"jobs"`
+	InstanceRelationship          IntegrationInstanceRelationship                    `json:"instanceRelationship"`
+	Typename                      string                                             `json:"__typename"`
 }
 
 // GetId returns IntegrationInstanceValues.Id, and is useful for accessing the field via an interface.
@@ -551,7 +551,7 @@ func (v *IntegrationInstanceValues) GetPollingInterval() IntegrationPollingInter
 }
 
 // GetPollingIntervalCronExpression returns IntegrationInstanceValues.PollingIntervalCronExpression, and is useful for accessing the field via an interface.
-func (v *IntegrationInstanceValues) GetPollingIntervalCronExpression() IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression {
+func (v *IntegrationInstanceValues) GetPollingIntervalCronExpression() PollingIntervalCronExpression {
 	return v.PollingIntervalCronExpression
 }
 
@@ -722,28 +722,6 @@ func (v *IntegrationInstanceValuesJobsIntegrationJobsResultJobsIntegrationJob) _
 	return &retval, nil
 }
 
-// IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression includes the requested fields of the GraphQL type IntegrationPollingIntervalCronExpression.
-type IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression struct {
-	Hour      int    `json:"hour"`
-	DayOfWeek int    `json:"dayOfWeek"`
-	Typename  string `json:"__typename"`
-}
-
-// GetHour returns IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression.Hour, and is useful for accessing the field via an interface.
-func (v *IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression) GetHour() int {
-	return v.Hour
-}
-
-// GetDayOfWeek returns IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression.DayOfWeek, and is useful for accessing the field via an interface.
-func (v *IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression) GetDayOfWeek() int {
-	return v.DayOfWeek
-}
-
-// GetTypename returns IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression.Typename, and is useful for accessing the field via an interface.
-func (v *IntegrationInstanceValuesPollingIntervalCronExpressionIntegrationPollingIntervalCronExpression) GetTypename() string {
-	return v.Typename
-}
-
 // IntegrationJob includes the requested fields of the GraphQL type IntegrationJob.
 type IntegrationJob struct {
 	Id                    string               `json:"id"`
@@ -807,11 +785,17 @@ func (v *IntegrationPollingIntervalCronExpressionInput) GetDayOfWeek() int { ret
 
 // InvokeInstanceInvokeIntegrationInstanceInvocationResult includes the requested fields of the GraphQL type InvocationResult.
 type InvokeInstanceInvokeIntegrationInstanceInvocationResult struct {
-	Success bool `json:"success"`
+	Success          bool   `json:"success"`
+	IntegrationJobId string `json:"integrationJobId"`
 }
 
 // GetSuccess returns InvokeInstanceInvokeIntegrationInstanceInvocationResult.Success, and is useful for accessing the field via an interface.
 func (v *InvokeInstanceInvokeIntegrationInstanceInvocationResult) GetSuccess() bool { return v.Success }
+
+// GetIntegrationJobId returns InvokeInstanceInvokeIntegrationInstanceInvocationResult.IntegrationJobId, and is useful for accessing the field via an interface.
+func (v *InvokeInstanceInvokeIntegrationInstanceInvocationResult) GetIntegrationJobId() string {
+	return v.IntegrationJobId
+}
 
 // InvokeInstanceResponse is returned by InvokeInstance on success.
 type InvokeInstanceResponse struct {
@@ -990,6 +974,22 @@ func (v *PageInfo) GetEndCursor() string { return v.EndCursor }
 
 // GetHasNextPage returns PageInfo.HasNextPage, and is useful for accessing the field via an interface.
 func (v *PageInfo) GetHasNextPage() bool { return v.HasNextPage }
+
+// PollingIntervalCronExpression includes the requested fields of the GraphQL type IntegrationPollingIntervalCronExpression.
+type PollingIntervalCronExpression struct {
+	Hour      int    `json:"hour"`
+	DayOfWeek int    `json:"dayOfWeek"`
+	Typename  string `json:"__typename"`
+}
+
+// GetHour returns PollingIntervalCronExpression.Hour, and is useful for accessing the field via an interface.
+func (v *PollingIntervalCronExpression) GetHour() int { return v.Hour }
+
+// GetDayOfWeek returns PollingIntervalCronExpression.DayOfWeek, and is useful for accessing the field via an interface.
+func (v *PollingIntervalCronExpression) GetDayOfWeek() int { return v.DayOfWeek }
+
+// GetTypename returns PollingIntervalCronExpression.Typename, and is useful for accessing the field via an interface.
+func (v *PollingIntervalCronExpression) GetTypename() string { return v.Typename }
 
 // QueryJupiterOneQueryV1QueryV1Response includes the requested fields of the GraphQL type QueryV1Response.
 type QueryJupiterOneQueryV1QueryV1Response struct {
@@ -1463,13 +1463,13 @@ type __CreateInstanceInput struct {
 // GetInstance returns __CreateInstanceInput.Instance, and is useful for accessing the field via an interface.
 func (v *__CreateInstanceInput) GetInstance() CreateIntegrationInstanceInput { return v.Instance }
 
-// __DeleteAnIntegrationInstanceInput is used internally by genqlient
-type __DeleteAnIntegrationInstanceInput struct {
+// __DeleteIntegrationInstanceInput is used internally by genqlient
+type __DeleteIntegrationInstanceInput struct {
 	Id string `json:"id"`
 }
 
-// GetId returns __DeleteAnIntegrationInstanceInput.Id, and is useful for accessing the field via an interface.
-func (v *__DeleteAnIntegrationInstanceInput) GetId() string { return v.Id }
+// GetId returns __DeleteIntegrationInstanceInput.Id, and is useful for accessing the field via an interface.
+func (v *__DeleteIntegrationInstanceInput) GetId() string { return v.Id }
 
 // __GetIntegrationDefinitionInput is used internally by genqlient
 type __GetIntegrationDefinitionInput struct {
@@ -1695,27 +1695,27 @@ mutation CreateInstance ($instance: CreateIntegrationInstanceInput!) {
 	return &data, err
 }
 
-func DeleteAnIntegrationInstance(
+func DeleteIntegrationInstance(
 	ctx context.Context,
 	client graphql.Client,
 	id string,
-) (*DeleteAnIntegrationInstanceResponse, error) {
+) (*DeleteIntegrationInstanceResponse, error) {
 	req := &graphql.Request{
-		OpName: "DeleteAnIntegrationInstance",
+		OpName: "DeleteIntegrationInstance",
 		Query: `
-mutation DeleteAnIntegrationInstance ($id: String!) {
+mutation DeleteIntegrationInstance ($id: String!) {
 	deleteIntegrationInstance(id: $id) {
 		success
 	}
 }
 `,
-		Variables: &__DeleteAnIntegrationInstanceInput{
+		Variables: &__DeleteIntegrationInstanceInput{
 			Id: id,
 		},
 	}
 	var err error
 
-	var data DeleteAnIntegrationInstanceResponse
+	var data DeleteIntegrationInstanceResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
@@ -1893,6 +1893,7 @@ func InvokeInstance(
 mutation InvokeInstance ($id: String!) {
 	invokeIntegrationInstance(id: $id) {
 		success
+		integrationJobId
 	}
 }
 `,
