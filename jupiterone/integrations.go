@@ -69,8 +69,8 @@ func (s *IntegrationService) ListJobEvents(instanceID string, jobID string, curs
 }
 
 // DeleteInstance deletes an integration instance by its id.
-func (s *IntegrationService) DeleteInstance(id string) (*graphql.DeleteAnIntegrationInstanceResponse, error) {
-	return graphql.DeleteAnIntegrationInstance(context.Background(), s.client.gqlClient, id)
+func (s *IntegrationService) DeleteInstance(id string) (*graphql.DeleteIntegrationInstanceResponse, error) {
+	return graphql.DeleteIntegrationInstance(context.Background(), s.client.gqlClient, id)
 }
 
 func (s *IntegrationService) GetIntegrationInstance(id string) (*graphql.GetIntegrationInstanceResponse, error) {
