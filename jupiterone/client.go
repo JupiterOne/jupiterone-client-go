@@ -1,7 +1,6 @@
 package jupiterone
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -48,8 +47,6 @@ func (c *Config) getRegion() string {
 	if region == "" {
 		region = DefaultRegion
 	}
-
-	log.Printf("[info] Utilizing region: %s", region)
 	return region
 }
 
