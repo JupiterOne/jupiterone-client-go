@@ -453,10 +453,13 @@ func (v *IntegrationEvent) GetCreateDate() int { return v.CreateDate }
 
 // IntegrationInstance includes the requested fields of the GraphQL type IntegrationInstance.
 type IntegrationInstance struct {
-	Id                      string `json:"id"`
-	Name                    string `json:"name"`
-	Description             string `json:"description"`
-	IntegrationDefinitionId string `json:"integrationDefinitionId"`
+	Id                            string                                   `json:"id"`
+	Name                          string                                   `json:"name"`
+	Description                   string                                   `json:"description"`
+	SourceIntegrationInstanceId   string                                   `json:"sourceIntegrationInstanceId"`
+	PollingInterval               IntegrationPollingInterval               `json:"pollingInterval"`
+	PollingIntervalCronExpression PollingIntervalCronExpression            `json:"pollingIntervalCronExpression"`
+	IntegrationDefinition         IntegrationInstanceIntegrationDefinition `json:"integrationDefinition"`
 }
 
 // GetId returns IntegrationInstance.Id, and is useful for accessing the field via an interface.
@@ -468,8 +471,53 @@ func (v *IntegrationInstance) GetName() string { return v.Name }
 // GetDescription returns IntegrationInstance.Description, and is useful for accessing the field via an interface.
 func (v *IntegrationInstance) GetDescription() string { return v.Description }
 
-// GetIntegrationDefinitionId returns IntegrationInstance.IntegrationDefinitionId, and is useful for accessing the field via an interface.
-func (v *IntegrationInstance) GetIntegrationDefinitionId() string { return v.IntegrationDefinitionId }
+// GetSourceIntegrationInstanceId returns IntegrationInstance.SourceIntegrationInstanceId, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetSourceIntegrationInstanceId() string {
+	return v.SourceIntegrationInstanceId
+}
+
+// GetPollingInterval returns IntegrationInstance.PollingInterval, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetPollingInterval() IntegrationPollingInterval {
+	return v.PollingInterval
+}
+
+// GetPollingIntervalCronExpression returns IntegrationInstance.PollingIntervalCronExpression, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetPollingIntervalCronExpression() PollingIntervalCronExpression {
+	return v.PollingIntervalCronExpression
+}
+
+// GetIntegrationDefinition returns IntegrationInstance.IntegrationDefinition, and is useful for accessing the field via an interface.
+func (v *IntegrationInstance) GetIntegrationDefinition() IntegrationInstanceIntegrationDefinition {
+	return v.IntegrationDefinition
+}
+
+// IntegrationInstanceIntegrationDefinition includes the requested fields of the GraphQL type IntegrationDefinition.
+type IntegrationInstanceIntegrationDefinition struct {
+	Id               string   `json:"id"`
+	IntegrationType  string   `json:"integrationType"`
+	IntegrationClass []string `json:"integrationClass"`
+	Name             string   `json:"name"`
+	Title            string   `json:"title"`
+}
+
+// GetId returns IntegrationInstanceIntegrationDefinition.Id, and is useful for accessing the field via an interface.
+func (v *IntegrationInstanceIntegrationDefinition) GetId() string { return v.Id }
+
+// GetIntegrationType returns IntegrationInstanceIntegrationDefinition.IntegrationType, and is useful for accessing the field via an interface.
+func (v *IntegrationInstanceIntegrationDefinition) GetIntegrationType() string {
+	return v.IntegrationType
+}
+
+// GetIntegrationClass returns IntegrationInstanceIntegrationDefinition.IntegrationClass, and is useful for accessing the field via an interface.
+func (v *IntegrationInstanceIntegrationDefinition) GetIntegrationClass() []string {
+	return v.IntegrationClass
+}
+
+// GetName returns IntegrationInstanceIntegrationDefinition.Name, and is useful for accessing the field via an interface.
+func (v *IntegrationInstanceIntegrationDefinition) GetName() string { return v.Name }
+
+// GetTitle returns IntegrationInstanceIntegrationDefinition.Title, and is useful for accessing the field via an interface.
+func (v *IntegrationInstanceIntegrationDefinition) GetTitle() string { return v.Title }
 
 // IntegrationInstanceJobValues includes the GraphQL fields of IntegrationJob requested by the fragment IntegrationInstanceJobValues.
 type IntegrationInstanceJobValues struct {
@@ -1977,7 +2025,20 @@ query ListIntegrationInstances ($cursor: String) {
 			id
 			name
 			description
-			integrationDefinitionId
+			sourceIntegrationInstanceId
+			pollingInterval
+			pollingIntervalCronExpression {
+				hour
+				dayOfWeek
+				__typename
+			}
+			integrationDefinition {
+				id
+				integrationType
+				integrationClass
+				name
+				title
+			}
 		}
 		pageInfo {
 			endCursor

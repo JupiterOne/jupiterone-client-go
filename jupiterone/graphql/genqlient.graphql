@@ -218,7 +218,21 @@ query ListIntegrationInstances($cursor: String) {
       id
       name
       description
-      integrationDefinitionId
+      sourceIntegrationInstanceId
+      pollingInterval
+      # @genqlient(typename: "PollingIntervalCronExpression")
+      pollingIntervalCronExpression {
+        hour
+        dayOfWeek
+        __typename
+      }
+      integrationDefinition {
+        id
+        integrationType
+        integrationClass
+        name
+        title
+      }
     }
     # @genqlient(typename: "PageInfo")
     pageInfo {
