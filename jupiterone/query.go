@@ -52,7 +52,6 @@ func (q *QueryService) Query(qi QueryInput) (interface{}, error) {
 
 	if qi.Flags == nil {
 		qi.Flags = &graphql.QueryV1Flags{
-			AllPages:           true,
 			ComputedProperties: false,
 			RowMetadata:        false,
 			VariableResultSize: false,

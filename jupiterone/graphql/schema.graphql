@@ -3700,7 +3700,6 @@ enum QueryResultsAre {
 }
 
 input QueryV1Flags {
-  allPages: Boolean
   computedProperties: Boolean
   rowMetadata: Boolean
   variableResultSize: Boolean

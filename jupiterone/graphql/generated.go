@@ -1074,14 +1074,10 @@ func (v *QueryJupiterOneResponse) GetQueryV1() QueryJupiterOneQueryV1QueryV1Resp
 }
 
 type QueryV1Flags struct {
-	AllPages           bool `json:"allPages"`
 	ComputedProperties bool `json:"computedProperties"`
 	RowMetadata        bool `json:"rowMetadata"`
 	VariableResultSize bool `json:"variableResultSize"`
 }
-
-// GetAllPages returns QueryV1Flags.AllPages, and is useful for accessing the field via an interface.
-func (v *QueryV1Flags) GetAllPages() bool { return v.AllPages }
 
 // GetComputedProperties returns QueryV1Flags.ComputedProperties, and is useful for accessing the field via an interface.
 func (v *QueryV1Flags) GetComputedProperties() bool { return v.ComputedProperties }
